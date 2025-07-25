@@ -6,7 +6,10 @@
     "dev": "vite",
     "build": "vite build --mode production",
     "preview": "vite preview",
-    "vercel-build": "vite build"
+    "vercel-build": "npm install && vite build"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@sanity/client": "^7.6.0",
