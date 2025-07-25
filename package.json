@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build --mode production",
+    "build": "vite build --mode production",
     "preview": "vite preview",
-    "vercel-build": "npm install && chmod +x node_modules/.bin/vite && npx vite build"
+    "vercel-build": "npm install --no-optional && npm rebuild && npm run build"
   },
   "engines": {
     "node": ">=16.0.0"
