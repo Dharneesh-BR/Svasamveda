@@ -19,6 +19,8 @@
   "build": {
     "env": {
       "NODE_ENV": "production"
-    }
-  }
+    },
+    "command": "chmod +x vercel-build.sh && ./vercel-build.sh"
+  },
+  "installCommand": "npm install"
 }
