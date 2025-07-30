@@ -1,5 +1,5 @@
 // Service Worker for Svasam
-const CACHE_NAME = 'svasam-cache-v2';
+const CACHE_NAME = 'svasam-cache-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -7,6 +7,11 @@ const urlsToCache = [
   '/icon-192x192.png',
   '/manifest.webmanifest'
 ];
+
+// Map of old paths to new paths
+const REDIRECTS = {
+  '/icons/icon-192x192.png': '/icon-192x192.png'
+};
 
 // Install event - cache the app shell
 self.addEventListener('install', event => {
@@ -35,7 +40,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch event - serve from cache, falling back to network
+// Handle fetch events with redirects
 self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
@@ -43,6 +48,19 @@ self.addEventListener('fetch', event => {
   // Skip cross-origin requests like analytics
   if (!event.request.url.startsWith(self.location.origin)) return;
 
+  // Check if this is a request we should redirect
+  const url = new URL(event.request.url);
+  const path = url.pathname;
+  
+  // Handle redirects
+  if (REDIRECTS[path]) {
+    const newUrl = new URL(REDIRECTS[path], self.location.origin);
+    return event.respondWith(
+      caches.match(newUrl).then(response => response || fetch(newUrl))
+    );
+  }
+
+  // Normal request handling
   event.respondWith(
     caches.match(event.request).then(response => {
       // Return cached response if found
