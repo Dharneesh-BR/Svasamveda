@@ -1,4 +1,3 @@
-import { Rule } from 'sanity'
 import { defineType, defineField } from 'sanity'
 
 export default defineType({
@@ -10,7 +9,7 @@ export default defineType({
       name: 'title',
       type: 'string',
       title: 'Title',
-      validation: (Rule: Rule) => Rule.required()
+      validation: rule => rule.required().error('Title is required')
     }),
     defineField({
       name: 'slug',
@@ -20,7 +19,7 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: Rule) => Rule.required()
+      validation: rule => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'category',
@@ -35,14 +34,14 @@ export default defineType({
         layout: 'radio',
         direction: 'horizontal'
       },
-      validation: (Rule: Rule) => Rule.required()
+      validation: rule => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'description',
       type: 'text',
       title: 'Short Description',
       description: 'A brief description shown in program listings',
-      validation: (Rule: Rule) => Rule.required()
+      validation: rule => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'body',
@@ -94,7 +93,7 @@ export default defineType({
           type: 'string',
           title: 'Alternative text',
           description: 'Important for SEO and accessibility',
-          validation: (Rule: Rule) => Rule.required()
+          validation: rule => rule.required().error('Slug is required')
         }
       ]
     }),
@@ -102,14 +101,14 @@ export default defineType({
       name: 'price',
       type: 'number',
       title: 'Price (INR)',
-      validation: (Rule: Rule) => Rule.required().min(0)
+      validation: rule => rule.required().min(0).error('Price is required and must be 0 or more')
     }),
     defineField({
       name: 'duration',
       type: 'string',
       title: 'Duration',
       description: 'e.g., "8 weeks", "1 hour"',
-      validation: (Rule: Rule) => Rule.required()
+      validation: rule => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'isFeatured',
