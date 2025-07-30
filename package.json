@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build",
+    "build": "npm install && vite build",
     "preview": "vite preview",
-    "vercel-build": "npx vite build"
+    "vercel-build": "npm install && vite build"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "22.x"
   },
   "dependencies": {
     "@sanity/client": "^7.6.0",

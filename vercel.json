@@ -6,7 +6,7 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist",
-        "nodeVersion": "18.x"
+        "nodeVersion": "22.x"
       }
     }
   ],
@@ -16,6 +16,12 @@
       "dest": "/"
     }
   ],
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "installCommand": "npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "dist"
 }
