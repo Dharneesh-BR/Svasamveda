@@ -30,7 +30,8 @@
       // Register service worker in production only
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { type: 'module' })
+          // Remove the type: 'module' option
+          navigator.serviceWorker.register('/sw.js')
             .then(registration => {
               console.log('ServiceWorker registration successful');
             })
