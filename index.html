@@ -13,14 +13,13 @@
     <meta name="theme-color" content="#6366f1">
     
     <!-- iOS PWA Support -->
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Svasam">
     
     <!-- Android PWA Support -->
-    <meta name="theme-color" content="#6366f1">
     <meta name="msapplication-navbutton-color" content="#6366f1">
     <meta name="msapplication-TileColor" content="#6366f1">
   </head>
@@ -29,9 +28,9 @@
     <script type="module" src="/src/main.jsx"></script>
     <script>
       // Register service worker in production only
-      if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+      if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
+          navigator.serviceWorker.register('/sw.js', { type: 'module' })
             .then(registration => {
               console.log('ServiceWorker registration successful');
             })
