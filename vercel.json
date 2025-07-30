@@ -16,6 +16,5 @@
       "dest": "/"
     }
   ],
-  "buildCommand": "npm install --force && npm install -g npm@latest && npm install && npm run build",
-  "installCommand": "true"
+  "buildCommand": "chmod +x build.sh && ./build.sh"
 }
