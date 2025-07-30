@@ -5,7 +5,7 @@ node_modules/
 .vercel/
 .next/
 out/
-dist/
+# ⚠️ DO NOT IGNORE dist/ — Vercel needs it to deploy if you use `outputDirectory: "dist"`
 
 # Environment variables
 .env
@@ -27,8 +27,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Sanity Studio
-/studio-svasam/
+# Sanity Studio (only if you don't want to deploy it with frontend)
+studio-svasam/
 
 # Local development
 .cache/
