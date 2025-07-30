@@ -4,25 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Svasam</title>
-    <link rel="manifest" href="/assets/manifest-BzRnP2xe.webmanifest">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="./manifest.webmanifest">
     <meta name="theme-color" content="#6366f1">
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    
+    <!-- iOS PWA Support -->
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-    <script type="module" crossorigin src="/assets/index-CJPxkZN8.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-B2kDjn90.js">
-    <link rel="modulepreload" crossorigin href="/assets/vendor-AoKiQRSw.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DEK3gTMP.css">
+    <meta name="apple-mobile-web-app-title" content="Svasam">
+    
+    <!-- Android PWA Support -->
+    <meta name="theme-color" content="#6366f1">
+    <meta name="msapplication-navbutton-color" content="#6366f1">
+    <meta name="msapplication-TileColor" content="#6366f1">
+    <script type="module" crossorigin src="./assets/index-BKELOe0d.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/react-B2kDjn90.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-CUW8uixQ.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DEK3gTMP.css">
   </head>
   <body>
     <div id="root"></div>
     <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
-      });
-    }
-  </script>
-</body>
+      // Register service worker in production only
+      if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful');
+            })
+            .catch(err => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
+  </body>
 </html>
