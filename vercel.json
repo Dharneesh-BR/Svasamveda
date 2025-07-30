@@ -16,12 +16,6 @@
       "dest": "/"
     }
   ],
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  "buildCommand": "npm install --force && npm install -g npm@latest && npm install && npm run build",
+  "installCommand": "true"
 }
