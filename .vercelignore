@@ -2,45 +2,23 @@
 node_modules/
 
 # Build outputs
-.vercel/
 .next/
 out/
-# ⚠️ DO NOT IGNORE dist/ — Vercel needs it to deploy if you use `outputDirectory: "dist"`
+
+# Local build cache (keep dist!)
+.cache/
+.temp/
 
 # Environment variables
 .env
 .env.*
-!.env.example
 
-# Editor and IDE
+# IDEs
 .vscode/
 .idea/
-*.sublime-*
-
-# System files
-.DS_Store
-Thumbs.db
 
 # Logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Sanity Studio (only if you don't want to deploy it with frontend)
-studio-svasam/
-
-# Local development
-.cache/
-.temp/
-
-# Testing
-coverage/
-.nyc_output/
-
-# Misc
-*.pem
-*.p12
-*.key
-*.csr
-*.srl
+# Sanity Studio
+/studio-svasam/
