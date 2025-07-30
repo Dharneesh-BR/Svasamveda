@@ -16,6 +16,6 @@
       "dest": "/"
     }
   ],
-  "buildCommand": "npm install --force && npm run build",
-  "installCommand": "npm install --force"
+  "buildCommand": "npm install --production=false && npm install && npm run build",
+  "installCommand": "npm install --production=false"
 }
