@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "postinstall": "chmod +x node_modules/.bin/vite",
     "dev": "vite",
-    "build": "CI=false vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "vercel-build": "vite build"
   },
   "engines": {
     "node": ">=16.0.0"
