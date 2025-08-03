@@ -15,8 +15,8 @@ const config = {
   withCredentials: false,
   token: import.meta.env.VITE_SANITY_TOKEN,
   
-  // Use the CDN with the project ID
-  apiHost: `https://${projectId}.api.sanity.io`,
+  // Use the CDN with the project ID (remove duplicate project ID)
+  apiHost: 'https://api.sanity.io',
   
   // Add CORS headers to all requests
   headers: {
@@ -25,24 +25,45 @@ const config = {
     'Cache-Control': 'no-cache',
   },
   
-  // Custom fetch function to handle CORS
-  fetch: (url, options = {}) => {
-    console.log('Sanity API Request:', url.toString());
+  // Custom fetch function to handle CORS and better error handling
+  fetch: async (url, options = {}) => {
+    const fullUrl = url.toString();
+    console.log('Sanity API Request:', fullUrl);
     
-    return fetch(url, {
-      ...options,
-      mode: 'cors',
-      credentials: 'omit',
-    }).then(response => {
+    try {
+      const response = await fetch(url, {
+        ...options,
+        mode: 'cors',
+        credentials: 'omit',
+        headers: {
+          ...options.headers,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      });
+
       if (!response.ok) {
-        console.error('Sanity API Error:', response.status, response.statusText);
-        return response.text().then(text => {
-          console.error('Response body:', text);
-          throw new Error(`Sanity API Error: ${response.status} ${response.statusText}`);
+        const errorText = await response.text();
+        console.error('Sanity API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          url: fullUrl,
+          responseText: errorText,
+          headers: Object.fromEntries(response.headers.entries())
         });
+        
+        throw new Error(`Sanity API Error (${response.status}): ${errorText || response.statusText}`);
       }
+      
       return response;
-    });
+    } catch (error) {
+      console.error('Fetch Error:', {
+        message: error.message,
+        url: fullUrl,
+        error: error.toString()
+      });
+      throw error;
+    }
   }
 };
 
