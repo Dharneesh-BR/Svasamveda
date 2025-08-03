@@ -15,8 +15,9 @@ const config = {
   withCredentials: false,
   token: import.meta.env.VITE_SANITY_TOKEN,
   
-  // Use the CDN with the project ID (remove duplicate project ID)
-  apiHost: 'https://api.sanity.io',
+  // Use the CDN with the project ID
+  // Note: The client will construct the URL as: ${apiHost}/v${apiVersion}/data/query/${dataset}
+  apiHost: `https://${projectId}.api.sanity.io`,
   
   // Add CORS headers to all requests
   headers: {
@@ -27,11 +28,15 @@ const config = {
   
   // Custom fetch function to handle CORS and better error handling
   fetch: async (url, options = {}) => {
-    const fullUrl = url.toString();
+    // Ensure the URL is a string
+    let fullUrl = url.toString();
+    
+    // Log the request for debugging
     console.log('Sanity API Request:', fullUrl);
     
     try {
-      const response = await fetch(url, {
+      // Make the fetch request
+      const response = await fetch(fullUrl, {
         ...options,
         mode: 'cors',
         credentials: 'omit',
@@ -42,16 +47,18 @@ const config = {
         }
       });
 
+      // Handle non-OK responses
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Sanity API Error:', {
+        const errorData = {
           status: response.status,
           statusText: response.statusText,
           url: fullUrl,
           responseText: errorText,
           headers: Object.fromEntries(response.headers.entries())
-        });
+        };
         
+        console.error('Sanity API Error:', errorData);
         throw new Error(`Sanity API Error (${response.status}): ${errorText || response.statusText}`);
       }
       
@@ -60,7 +67,14 @@ const config = {
       console.error('Fetch Error:', {
         message: error.message,
         url: fullUrl,
-        error: error.toString()
+        error: error.toString(),
+        config: {
+          projectId,
+          dataset,
+          apiVersion,
+          useCdn,
+          apiHost: `https://${projectId}.api.sanity.io`
+        }
       });
       throw error;
     }
