@@ -28,6 +28,8 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       port: 3000,
+      // No proxy needed when using CDN directly
+      cors: true, // Enable CORS for development
       open: true,
     },
   };

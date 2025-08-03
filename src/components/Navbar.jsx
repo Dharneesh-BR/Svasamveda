@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUser, logoutUser } from '../utils/auth';
-import SvasamLogo from '../assets/svasam logo copy.png';
+import SvasamLogo from '/icons/svasam logo copy.png';
 
 // Custom Link component that reloads the page
 const ReloadLink = ({ to, children, ...props }) => {

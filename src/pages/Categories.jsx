@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import MindImg from '../assets/mind.png';
-import SoulImg from '../assets/soul.png';
-import BodyImg from '../assets/Body.png';
-import Logo from '../assets/Logo.png';
+const MindImg = '/assets/Main page.png';
+const SoulImg = '/assets/Soul icon.png';
+const BodyImg = '/assets/body icon.png';
+const Logo = '/icons/Logo icon.png';
 import FAQSection from '../components/FAQSection';
 
 const CategoryCard = ({ to, title, description, image, alt }) => (
