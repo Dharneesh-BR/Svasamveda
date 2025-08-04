@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { client } from '../lib/sanity';
 
 export function useStoreItems(category = null) {
@@ -6,52 +6,54 @@ export function useStoreItems(category = null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const query = category 
+    ? `*[_type == "storeItem" && $category in categories[]->title] {
+        _id,
+        title,
+        description,
+        shortDescription,
+        "slug": slug.current,
+        "imageUrl": mainImage.asset->url,
+        price,
+        compareAtPrice,
+        "categories": categories[]->title,
+        stock,
+        "images": images[].asset->url
+      } | order(_createdAt desc)`
+    : `*[_type == "storeItem"] {
+        _id,
+        title,
+        description,
+        shortDescription,
+        "slug": slug.current,
+        "imageUrl": mainImage.asset->url,
+        price,
+        compareAtPrice,
+        "categories": categories[]->title,
+        stock,
+        "images": images[].asset->url
+      } | order(_createdAt desc)`;
+
+  const fetchItems = useCallback(async () => {
+    try {
+      setLoading(true);
+      const result = await client.fetch(query, category ? { category } : {});
+      setItems(result);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching store items:', err);
+      setError({
+        message: err.message || 'Unknown error',
+        isNetworkError: err.name === 'AbortError' || !navigator.onLine
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [query, category]);
+
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        setLoading(true);
-        
-        // Build the GROQ query based on whether a category is specified
-        const query = category 
-          ? `*[_type == "storeItem" && "${category}" in categories[]->title] {
-              _id,
-              title,
-              description,
-              shortDescription,
-              "slug": slug.current,
-              "imageUrl": mainImage.asset->url,
-              price,
-              compareAtPrice,
-              "categories": categories[]->title,
-              stock,
-              "images": images[].asset->url
-            } | order(_createdAt desc)`
-          : `*[_type == "storeItem"] {
-              _id,
-              title,
-              description,
-              shortDescription,
-              "slug": slug.current,
-              "imageUrl": mainImage.asset->url,
-              price,
-              compareAtPrice,
-              "categories": categories[]->title,
-              stock,
-              "images": images[].asset->url
-            } | order(_createdAt desc)`;
-
-        const result = await client.fetch(query);
-        setItems(result);
-      } catch (err) {
-        console.error('Error fetching store items:', err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchItems();
-  }, [category]);
+  }, [fetchItems]);
 
-  return { items, loading, error };
+  return { items, loading, error, refetch: fetchItems };
 }
