@@ -15,8 +15,7 @@ const config = {
   withCredentials: false,
   token: import.meta.env.VITE_SANITY_TOKEN,
   
-  // Use the CDN with the project ID
-  // Use the full URL format that Sanity expects
+  // Force the correct URL format
   apiHost: 'https://api.sanity.io',
   
   // Add CORS headers to all requests
@@ -26,29 +25,29 @@ const config = {
     'Cache-Control': 'no-cache',
   },
   
+  // Completely override the URL construction
+  url: `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`,
+  
   // Custom fetch function to handle CORS and better error handling
   fetch: async (url, options = {}) => {
-    // Ensure the URL is a string and fix any malformed URLs
-    let fullUrl = url.toString();
+    // Construct the correct URL manually
+    const queryParams = new URLSearchParams({
+      query: options.body ? JSON.parse(options.body).query : '',
+      ...(options.body ? JSON.parse(options.body).params : {})
+    });
     
-    // Fix the malformed URL if it contains the project ID twice
-    if (fullUrl.includes(`${projectId}.${projectId}`)) {
-      fullUrl = fullUrl.replace(`${projectId}.${projectId}`, projectId);
-    }
+    const fullUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?${queryParams}`;
     
-    // Log the request for debugging
-    console.log('Sanity API Request:', fullUrl);
+    console.log('Sanity API Request URL:', fullUrl);
     
     try {
-      // Make the fetch request
+      // Make the fetch request with the correct URL
       const response = await fetch(fullUrl, {
-        ...options,
-        mode: 'cors',
-        credentials: 'omit',
+        method: 'GET', // Always use GET for queries
         headers: {
-          ...options.headers,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SANITY_TOKEN || ''}`
         }
       });
 
