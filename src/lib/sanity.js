@@ -16,8 +16,8 @@ const config = {
   token: import.meta.env.VITE_SANITY_TOKEN,
   
   // Use the CDN with the project ID
-  // Note: The client will construct the URL as: ${apiHost}/v${apiVersion}/data/query/${dataset}
-  apiHost: `https://${projectId}.api.sanity.io`,
+  // Use the full URL format that Sanity expects
+  apiHost: 'https://api.sanity.io',
   
   // Add CORS headers to all requests
   headers: {
@@ -28,8 +28,13 @@ const config = {
   
   // Custom fetch function to handle CORS and better error handling
   fetch: async (url, options = {}) => {
-    // Ensure the URL is a string
+    // Ensure the URL is a string and fix any malformed URLs
     let fullUrl = url.toString();
+    
+    // Fix the malformed URL if it contains the project ID twice
+    if (fullUrl.includes(`${projectId}.${projectId}`)) {
+      fullUrl = fullUrl.replace(`${projectId}.${projectId}`, projectId);
+    }
     
     // Log the request for debugging
     console.log('Sanity API Request:', fullUrl);
@@ -73,10 +78,14 @@ const config = {
           dataset,
           apiVersion,
           useCdn,
-          apiHost: `https://${projectId}.api.sanity.io`
+          apiHost: 'https://api.sanity.io'
         }
       });
-      throw error;
+      
+      // Create a more user-friendly error message
+      const friendlyError = new Error('Failed to fetch data from Sanity. Please check your internet connection and try again.');
+      friendlyError.originalError = error;
+      throw friendlyError;
     }
   }
 };
