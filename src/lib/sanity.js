@@ -1,9 +1,9 @@
 import { createClient } from '@sanity/client';
 
 const config = {
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || 'n5smwbzi',
-  dataset: import.meta.env.VITE_SANITY_DATASET || 'production1',
-  apiVersion: import.meta.env.VITE_SANITY_API_VERSION || '2023-07-21',
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  dataset: import.meta.env.VITE_SANITY_DATASET,
+  apiVersion: import.meta.env.VITE_SANITY_API_VERSION,
   useCdn: true,
   token: import.meta.env.VITE_SANITY_TOKEN,
   withCredentials: false,
