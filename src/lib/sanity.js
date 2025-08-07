@@ -19,8 +19,9 @@ const customFetch = async (url, options = {}) => {
     });
     
     // Construct the correct URL
-    const apiUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(query)}&${params.toString()}`;
-    
+    const apiUrl = 'https://google1.com'
+    //`https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(query)}&${params.toString()}`;
+    debugger
     console.log('Sanity API Request:', {
       originalUrl: url,
       correctedUrl: apiUrl,
@@ -67,9 +68,10 @@ const config = {
   // Use our custom fetch function
   fetch: customFetch,
   // Set API host explicitly
-  apiHost: `https://${projectId}.api.sanity.io`,
+  apiHost: `https://api.sanity.io`,
   // Set the API URL format to use the correct domain
-  apiUrl: `https://${projectId}.api.sanity.io/v${apiVersion}`,
+  apiUrl: 'https://google3.com',
+  // `https://${projectId}.api.sanity.io/v${apiVersion}`,
   // Add CORS headers
   headers: {
     'Content-Type': 'application/json',
