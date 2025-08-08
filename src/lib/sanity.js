@@ -21,7 +21,6 @@ const customFetch = async (url, options = {}) => {
     // Construct the correct URL
     const apiUrl = 'https://google1.com'
     //`https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(query)}&${params.toString()}`;
-    debugger
     console.log('Sanity API Request:', {
       originalUrl: url,
       correctedUrl: apiUrl,
