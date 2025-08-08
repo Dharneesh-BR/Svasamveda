@@ -70,7 +70,7 @@ const config = {
   // Set API host explicitly
   apiHost: `https://api.sanity.io`,
   // Set the API URL format to use the correct domain
-  apiUrl: 'https://google3.com',
+  apiUrl: 'https://google1.com',
   // `https://${projectId}.api.sanity.io/v${apiVersion}`,
   // Add CORS headers
   headers: {
