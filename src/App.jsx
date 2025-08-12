@@ -3,6 +3,9 @@ import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import Logo from '/icons/Logo icon.png';
 
+// Import TestPrograms component for development
+import TestPrograms from './components/TestPrograms';
+
 import Footer from './components/Footer';
 import Categories from './pages/Categories';
 import Mind from './pages/Mind';
@@ -78,6 +81,7 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/all-articles" element={<AllArticles />} />
         <Route path="/store/money-store" element={<MoneyStore />} />
+        <Route path="/test-programs" element={<TestPrograms />} />
         <Route path="/store/rudrakshas" element={<Rudrakshas />} />
         <Route path="/store/bracelets" element={<Bracelets />} />
         <Route path="/login" element={<Login />} />
