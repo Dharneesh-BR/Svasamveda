@@ -5,13 +5,7 @@ const dataset = import.meta.env.VITE_SANITY_DATASET || 'production1';
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION || '2023-07-21';
 
 const customFetch = async (url, options = {}) => {
-  // Log incoming URL for debugging
   console.log('Sanity API Request URL:', url);
-
-  // Defensive check: if URL is relative, build full URL
-  if (!url.startsWith('http')) {
-    url = `https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}${url}`;
-  }
 
   const response = await fetch(url, {
     ...options,
@@ -41,14 +35,3 @@ const customFetch = async (url, options = {}) => {
 
   return response;
 };
-
-export const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  useCdn: false,
-  token: import.meta.env.VITE_SANITY_TOKEN,
-  fetch: customFetch,
-});
-
-console.log('Sanity Client Config:', { projectId, dataset, apiVersion });
