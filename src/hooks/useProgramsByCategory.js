@@ -1,31 +1,22 @@
 import { useEffect, useState } from 'react';
 import { client } from '../lib/sanity';
 
-export function useProgramsByCategory(category) {
+export function useAllPrograms() {
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!category) return;
-
     setLoading(true);
     setError(null);
 
-    // This query works for both string & reference category fields
-    const query = `
-      *[_type == "program" &&
-        (category == $category || category._ref in *[_type == "category" && title == $category]._id)
-      ]{
-        _id,
-        title,
-        description,
-        "category": category->title
-      }
-    `;
+    const query = `*[_type == "program"]{_id, title, description}`;
 
-    client.fetch(query, { category })
+    console.log('Fetching all programs');
+
+    client.fetch(query)
       .then(data => {
+        console.log('Received programs:', data);
         setPrograms(data);
         setLoading(false);
       })
@@ -34,7 +25,7 @@ export function useProgramsByCategory(category) {
         setError(err);
         setLoading(false);
       });
-  }, [category]);
+  }, []);
 
   return { programs, loading, error };
 }
