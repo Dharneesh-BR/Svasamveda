@@ -33,6 +33,12 @@ const customFetch = async (url, options = {}) => {
 
   return response;
 };
+console.log('Sanity Client Config:', { 
+  projectId, 
+  dataset, 
+  apiVersion,
+  envProjectId: import.meta.env.VITE_SANITY_PROJECT_ID
+});
 
 export const client = createClient({
   projectId,
