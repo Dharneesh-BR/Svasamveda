@@ -1,46 +1,42 @@
-import { useSanityData } from './useSanityData';
+import { useState, useEffect } from "react";
+import { client } from "../lib/sanity";
+
 
 export function useProgramsByCategory(category) {
-  // Validate the category parameter
-  const validCategories = ['mind', 'body', 'soul'];
-  const isValidCategory = validCategories.includes(category);
-  
-  const query = `*[_type == "program" && category == $category] {
-    _id,
-    title,
-    description,
-    category,
-    "imageUrl": image.asset->url,
-    price,
-    duration,
-    "slug": slug.current
-  } | order(title asc)`;
+  const [programs, setPrograms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const { 
-    data: programs, 
-    loading, 
-    error,
-    refetch 
-  } = useSanityData(query, { category });
+  useEffect(() => {
+    if (!category) return;
 
-  // If the category is invalid, return an error immediately
-  if (!isValidCategory) {
-    return {
-      programs: [],
-      loading: false,
-      error: {
-        message: `Invalid category: ${category}. Must be one of: ${validCategories.join(', ')}`,
-        isInvalidCategory: true
-      },
-      refetch: () => Promise.resolve([])
-    };
-  }
+    setLoading(true);
+    setError(null);
 
-  // Return the data with the refetch function
-  return { 
-    programs: programs || [], 
-    loading, 
-    error,
-    refetch
-  };
+    // Universal GROQ query:
+    //  - If category is a string field, matches directly.
+    //  - If category is a reference, resolves and matches category->title.
+    const query = `*[_type == "program" && (
+      category == $category || category->title == $category
+    )]{
+      _id,
+      title,
+      description,
+      // For string categories, just output it
+      // For reference categories, resolve the title
+      "category": coalesce(category->title, category),
+      "imageUrl": image.asset->url,
+      price,
+      duration,
+      "slug": slug.current
+    } | order(title asc)`;
+
+    client
+      .fetch(query, { category })
+      .then((data) => setPrograms(data))
+      .catch((err) => setError(err))
+      .finally(() => setLoading(false));
+  }, [category]);
+
+  return { programs, loading, error };
 }
