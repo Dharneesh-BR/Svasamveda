@@ -14,7 +14,7 @@ export default defineConfig(({ command, mode }) => {
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
-      sourcemap: true,
+      sourcemap: false,
       minify: 'terser',
       chunkSizeWarningLimit: 1000,
       rollupOptions: {

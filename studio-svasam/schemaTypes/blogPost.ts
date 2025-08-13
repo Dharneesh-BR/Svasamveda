@@ -31,7 +31,8 @@ const blogPost: SchemaTypeDefinition = {
         name: 'author',
         type: 'reference',
         title: 'Author',
-        to: [{type: 'author'}]
+        to: [{type: 'author'}],
+        validation: (Rule: Rule) => Rule.required()
       },
       {
         name: 'mainImage',

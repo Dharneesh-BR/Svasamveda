@@ -1,16 +1,18 @@
+import { t } from '../i18n';
+
 export default function Contact() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
       <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">Contact Us</h1>
+        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('contact.title')}</h1>
         
         <div className="space-y-8">
           {/* Contact Form */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-8">Get in Touch</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-8">{t('contact.getInTouch')}</h2>
             <form className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.fullName')}</label>
                 <input
                   type="text"
                   id="name"
@@ -19,7 +21,7 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.emailAddress')}</label>
                 <input
                   type="email"
                   id="email"
@@ -28,7 +30,7 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.phoneNumber')}</label>
                 <input
                   type="tel"
                   id="phone"
@@ -37,7 +39,7 @@ export default function Contact() {
                 />
               </div>
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.subject')}</label>
                 <select
                   id="subject"
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -50,7 +52,7 @@ export default function Contact() {
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.message')}</label>
                 <textarea
                   id="message"
                   rows="4"
@@ -65,14 +67,14 @@ export default function Contact() {
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
-                Send Message
+                {t('contact.sendMessage')}
               </button>
             </form>
           </div>
 
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-8">Contact Information</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-8">{t('contact.contactInfo')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-4">Office Location</h3>
@@ -105,7 +107,7 @@ export default function Contact() {
 
           {/* FAQ */}
           <section className="my-16 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Frequently Asked Questions</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('contact.faq')}</h2>
             <div className="space-y-4">
               <details className="bg-white rounded-xl shadow p-4">
                 <summary className="font-semibold text-indigo-700 cursor-pointer">How do I schedule a wellness session?</summary>

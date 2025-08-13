@@ -1,8 +1,10 @@
+import { t } from '../i18n';
+
 export default function TermsConditions() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
       <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">Terms and Conditions</h1>
+        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('terms.title')}</h1>
         
         <div className="space-y-8">
           {/* Introduction */}
@@ -26,7 +28,7 @@ export default function TermsConditions() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Changes to Terms</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.changesToTerms')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>We reserve the right to modify these Terms and Conditions at any time.</li>
                   <li>Continued use of the website after changes constitutes acceptance of the new terms.</li>
@@ -127,14 +129,14 @@ export default function TermsConditions() {
 
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Contact Us</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.contactUs')}</h2>
             <p className="text-gray-700 mb-4">
-              For any questions regarding these Terms and Conditions, please contact us:
+              {t('terms.contactMessage')}
             </p>
             <div className="space-y-2">
-              <p className="text-gray-600">Email: support@svasam.com</p>
-              <p className="text-gray-600">Phone: +91 1234567890</p>
-              <p className="text-gray-600">Customer Support Hours: Mon-Sat, 10 AM - 7 PM</p>
+              <p className="text-gray-600">{t('terms.email')}</p>
+              <p className="text-gray-600">{t('terms.phone')}</p>
+              <p className="text-gray-600">{t('terms.supportHours')}</p>
             </div>
           </div>
         </div>

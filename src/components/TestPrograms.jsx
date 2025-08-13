@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useProgramsByCategory } from '../hooks/useProgramsByCategory';
+import { t } from '../i18n';
 
 const TestPrograms = () => {
   const [category, setCategory] = useState('mind');
@@ -31,7 +32,7 @@ const TestPrograms = () => {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-4">Test Programs by Category</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('programs.title')}</h2>
         <div className="flex space-x-4 mb-6">
           {['mind', 'body', 'soul'].map((cat) => (
             <button

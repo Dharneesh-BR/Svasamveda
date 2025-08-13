@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 export default function CancellationPolicy() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
@@ -27,7 +29,7 @@ export default function CancellationPolicy() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Emergency Cancellations</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('cancellation.emergencyCancellations')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>In case of genuine emergencies, please inform us as soon as possible.</li>
                   <li>We may provide flexibility in such cases at our discretion.</li>

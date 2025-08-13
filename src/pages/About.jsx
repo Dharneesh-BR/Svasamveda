@@ -1,3 +1,5 @@
+import { t } from '../i18n';
+
 export default function About() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
@@ -20,7 +22,7 @@ export default function About() {
 
           {/* Our Services */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-4">Our Services</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-4">{t('about.services')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-2">Mind Wellness</h3>

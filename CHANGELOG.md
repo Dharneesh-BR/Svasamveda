@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-08-13
+
+### Security
+- Updated esbuild to fix CWE-346 vulnerability
+- Fixed shell script carriage return issues
+
+### Performance
+- Optimized React components by removing inline arrow functions
+- Improved render performance in Store component
+
+### Fixed
+- Added required validation to Sanity blog post author field
+- Fixed Node.js engine compatibility
+- Removed carriage returns from build.sh script
+
+### Added
+- Basic internationalization structure
+- Stable callback functions for better performance
+
+## [1.0.0] - 2025-08-03
+
 ### Added
 - Initial project setup with React, Vite, and Tailwind CSS
 - Sanity.io integration for content management
