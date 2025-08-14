@@ -1,14 +1,24 @@
 import { useNavigate } from 'react-router-dom';
 import { useStoreItems } from '../hooks/useStoreItems';
+import { t } from '../i18n';
+import { useCallback } from 'react';
 
 export default function Store() {
   const navigate = useNavigate();
   const { items, loading, error } = useStoreItems();
 
+  const handleViewDetails = useCallback((slug) => {
+    if (slug) navigate(`/store/${slug}`);
+  }, [navigate]);
+
+  const handleRetry = useCallback(() => {
+    window.location.reload();
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen w-full bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500" aria-label={t('common.loading')}></div>
       </div>
     );
   }
@@ -20,7 +30,7 @@ export default function Store() {
           <h2 className="text-xl font-bold mb-2">Error Loading Store Items</h2>
           <p className="mb-4">{error.message}</p>
           <button 
-            onClick={() => window.location.reload()} 
+            onClick={handleRetry} 
             className="px-4 py-2 bg-accent text-white rounded-lg font-semibold hover:bg-[#704091] transition-colors"
           >
             Try Again
@@ -90,7 +100,7 @@ export default function Store() {
                     </div>
                     <button
                       className="px-4 py-2 bg-accent text-white rounded-lg font-semibold text-sm shadow hover:bg-[#704091] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition"
-                      onClick={() => item.slug ? navigate(`/store/${item.slug}`) : '#'}
+                      onClick={useCallback(() => handleViewDetails(item.slug), [handleViewDetails, item.slug])}
                     >
                       View Details
                     </button>

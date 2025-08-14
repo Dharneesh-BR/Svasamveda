@@ -1,13 +1,15 @@
+import { t } from '../i18n';
+
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
       <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">Privacy Policy</h1>
+        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('privacy.title')}</h1>
         
         <div className="space-y-8">
           {/* Introduction */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-4">Welcome to Svasam Wellness</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-4">{t('privacy.welcome')}</h2>
             <p className="text-gray-700 text-lg">
               At Svasam Wellness, we are committed to protecting your privacy and ensuring the security of your personal information.
             </p>
@@ -15,10 +17,10 @@ export default function PrivacyPolicy() {
 
           {/* Information Collection */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">1. Information We Collect</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('privacy.infoCollect')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Personal Information</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('privacy.personalInfo')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Name and contact information</li>
                   <li>Email address</li>
@@ -27,7 +29,7 @@ export default function PrivacyPolicy() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Usage Information</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('privacy.usageInfo')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Website usage data</li>
                   <li>Device information</li>
@@ -40,10 +42,10 @@ export default function PrivacyPolicy() {
 
           {/* How We Use Information */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">2. How We Use Your Information</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('privacy.howWeUse')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Primary Uses</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('privacy.primaryUses')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>To provide and improve our services</li>
                   <li>To process orders and payments</li>
@@ -52,7 +54,7 @@ export default function PrivacyPolicy() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Marketing</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('privacy.marketing')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>We may send promotional emails with your consent</li>
                   <li>You can opt-out of marketing communications</li>
@@ -64,7 +66,7 @@ export default function PrivacyPolicy() {
 
           {/* Data Protection */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">3. Data Protection</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('privacy.dataProtection')}</h2>
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-4">Security Measures</h3>
@@ -133,7 +135,7 @@ export default function PrivacyPolicy() {
 
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Contact Us</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('privacy.contactUs')}</h2>
             <p className="text-gray-700 mb-4">
               For any questions regarding this Privacy Policy or your data, please contact us:
             </p>

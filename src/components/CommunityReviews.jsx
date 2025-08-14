@@ -1,7 +1,9 @@
+import { t } from '../i18n';
+
 export default function CommunityReviews() {
   return (
     <section className="my-16 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-heading mb-6">Community Reviews</h2>
+      <h2 className="text-2xl font-bold text-heading mb-6">{t('reviews.title')}</h2>
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow p-5">
           <p className="text-main italic mb-2">“Svasam has transformed my daily routine. The Mind sessions are so calming!”</p>

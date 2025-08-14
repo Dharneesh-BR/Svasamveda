@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { t } from '../i18n';
 const MindImg = '/assets/Main page.png';
 const SoulImg = '/assets/Soul icon.png';
 const BodyImg = '/assets/body icon.png';
@@ -26,9 +27,9 @@ const CategoryCard = ({ to, title, description, image, alt }) => (
         <Link 
           to={to} 
           className="flex items-center justify-center group w-full py-2 text-main hover:text-accent transition-colors"
-          aria-label={`Explore ${title} programs`}
+          aria-label={t('categories.exploreAriaLabel', { title })}
         >
-          <span className="mr-2 font-medium">Explore</span>
+          <span className="mr-2 font-medium">{t('categories.explore')}</span>
           <svg 
             className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
             fill="none" 
@@ -48,24 +49,24 @@ export default function Categories() {
   const categories = [
     {
       id: 'mind',
-      title: 'Mind',
-      description: 'The seat of consciousness, thoughts, and emotions. In spirituality, the mind is seen as a powerful tool for transformation and enlightenment.',
+      title: t('categories.mind.title'),
+      description: t('categories.mind.description'),
       image: MindImg,
-      alt: 'Illustration representing the mind and consciousness'
+      alt: t('categories.mind.alt')
     },
     {
       id: 'body',
-      title: 'Body',
-      description: 'The physical vessel that houses our spirit. In spirituality, the body is considered sacred and a temple for our soul\'s journey.',
+      title: t('categories.body.title'),
+      description: t('categories.body.description'),
       image: BodyImg,
-      alt: 'Illustration representing physical health and the body'
+      alt: t('categories.body.alt')
     },
     {
       id: 'soul',
-      title: 'Soul',
-      description: 'The eternal essence of our being. In spirituality, the soul is our true self, the divine spark that connects us to the universe.',
+      title: t('categories.soul.title'),
+      description: t('categories.soul.description'),
       image: SoulImg,
-      alt: 'Illustration representing the soul and spiritual essence'
+      alt: t('categories.soul.alt')
     }
   ];
 
@@ -89,16 +90,16 @@ export default function Categories() {
           <header className="relative mb-12 md:mb-16 rounded-xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-main to-accent opacity-90" />
             <div className="relative z-10 py-16 md:py-24 px-4 sm:px-6 lg:px-8 text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">Discover Your Path</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('categories.title')}</h1>
               <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto">
-                Explore our holistic wellness categories designed to guide you on your journey to inner peace and transformation
+                {t('categories.description')}
               </p>
             </div>
           </header>
 
           {/* Categories Grid */}
           <section aria-labelledby="categories-heading" className="py-8 md:py-12">
-            <h2 id="categories-heading" className="sr-only">Wellness Categories</h2>
+            <h2 id="categories-heading" className="sr-only">{t('categories.heading')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {categories.map((category) => (
                 <CategoryCard

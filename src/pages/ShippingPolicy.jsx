@@ -1,13 +1,15 @@
+import { t } from '../i18n';
+
 export default function ShippingPolicy() {
   return (
     <div className="min-h-screen w-full bg-pink-50">
       <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">Shipping and Delivery Policy</h1>
+        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('shipping.title')}</h1>
         
         <div className="space-y-8">
           {/* Introduction */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-4">Welcome to Svasam Wellness Store</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-4">{t('shipping.welcome')}</h2>
             <p className="text-gray-700 text-lg">
               This policy outlines our shipping and delivery procedures for all products purchased from our store. We strive to provide efficient and reliable delivery services to ensure you receive your wellness products in perfect condition.
             </p>
@@ -15,10 +17,10 @@ export default function ShippingPolicy() {
 
           {/* Shipping Areas */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Shipping Areas</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('shipping.shippingAreas')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Domestic Shipping</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('shipping.domesticShipping')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>We ship to all major cities and towns across India.</li>
                   <li>Shipping charges vary based on location and product weight.</li>
@@ -26,7 +28,7 @@ export default function ShippingPolicy() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">International Shipping</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('shipping.internationalShipping')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Currently available for select countries.</li>
                   <li>Additional customs and import duties may apply.</li>
@@ -38,7 +40,7 @@ export default function ShippingPolicy() {
 
           {/* Shipping Times */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Shipping Times</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('shipping.shippingTimes')}</h2>
             <div className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-4">Processing Time</h3>
@@ -130,7 +132,7 @@ export default function ShippingPolicy() {
 
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">Contact Us</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('shipping.contactUs')}</h2>
             <p className="text-gray-700 mb-4">
               For any questions regarding shipping and delivery, please contact our customer support team:
             </p>

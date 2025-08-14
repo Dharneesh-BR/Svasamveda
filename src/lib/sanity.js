@@ -13,13 +13,15 @@ const projectId = validateEnvVar('VITE_SANITY_PROJECT_ID');
 const dataset = validateEnvVar('VITE_SANITY_DATASET');
 const apiVersion = import.meta.env.VITE_SANITY_API_VERSION || '2023-07-21';
 
-// ✅ Optional: Warn if projectId looks wrong
-if (projectId.includes('.api.sanity.io')) {
-  throw new Error(`❌ VITE_SANITY_PROJECT_ID must be only the ID (e.g., "n5smwbzi"), not a full URL`);
+// ✅ Fix: Clean projectId to prevent duplicate in URL
+const cleanProjectId = projectId.replace(/\.api\.sanity\.io.*$/, '').trim();
+
+if (cleanProjectId !== projectId) {
+  console.warn('⚠️ Fixed malformed VITE_SANITY_PROJECT_ID:', projectId, '→', cleanProjectId);
 }
 
 const config = {
-  projectId,
+  projectId: cleanProjectId,
   dataset,
   apiVersion,
   useCdn: import.meta.env.VITE_SANITY_USE_CDN === 'true',
