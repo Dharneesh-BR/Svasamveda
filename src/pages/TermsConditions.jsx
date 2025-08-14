@@ -9,18 +9,18 @@ export default function TermsConditions() {
         <div className="space-y-8">
           {/* Introduction */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-4">Welcome to Svasam Wellness</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-4">{t('terms.welcome')}</h2>
             <p className="text-gray-700 text-lg">
-              These Terms and Conditions outline the rules and regulations for the use of Svasam Wellness's Website and Services.
+              {t('terms.introText')}
             </p>
           </div>
 
           {/* Acceptance of Terms */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">1. Acceptance of Terms</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.acceptanceOfTerms')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Access to Website</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.accessToWebsite')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>By accessing this website, you agree to be bound by these Terms and Conditions.</li>
                   <li>Our services are only available to individuals who can form legally binding contracts.</li>
@@ -39,10 +39,10 @@ export default function TermsConditions() {
 
           {/* User Obligations */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">2. User Obligations</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.userObligations')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Account Security</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.accountSecurity')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Keep your account credentials secure.</li>
                   <li>Notify us immediately of any unauthorized access.</li>
@@ -50,7 +50,7 @@ export default function TermsConditions() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Prohibited Activities</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.prohibitedActivities')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Do not use our services for illegal purposes.</li>
                   <li>Do not interfere with our website's operations.</li>
@@ -62,10 +62,10 @@ export default function TermsConditions() {
 
           {/* Services */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">3. Services</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.services')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Wellness Services</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.wellnessServices')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Services are subject to availability.</li>
                   <li>Prices are subject to change without notice.</li>
@@ -73,7 +73,7 @@ export default function TermsConditions() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Store Products</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.storeProducts')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Product descriptions are for informational purposes only.</li>
                   <li>Stock availability is not guaranteed.</li>
@@ -85,10 +85,10 @@ export default function TermsConditions() {
 
           {/* Intellectual Property */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">4. Intellectual Property</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.intellectualProperty')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Content Ownership</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.contentOwnership')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>All content on the website is owned by Svasam Wellness.</li>
                   <li>You may not reproduce or distribute our content without permission.</li>
@@ -96,7 +96,7 @@ export default function TermsConditions() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Trademarks</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.trademarks')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Svasam Wellness and related logos are trademarks.</li>
                   <li>You may not use our trademarks without permission.</li>
@@ -107,10 +107,10 @@ export default function TermsConditions() {
 
           {/* Limitation of Liability */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">5. Limitation of Liability</h2>
+            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('terms.limitationOfLiability')}</h2>
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Disclaimer of Warranties</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.disclaimerOfWarranties')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>Services are provided "as is" and "as available".</li>
                   <li>No warranties are made regarding service availability.</li>
@@ -118,7 +118,7 @@ export default function TermsConditions() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">Limitation of Damages</h3>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('terms.limitationOfDamages')}</h3>
                 <ul className="list-disc ml-6 text-gray-600 space-y-2">
                   <li>We are not liable for any indirect or consequential damages.</li>
                   <li>Our liability is limited to the amount paid for services.</li>
