@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CartProvider } from './contexts/CartContext';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import Logo from '/icons/Logo icon.png';
@@ -23,6 +24,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Sessions from './pages/Sessions';
 import Blog from './pages/Blog';
 import AllArticles from './pages/AllArticles';
+import ProgramDetail from './pages/ProgramDetail';
 // Mind subpages
 import ManifestAbundance from './pages/mind/ManifestAbundance';
 import ReduceStress from './pages/mind/ReduceStress';
@@ -46,56 +48,62 @@ import Bracelets from './pages/store/Bracelets';
 import Cart from './pages/Cart';
 import Favorites from './pages/Favorites';
 import CoachingHistory from './pages/CoachingHistory';
+import CartIcon from './components/CartIcon';
+import CartDrawer from './components/Cart';
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <ScrollToTop />
-      <div className="min-h-screen bg-background">
-        <div>
-          <Routes>
-        <Route path="/" element={<Categories />} />
-        <Route path="/mind" element={<Mind />} />
-        <Route path="/mind/manifest-abundance" element={<ManifestAbundance />} />
-        <Route path="/mind/reduce-stress" element={<ReduceStress />} />
-        <Route path="/mind/super-brain" element={<SuperBrain />} />
-        <Route path="/mind/self-sessions" element={<SelfSessionsMind />} />
-        <Route path="/body" element={<Body />} />
-        <Route path="/body/yoga" element={<Yoga />} />
-        <Route path="/body/nutrition" element={<Nutrition />} />
-        <Route path="/body/naturopathy" element={<Naturopathy />} />
-        <Route path="/body/self-sessions" element={<SelfSessionsBody />} />
-        <Route path="/soul" element={<Soul />} />
-        <Route path="/soul/trauma-healing" element={<TraumaHealing />} />
-        <Route path="/soul/sound-therapy" element={<SoundTherapy />} />
-        <Route path="/soul/breathwork" element={<Breathwork />} />
-        <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} />
-        <Route path="/store" element={<Store />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/refund-and-cancellation" element={<CancellationPolicy />} />
-        <Route path="/shipping-and-delivery" element={<ShippingPolicy />} />
-        <Route path="/terms-and-conditions" element={<TermsConditions />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/sessions" element={<Sessions />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/all-articles" element={<AllArticles />} />
-        <Route path="/store/money-store" element={<MoneyStore />} />
-        <Route path="/test-programs" element={<TestPrograms />} />
-        <Route path="/store/rudrakshas" element={<Rudrakshas />} />
-        <Route path="/store/bracelets" element={<Bracelets />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/favorites" element={<Favorites />} />
-        <Route path="/coaching-history" element={<CoachingHistory />} />
-        </Routes>
+    <CartProvider>
+      <Router>
+        <ScrollToTop />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <CartDrawer />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Categories />} />
+              <Route path="/mind" element={<Mind />} />
+              <Route path="/mind/manifest-abundance" element={<ManifestAbundance />} />
+              <Route path="/mind/reduce-stress" element={<ReduceStress />} />
+              <Route path="/mind/super-brain" element={<SuperBrain />} />
+              <Route path="/mind/self-sessions" element={<SelfSessionsMind />} />
+              <Route path="/body" element={<Body />} />
+              <Route path="/body/yoga" element={<Yoga />} />
+              <Route path="/body/nutrition" element={<Nutrition />} />
+              <Route path="/body/naturopathy" element={<Naturopathy />} />
+              <Route path="/body/self-sessions" element={<SelfSessionsBody />} />
+              <Route path="/soul" element={<Soul />} />
+              <Route path="/soul/trauma-healing" element={<TraumaHealing />} />
+              <Route path="/soul/sound-therapy" element={<SoundTherapy />} />
+              <Route path="/soul/breathwork" element={<Breathwork />} />
+              <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} />
+              <Route path="/store" element={<Store />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/refund-and-cancellation" element={<CancellationPolicy />} />
+              <Route path="/shipping-and-delivery" element={<ShippingPolicy />} />
+              <Route path="/terms-and-conditions" element={<TermsConditions />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/sessions" element={<Sessions />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/all-articles" element={<AllArticles />} />
+              <Route path="/store/money-store" element={<MoneyStore />} />
+              <Route path="/test-programs" element={<TestPrograms />} />
+              <Route path="/store/rudrakshas" element={<Rudrakshas />} />
+              <Route path="/store/bracelets" element={<Bracelets />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/coaching-history" element={<CoachingHistory />} />
+              <Route path="/programs/:slug" element={<ProgramDetail />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
-      </div>
-      <Footer />
-    </Router>
+      </Router>
+    </CartProvider>
   );
 }
 

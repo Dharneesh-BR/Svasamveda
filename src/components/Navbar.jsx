@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUser, logoutUser } from '../utils/auth';
 import SvasamLogo from '/icons/svasam logo copy.png';
+import CartIcon from './CartIcon';
 
 // Custom Link component that reloads the page
 const ReloadLink = ({ to, children, ...props }) => {
@@ -92,16 +93,9 @@ export default function Navbar() {
       </ul>
       <div className="flex items-center gap-4">
         {/* Cart Icon */}
-        <button
-          onClick={() => navigate('/cart')}
-          className="p-2 rounded-full hover:bg-accent/10 focus:outline-none focus:ring-2 focus:ring-accent"
-          aria-label="View Cart"
-        >
-          {/* Heroicons solid shopping cart SVG */}
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7 text-main">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.836l.272 1.016m0 0L6.6 8.25m-.505-3.398l1.772 6.617A2.25 2.25 0 009.06 13.5h7.19a2.25 2.25 0 002.193-1.783l1.218-6.09A1.125 1.125 0 0018.56 4.5H6.6m0 0L5.995 2.852A1.125 1.125 0 004.91 2.25H2.25m16.5 16.5a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0zm-10.5 0a1.125 1.125 0 11-2.25 0 1.125 1.125 0 012.25 0z" />
-          </svg>
-        </button>
+        <div className="relative">
+          <CartIcon />
+        </div>
 
         {user ? (
           <div className="flex items-center gap-2">

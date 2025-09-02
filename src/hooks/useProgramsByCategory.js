@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { client } from '../lib/sanity';
+import { client } from '../sanityClient';
 
 // Define valid categories to prevent invalid queries
 const VALID_CATEGORIES = ['mind', 'body', 'soul'];
@@ -43,7 +43,7 @@ export function useProgramsByCategory(category) {
         "imageUrl": image.asset->url,
         price,
         duration,
-        "slug": slug.current
+        "slug": select(slug.current != null => slug.current, _id) // Fallback to _id if no slug
       } | order(title asc)`;
 
       if (import.meta.env.DEV) {
