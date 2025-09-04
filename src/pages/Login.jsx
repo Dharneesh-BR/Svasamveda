@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { signIn, auth } from '../firebase';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -48,17 +49,34 @@ export default function Login() {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    setErrors({}); // Clear previous errors
+    
     try {
-      // In a real app, you would make an API call here
-      console.log('Logging in with:', formData);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { email, password } = formData;
+      const result = await signIn(email, password);
       
-      // Redirect to home or dashboard after successful login
-      navigate('/');
+      if (result.success) {
+        // Redirect to home page after successful login
+        navigate('/');
+      } else {
+        // Handle specific Firebase auth errors
+        let errorMessage = 'Login failed. Please check your email and password.';
+        
+        if (result.error.includes('auth/user-not-found')) {
+          errorMessage = 'No account found with this email.';
+        } else if (result.error.includes('auth/wrong-password')) {
+          errorMessage = 'Incorrect password. Please try again.';
+        } else if (result.error.includes('auth/too-many-requests')) {
+          errorMessage = 'Too many failed attempts. Please try again later.';
+        } else if (result.error.includes('auth/user-disabled')) {
+          errorMessage = 'This account has been disabled. Please contact support.';
+        }
+        
+        setErrors({ submit: errorMessage });
+      }
     } catch (error) {
       console.error('Login failed:', error);
-      setErrors({ submit: 'Login failed. Please check your credentials.' });
+      setErrors({ submit: 'An unexpected error occurred. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -142,10 +160,13 @@ export default function Login() {
                 </label>
               </div>
 
-              <div className="text-sm">
-                <a href="#" className="font-medium text-accent hover:text-main">
-                  Forgot your password?
-                </a>
+              <div className="flex justify-between text-sm">
+                <Link to="/signup" className="font-medium text-main hover:text-main-dark">
+                  Don't have an account? Sign up
+                </Link>
+                <Link to="/reset-password" className="font-medium text-gray-600 hover:text-gray-500">
+                  Forgot password?
+                </Link>
               </div>
             </div>
 

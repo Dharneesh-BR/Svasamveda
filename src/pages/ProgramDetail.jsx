@@ -163,28 +163,6 @@ function ProgramDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb */}
-      <div className="bg-white py-4 border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-sm">
-              <li>
-                <a href="/" className="text-gray-500 hover:text-gray-700">Home</a>
-              </li>
-              <li>
-                <span className="mx-2 text-gray-400">/</span>
-              </li>
-              <li>
-                <a href="/programs" className="text-gray-500 hover:text-gray-700">Programs</a>
-              </li>
-              <li>
-                <span className="mx-2 text-gray-400">/</span>
-              </li>
-              <li className="text-gray-600 font-medium">{program.title}</li>
-            </ol>
-          </nav>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -327,7 +305,7 @@ function ProgramDetail() {
         </div>
 
         {/* Enrollment Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 sticky bottom-4 border-t-4 border-main">
+        <div className="bg-white rounded-xl shadow-md p-8 mt-12 border-t-4 border-main">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Ready to get started?</h2>
@@ -348,7 +326,7 @@ function ProgramDetail() {
               onClick={handleAddToCart}
               className="w-full md:w-auto bg-main hover:bg-main-dark text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
             >
-              Add to Cart
+              Enroll Now
             </button>
           </div>
         </div>

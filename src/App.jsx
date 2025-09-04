@@ -15,6 +15,7 @@ import Soul from './pages/Soul';
 import Store from './pages/Store';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import ResetPassword from './pages/ResetPassword';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import CancellationPolicy from './pages/CancellationPolicy';
@@ -93,6 +94,7 @@ function App() {
               <Route path="/store/bracelets" element={<Bracelets />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/favorites" element={<Favorites />} />
