@@ -3,18 +3,23 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.webmanifest',
-  // Add more assets or routes as needed
+  '/styles.css',      // add your CSS files
+  '/main.js',         // add your JS files
+  '/favicon.ico',     // app icon
+  '/images/logo.png', // any images
+  // add other routes or assets
 ];
 
-self.addEventListener('install', event => {
+// Install: cache files
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting();
 });
 
-self.addEventListener('activate', event => {
+// Activate: clean old caches
+self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
@@ -22,12 +27,19 @@ self.addEventListener('activate', event => {
       );
     })
   );
+  self.clients.claim();
 });
 
-self.addEventListener('fetch', event => {
+// Fetch: serve from cache first
+self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      return response || fetch(event.request);
+      return response || fetch(event.request).catch(() => {
+        // fallback if offline and resource not cached
+        if (event.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
+      });
     })
   );
 });
