@@ -2,10 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useProgramsByCategory } from '../hooks/useProgramsByCategory';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay, Grid } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import 'swiper/css/grid';
 
 const TestPrograms = () => {
   const [allPrograms, setAllPrograms] = useState([]);
@@ -75,13 +76,35 @@ const TestPrograms = () => {
         <div className="relative">
           <Swiper
             ref={swiperRef}
-            modules={[Navigation, Pagination, Autoplay]}
+            modules={[Navigation, Pagination, Autoplay, Grid]}
             spaceBetween={30}
             slidesPerView={1}
+            grid={{
+              rows: 2,
+              fill: 'row'
+            }}
             breakpoints={{
-              640: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
+              640: { 
+                slidesPerView: 1,
+                grid: {
+                  rows: 2,
+                  fill: 'row'
+                }
+              },
+              768: { 
+                slidesPerView: 2,
+                grid: {
+                  rows: 2,
+                  fill: 'row'
+                }
+              },
+              1024: { 
+                slidesPerView: 3,
+                grid: {
+                  rows: 2,
+                  fill: 'row'
+                }
+              },
             }}
             autoplay={{
               delay: 5000,
@@ -134,13 +157,13 @@ const TestPrograms = () => {
           {/* Custom Pagination */}
           <div className="flex justify-center mt-8">
             <div className="programs-pagination flex space-x-2">
-              {Array.from({ length: Math.ceil(allPrograms.length / 3) }).map((_, index) => (
+              {Array.from({ length: Math.ceil(allPrograms.length / 6) }).map((_, index) => (
                 <span 
                   key={index}
                   className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    index === Math.floor(activeIndex) ? 'bg-main w-6' : 'bg-gray-300'
+                    index === Math.floor(activeIndex / 6) ? 'bg-main w-6' : 'bg-gray-300'
                   }`}
-                  onClick={() => swiperRef.current?.swiper.slideTo(index * 3)}
+                  onClick={() => swiperRef.current?.swiper.slideTo(index * 6)}
                 />
               ))}
             </div>

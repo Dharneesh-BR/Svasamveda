@@ -10,7 +10,8 @@
     "preview:prod": "vite preview --mode production --port 4173",
     "test:prod": "npm run build:prod && npm run preview:prod",
     "vercel-build": "node vercel-build.js",
-    "debug:modules": "echo 'Checking installed modules...' && ls -la node_modules/tailwindcss && ls -la node_modules/postcss && ls -la node_modules/autoprefixer"
+    "debug:modules": "echo 'Checking installed modules...' && ls -la node_modules/tailwindcss && ls -la node_modules/postcss && ls -la node_modules/autoprefixer",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "engines": {
     "node": ">=18.0.0"
