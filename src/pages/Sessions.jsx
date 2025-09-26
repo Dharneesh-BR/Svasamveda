@@ -1,36 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useProgramsByCategory } from '../hooks/useProgramsByCategory';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSessions } from '@/hooks/useSessions';
 
 function Sessions() {
-  const [allPrograms, setAllPrograms] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch programs for each category
-  const { programs: mindPrograms, loading: mindLoading } = useProgramsByCategory('mind');
-  const { programs: bodyPrograms, loading: bodyLoading } = useProgramsByCategory('body');
-  const { programs: soulPrograms, loading: soulLoading } = useProgramsByCategory('soul');
-
-  useEffect(() => {
-    if (!mindLoading && !bodyLoading && !soulLoading) {
-      try {
-        // Combine all programs
-        const combined = [
-          ...(mindPrograms || []),
-          ...(bodyPrograms || []),
-          ...(soulPrograms || [])
-        ];
-        setAllPrograms(combined);
-        setError(null);
-      } catch (err) {
-        console.error('Error combining programs:', err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-  }, [mindLoading, bodyLoading, soulLoading, mindPrograms, bodyPrograms, soulPrograms]);
+  const { sessions, loading, error } = useSessions();
 
   if (loading) {
     return (
@@ -62,72 +35,76 @@ function Sessions() {
     <div className="min-h-screen w-full bg-background">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-main mb-4">Our Wellness Programs</h1>
+          <h1 className="text-4xl font-bold text-main mb-4">Sessions</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover transformative programs designed to nurture your mind, body, and soul.
+            Listen or watch guided content designed to nurture your mind, body, and soul.
           </p>
         </div>
 
-        {/* Programs Grid */}
+        {/* Sessions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {allPrograms.map((program) => (
-            <Link 
-              to={`/programs/${program.slug}`} 
-              key={program._id}
+          {sessions.map((session) => (
+            <div 
+              key={session._id}
               className="group block h-full"
             >
               <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-                <div className="relative h-48 bg-gray-100">
-                  {program.imageUrl ? (
-                    <img
-                      src={program.imageUrl}
-                      alt={program.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                <div className="relative bg-gray-100">
+                  {session.mediaType === 'audio' && session.fileUrl ? (
+                    <div className="p-4">
+                      <audio controls className="w-full" src={session.fileUrl} preload="none" />
+                    </div>
+                  ) : session.mediaType === 'video' && session.fileUrl ? (
+                    <div className="aspect-video bg-black">
+                      <video controls className="w-full h-full" src={session.fileUrl} preload="none" />
+                    </div>
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
-                      <span className="text-gray-400">No image available</span>
+                    <div className="w-full h-48 bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
+                      <span className="text-gray-400">No media available</span>
                     </div>
                   )}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
-                    <span className="inline-block px-3 py-1 text-xs font-semibold text-white bg-main rounded-full">
-                      {program.category}
-                    </span>
-                  </div>
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-main transition-colors">
-                    {program.title}
+                    {session.title || 'Untitled session'}
                   </h3>
                   <p className="text-gray-600 mb-4 flex-grow line-clamp-3">
-                    {program.description}
+                    {session.description || 'No description'}
                   </p>
                   <div className="mt-auto pt-4 border-t border-gray-100">
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-main">
-                        {program.price ? `₹${program.price}` : 'Free'}
+                      <span className="text-sm font-medium text-main capitalize">
+                        {session.mediaType || 'unknown'}
                       </span>
-                      <span className="inline-flex items-center text-sm text-gray-500">
-                        View details
-                        <svg 
-                          className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform"
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24"
+                      {session.fileUrl ? (
+                        <a 
+                          href={session.fileUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center text-sm text-gray-500 hover:text-main"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </span>
+                          Open file
+                          <svg 
+                            className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform"
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <span className="text-sm text-gray-400">No file</span>
+                      )}
                     </div>
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
-        {/* Categories Section */}
+        {/* Categories Section (optional keep) */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-12">
           <h2 className="text-2xl font-bold text-main mb-8 text-center">Explore by Category</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
