@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
 import Navbar from './components/Navbar';
+import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
 import Logo from '/icons/Logo icon.png';
 
@@ -96,9 +97,9 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/coaching-history" element={<CoachingHistory />} />
+              <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
+              <Route path="/favorites" element={<RequireAuth><Favorites /></RequireAuth>} />
+              <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
             </Routes>
           </main>

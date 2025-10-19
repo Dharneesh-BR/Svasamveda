@@ -326,7 +326,7 @@ function ProgramDetail() {
               onClick={handleAddToCart}
               className="w-full md:w-auto bg-main hover:bg-main-dark text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
             >
-              Enroll Now
+              Add to Cart
             </button>
           </div>
         </div>

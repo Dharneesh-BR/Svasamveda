@@ -66,15 +66,7 @@ const Cart = () => {
                         <p className="mt-1 text-sm text-gray-500">
                           Start adding some items to your cart
                         </p>
-                        <div className="mt-6">
-                          <button
-                            type="button"
-                            onClick={() => setIsOpen(false)}
-                            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-main hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
-                          >
-                            Continue Shopping
-                          </button>
-                        </div>
+                        {/* Continue Shopping button removed as requested */}
                       </div>
                     ) : (
                       <ul className="-my-6 divide-y divide-gray-200">
@@ -160,18 +152,7 @@ const Cart = () => {
                       Clear Cart
                     </button>
                   </div>
-                  <div className="mt-6 flex justify-center text-sm text-center text-gray-500">
-                    <p>
-                      or{' '}
-                      <button
-                        type="button"
-                        className="text-indigo-600 font-medium hover:text-indigo-500"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        Continue Shopping<span aria-hidden="true"> &rarr;</span>
-                      </button>
-                    </p>
-                  </div>
+                  {/* Continue Shopping link removed as requested */}
                 </div>
               )}
             </div>

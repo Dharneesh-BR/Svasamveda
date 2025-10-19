@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
@@ -117,4 +117,56 @@ export const resetPassword = async (email) => {
   }
 };
 
-export { auth, db };
+ const googleProvider = new GoogleAuthProvider();
+ const facebookProvider = new FacebookAuthProvider();
+
+ // Sign in with Google
+ export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    await setDoc(
+      doc(db, 'users', user.uid),
+      {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        mobile: '',
+        photoURL: user.photoURL || '',
+        provider: 'google',
+        emailVerified: user.emailVerified,
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
+    return { success: true, user };
+  } catch (error) {
+  }
+};
+
+ // Sign in with Facebook
+  export const signInWithFacebook = async () => {
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+      await setDoc(
+        doc(db, 'users', user.uid),
+        {
+          uid: user.uid,
+          name: user.displayName || '',
+          email: user.email || '',
+          mobile: '',
+          photoURL: user.photoURL || '',
+          provider: 'facebook',
+          emailVerified: user.emailVerified,
+          updatedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
+      return { success: true, user };
+    } catch (error) {
+      return { success: false, error: error.code || error.message };
+    }
+  };
+
+  export { auth, db };
