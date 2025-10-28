@@ -3,13 +3,13 @@
   publish = "dist"
   functions = "netlify/functions"
 
-# ✅ Allow API calls to functions without being caught by SPA redirect
+# Ensure Netlify Functions route properly
 [[redirects]]
   from = "/.netlify/functions/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-# ✅ Then handle SPA (React) routing
+# ✅ Catch-all redirect for React Router (Fixes 404 on /mind and others)
 [[redirects]]
   from = "/*"
   to = "/index.html"
