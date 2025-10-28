@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
 import Logo from '/icons/Logo icon.png';
+import Checkout from './pages/Checkout';
 
 // Import TestPrograms component for development
 import TestPrograms from './components/TestPrograms';
@@ -101,6 +102,7 @@ function App() {
               <Route path="/favorites" element={<RequireAuth><Favorites /></RequireAuth>} />
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
+              <Route path="/checkout" element={<Checkout />} />
             </Routes>
           </main>
           <Footer />

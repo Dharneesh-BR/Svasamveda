@@ -1,68 +1,39 @@
-const Razorpay = require('razorpay');
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
-
-function response(statusCode, data) {
-  return {
-    statusCode,
-    headers: {
-      'Content-Type': 'application/json',
-      ...corsHeaders,
-    },
-    body: JSON.stringify(data),
-  };
-}
-
-exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: corsHeaders,
-      body: '',
-    };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return response(405, { error: 'Method Not Allowed' });
-  }
-
-  let payload;
+const handleCheckout = async () => {
   try {
-    payload = JSON.parse(event.body || '{}');
-  } catch (e) {
-    return response(400, { error: 'Invalid JSON body' });
-  }
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
 
-  const { amount, currency = 'INR', receipt, notes } = payload;
-
-  if (!amount || typeof amount !== 'number' || !Number.isInteger(amount) || amount <= 0) {
-    return response(400, { error: 'amount (integer, in smallest currency unit) is required' });
-  }
-
-  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-    return response(500, { error: 'Razorpay environment variables not configured' });
-  }
-
-  const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-  });
-
-  try {
-    const order = await razorpay.orders.create({
-      amount,
-      currency,
-      receipt: receipt || `rcpt_${Date.now()}`,
-      notes,
+    const response = await axios.post("/.netlify/functions/create-order", {
+      amount: cartTotal * 100, // Razorpay expects amount in paise
+      currency: "INR",
     });
 
-    return response(200, { success: true, order });
-  } catch (err) {
-    const status = err?.statusCode && Number.isInteger(err.statusCode) ? err.statusCode : 500;
-    return response(status, { success: false, error: err?.message || 'Failed to create order' });
+    const { order } = response.data;
+    console.log("Order response:", order); // Check this log!
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Svasam Wellness Pvt. Ltd.",
+      description: "Program Purchase",
+      order_id: order.id,
+      handler: function (response) {
+        alert("✅ Payment successful!");
+        console.log("Payment details:", response);
+        clearCart(); // Empty cart after successful payment
+      },
+      theme: {
+        color: "#8B1F7A",
+      },
+    };
+
+    const razor = new window.Razorpay(options);
+    razor.open();
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Something went wrong during checkout!");
   }
 };
