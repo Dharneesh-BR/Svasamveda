@@ -2,6 +2,8 @@
 import React from "react";
 import axios from "axios";
 import { useCart } from "../contexts/CartContext";
+import { auth, db } from "../firebase";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
@@ -35,10 +37,36 @@ const Checkout = () => {
         name: "Svasam Wellness Pvt. Ltd.",
         description: "Program Purchase",
         order_id: order.id,
-        handler: function (response) {
-          alert("✅ Payment successful!");
-          console.log("Payment details:", response);
-          clearCart(); // Empty cart after successful payment
+        handler: async function (response) {
+          try {
+            const user = auth.currentUser;
+            if (user) {
+              await addDoc(collection(db, 'users', user.uid, 'orders'), {
+                amount: order.amount / 100,
+                currency: order.currency,
+                gateway: 'razorpay',
+                razorpay: {
+                  orderId: order.id,
+                  paymentId: response.razorpay_payment_id,
+                  signature: response.razorpay_signature,
+                },
+                items: cart.map(i => ({
+                  id: i.id,
+                  title: i.title,
+                  price: i.price,
+                  quantity: i.quantity,
+                  image: i.image || null,
+                })),
+                createdAt: serverTimestamp(),
+                status: 'paid',
+              });
+            }
+            alert("✅ Payment successful!");
+          } catch (e) {
+            console.error('Failed to save order:', e);
+          } finally {
+            clearCart();
+          }
         },
         prefill: {
           name: "Customer Name",

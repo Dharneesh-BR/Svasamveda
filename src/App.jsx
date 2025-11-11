@@ -5,6 +5,7 @@ import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
 import Logo from '/icons/Logo icon.png';
 import Checkout from './pages/Checkout';
+import Dashboard from './pages/Dashboard';
 
 // Import TestPrograms component for development
 import TestPrograms from './components/TestPrograms';
@@ -45,8 +46,16 @@ import Breathwork from './pages/soul/Breathwork';
 import SelfSessionsSoul from './pages/soul/SelfSessions';
 // Store subpages
 import MoneyStore from './pages/store/MoneyStore';
-import Rudrakshas from './pages/store/Rudrakshas';
+import Rudrakshas from './pages/store/Rudraksha';
 import Bracelets from './pages/store/Bracelets';
+import Murti from './pages/store/Murti';
+import Anklet from './pages/store/Anklet';
+import Frames from './pages/store/Frames';
+import Karungali from './pages/store/Karungali';
+import Zodiac from './pages/store/Zodiac';
+import Pyrite from './pages/store/Pyrite';
+import Gemstones from './pages/store/Gemstones';
+import Pendant from './pages/store/Pendant';
 // Cart, Favorites, Coaching History
 import Cart from './pages/Cart';
 import Favorites from './pages/Favorites';
@@ -92,8 +101,17 @@ function App() {
               <Route path="/all-articles" element={<AllArticles />} />
               <Route path="/store/money-store" element={<MoneyStore />} />
               <Route path="/test-programs" element={<TestPrograms />} />
+              <Route path="/store/rudraksha" element={<Rudrakshas />} />
               <Route path="/store/rudrakshas" element={<Rudrakshas />} />
               <Route path="/store/bracelets" element={<Bracelets />} />
+              <Route path="/store/murti" element={<Murti />} />
+              <Route path="/store/anklet" element={<Anklet />} />
+              <Route path="/store/frames" element={<Frames />} />
+              <Route path="/store/karungali" element={<Karungali />} />
+              <Route path="/store/zodiac" element={<Zodiac />} />
+              <Route path="/store/pyrite" element={<Pyrite />} />
+              <Route path="/store/gemstones" element={<Gemstones />} />
+              <Route path="/store/pendant" element={<Pendant />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
@@ -103,6 +121,7 @@ function App() {
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
             </Routes>
           </main>
           <Footer />

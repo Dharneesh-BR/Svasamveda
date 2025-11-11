@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { CodeInput } from '@sanity/code-input'
 
 export default defineType({
   name: 'program',

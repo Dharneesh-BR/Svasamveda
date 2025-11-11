@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUser, logoutUser } from '../utils/auth';
+import { auth, logOut } from '../firebase';
 import SvasamLogo from '/icons/svasam logo copy.png';
 import CartIcon from './CartIcon';
 
@@ -23,7 +23,7 @@ const ReloadLink = ({ to, children, ...props }) => {
 
 export default function Navbar() {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => auth.currentUser);
   const navigate = useNavigate();
 
   // Function to refresh the page
@@ -32,34 +32,16 @@ export default function Navbar() {
     window.location.reload();
   };
 
-  // Listen for auth changes and refresh when they occur
+  // Listen for Firebase auth changes
   useEffect(() => {
-    const handleAuthChange = () => {
-      setUser(getUser());
-      refreshPage();
-    };
-
-    // Listen to storage events for login/logout in other tabs
-    window.addEventListener('storage', handleAuthChange);
-    
-    // Initial auth check
-    setUser(getUser());
-
-    return () => {
-      window.removeEventListener('storage', handleAuthChange);
-    };
-  }, [navigate]);
-
-  useEffect(() => {
-    setUser(getUser());
-    // Listen to storage events for login/logout in other tabs
-    const handler = () => setUser(getUser());
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
+    const unsub = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+    return () => unsub();
   }, []);
 
-  const handleLogout = () => {
-    logoutUser();
+  const handleLogout = async () => {
+    await logOut();
     setUser(null);
     refreshPage();
   };
@@ -101,8 +83,9 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <span className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-100 via-purple-200 to-blue-100 text-main font-semibold shadow-lg border border-purple-200">
               <svg className="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-              {user.name || 'User'}
+              {user?.displayName || user?.email || 'User'}
             </span>
+            <Link to="/dashboard" className="px-4 py-2 rounded-full bg-purple-100 text-main font-semibold shadow border border-purple-200 hover:bg-purple-200 transition">Dashboard</Link>
             <button onClick={handleLogout} className="ml-2 px-4 py-2 rounded-full bg-red-100 text-red-700 font-semibold shadow border border-red-200 hover:bg-red-200 transition">Logout</button>
           </div>
         ) : (
