@@ -4,11 +4,11 @@ import { t } from '../i18n';
 
 function Blog() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('blog.title')}</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t('blog.title')}</h1>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">
             {t('blog.description')}
           </p>
         </div>
@@ -18,16 +18,16 @@ function Blog() {
         <div className="mt-16 text-center">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">{t('blog.stayUpdated')}</h3>
           <p className="text-gray-700 mb-6">{t('blog.subscribeText')}</p>
-          <form className="flex gap-2 max-w-md mx-auto">
+          <form className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto">
             <input 
               type="email" 
               placeholder={t('blog.emailPlaceholder')}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="flex-1 px-3 py-2 sm:px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
               required
             />
             <button 
               type="submit"
-              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+              className="bg-main text-white px-4 py-2 sm:px-6 rounded-lg hover:brightness-105 transition-colors text-sm sm:text-base"
             >
               {t('blog.subscribe')}
             </button>

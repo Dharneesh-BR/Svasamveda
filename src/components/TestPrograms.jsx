@@ -68,7 +68,7 @@ const TestPrograms = () => {
   return (
     <div className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-main mb-4">Our Programs</h2>
+        <h2 className="text-3xl font-bold text-center text-main mb-4">Featured Sessions</h2>
         <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
           Explore our carefully curated programs designed to nurture your mind, body, and soul
         </p>

@@ -3,13 +3,27 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useStoreItems } from '../hooks/useStoreItems';
 import { useCart } from '../contexts/CartContext';
 import { t } from '../i18n';
-const MindImg = '/assets/Main page.png';
-const SoulImg = '/assets/Soul icon.png';
-const BodyImg = '/assets/body icon.png';
-const Logo = '/icons/Logo icon.png';
+const BannerImg = '/assets/Main page.png';
+const MindImg = '/assets/Mind.png';
+const SoulImg = '/assets/New soul.png';
+const BodyImg = '/assets/Body.png';
+const Logo = '/assets/Svasam vector 2 New.png';
 import FAQSection from '../components/FAQSection';
 import TestPrograms from '../components/TestPrograms';
 import Testimonials from '../components/Testimonials';
+
+// Import Chevron icons
+const ChevronLeft = ({ className }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+  </svg>
+);
+
+const ChevronRight = ({ className }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+  </svg>
+);
 
 const CategoryCard = ({ to, title, description, image, alt }) => (
   <article className="flex flex-col items-center h-full">
@@ -152,15 +166,6 @@ export default function Categories() {
 
   return (
     <main className="relative min-h-screen w-full bg-background/80">
-      {/* Decorative background logo */}
-      <img
-        src={Logo}
-        alt=""
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl opacity-40 z-0 pointer-events-none select-none"
-        draggable={false}
-        aria-hidden="true"
-      />
-      
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Spacer with semantic meaning */}
@@ -170,8 +175,8 @@ export default function Categories() {
           <header className="relative mb-12 md:mb-16 rounded-xl overflow-hidden h-64 md:h-96">
             <div className="absolute inset-0">
               <img 
-                src={MindImg}
-                alt="Mind category banner"
+                src={BannerImg}
+                alt="Svasam banner"
                 className="w-full h-full object-cover"
                 loading="eager"
               />
@@ -186,9 +191,9 @@ export default function Categories() {
           </header>
 
           {/* Categories Grid */}
-          <section aria-labelledby="categories-heading" className="py-8 md:py-12">
-            <h2 id="categories-heading" className="sr-only">{t('categories.heading')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <section aria-labelledby="categories-heading" className="py-6 sm:py-8 md:py-12">
+            <h2 id="categories-heading" className="text-2xl sm:text-3xl font-bold text-main mb-6 sm:mb-8 text-center">Our Categories</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {categories.map((category) => (
                 <CategoryCard
                   key={category.id}
@@ -210,17 +215,17 @@ export default function Categories() {
           {/* Store Categories Carousel (moved below Our Programs) */}
           <section className="mb-12">
             <div className="mb-3 text-center">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-main">Store Categories</h2>
+              <h2 className="text-3xl md:text-4xl font-extrabold text-main">Shop by Category</h2>
               <Link to="/store" className="block mt-2 text-base text-accent hover:text-[#704091] font-semibold">View all</Link>
             </div>
             <div className="relative">
               <button
                 type="button"
                 aria-label="Scroll categories left"
-                onClick={scrollLeft}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                onClick={() => scrollCategories('left')}
+                className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
               <div
@@ -234,7 +239,7 @@ export default function Categories() {
                     key={cat.slug}
                     role="tab"
                     onClick={() => goToCategory(cat.slug)}
-                    className="flex-shrink-0 snap-start group w-28 sm:w-36 focus:outline-none"
+                    className="flex-shrink-0 snap-start group w-20 sm:w-28 md:w-36 focus:outline-none"
                     title={cat.title}
                   >
                     <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all">
@@ -245,10 +250,11 @@ export default function Categories() {
                           className="w-full h-full object-cover"
                           loading="lazy"
                           onError={(e) => {
-                            const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><rect width='100%' height='100%' fill='%23f5f5f5'/><text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='14' fill='%23999'>${cat.title}</text></svg>`;
-                            e.currentTarget.src = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+                            e.target.style.display = 'none';
+                            e.target.nextElementSibling.style.display = 'flex';
                           }}
                         />
+                        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm" style={{ display: 'none' }}>No Image</div>
                       </div>
                     </div>
                     <div className="mt-2 text-center text-sm font-semibold text-main">{cat.title}</div>
@@ -259,10 +265,10 @@ export default function Categories() {
               <button
                 type="button"
                 aria-label="Scroll categories right"
-                onClick={scrollRight}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                onClick={() => scrollCategories('right')}
+                className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+                <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
           </section>

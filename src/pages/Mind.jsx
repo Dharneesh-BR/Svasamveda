@@ -21,7 +21,7 @@ function Mind() {
           <p>{error.message}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+            className="mt-4 px-4 py-2 bg-main text-white rounded hover:brightness-105"
           >
             Try Again
           </button>

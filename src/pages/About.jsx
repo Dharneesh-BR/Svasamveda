@@ -2,7 +2,7 @@ import { t } from '../i18n';
 
 export default function About() {
   return (
-    <div className="min-h-screen w-full bg-pink-50">
+    <div className="min-h-screen w-full bg-background">
       <div className="max-w-4xl mx-auto py-16 px-4">
         <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('about.title')}</h1>
         
@@ -105,10 +105,10 @@ export default function About() {
                 Ready to transform your life? Join our community of wellness seekers and begin your journey to holistic health and happiness.
               </p>
               <div className="flex flex-col md:flex-row gap-4">
-                <button className="flex-1 bg-indigo-600 text-white rounded-lg py-3 px-6 hover:bg-indigo-700 transition">
+                <button className="flex-1 bg-main text-white rounded-lg py-3 px-6 hover:brightness-105 transition">
                   {t('about.contactUs')}
                 </button>
-                <button className="flex-1 bg-green-600 text-white rounded-lg py-3 px-6 hover:bg-green-700 transition">
+                <button className="flex-1 bg-main text-white rounded-lg py-3 px-6 hover:brightness-105 transition">
                   {t('about.scheduleSession')}
                 </button>
               </div>

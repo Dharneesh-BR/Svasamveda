@@ -2,14 +2,14 @@ import { t } from '../i18n';
 
 export default function Contact() {
   return (
-    <div className="min-h-screen w-full bg-pink-50">
-      <div className="max-w-4xl mx-auto py-16 px-4">
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('contact.title')}</h1>
+    <div className="min-h-screen w-full bg-background">
+      <div className="max-w-4xl mx-auto py-12 sm:py-16 px-4 md:px-6 lg:px-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-800 text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
         
         <div className="space-y-8">
           {/* Contact Form */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-8">{t('contact.getInTouch')}</h2>
+          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
+            <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-6 sm:mb-8">{t('contact.getInTouch')}</h2>
             <form className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.fullName')}</label>
@@ -62,7 +62,7 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-indigo-600 text-white py-3 px-6 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center"
+                className="w-full bg-main text-white py-3 px-6 rounded-lg hover:brightness-105 transition flex items-center justify-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -73,7 +73,7 @@ export default function Contact() {
           </div>
 
           {/* Contact Information */}
-          <div className="bg-white rounded-xl shadow-lg p-8">
+          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
             <h2 className="text-2xl font-bold text-indigo-800 mb-8">{t('contact.contactInfo')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
@@ -107,7 +107,7 @@ export default function Contact() {
 
           {/* FAQ */}
           <section className="my-16 max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-indigo-800 mb-6">{t('contact.faq')}</h2>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-800 text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
             <div className="space-y-4">
               <details className="bg-white rounded-xl shadow p-4">
                 <summary className="font-semibold text-indigo-700 cursor-pointer">{t('contact.faqQuestion1')}</summary>

@@ -21,7 +21,7 @@ export default function Soul() {
           <p className="mb-4">{error.message}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-accent text-white rounded-lg font-semibold hover:bg-[#704091] transition-colors"
+            className="px-4 py-2 bg-main text-white rounded-lg font-semibold hover:brightness-105 transition-colors"
           >
             Try Again
           </button>
@@ -71,7 +71,7 @@ export default function Soul() {
                       </span>
                     )}
                     <button
-                      className="px-4 py-2 bg-accent text-white rounded-lg font-semibold shadow hover:bg-[#704091] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition"
+                      className="px-4 py-2 bg-main text-white rounded-lg font-semibold shadow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 transition"
                       onClick={() => program.slug ? navigate(`/programs/${program.slug.current || program.slug}`) : '#'}
                     >
                       Read More

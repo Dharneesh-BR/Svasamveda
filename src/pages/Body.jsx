@@ -21,7 +21,7 @@ export default function Body() {
           <p>{error.message}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+            className="mt-4 px-4 py-2 bg-main text-white rounded hover:brightness-105"
           >
             Try Again
           </button>
@@ -75,7 +75,7 @@ export default function Body() {
                     )}
                   </div>
                   <button
-                    className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition"
+                    className="mt-4 w-full px-4 py-2 bg-main text-white rounded-lg font-semibold shadow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 transition"
                     onClick={() => program.slug && navigate(`/programs/${program.slug}`)}
                   >
                     Learn More

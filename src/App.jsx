@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
@@ -65,8 +66,9 @@ import CartDrawer from './components/Cart';
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
         <ScrollToTop />
         <div className="flex flex-col min-h-screen">
           <Navbar />
@@ -120,14 +122,15 @@ function App() {
               <Route path="/favorites" element={<RequireAuth><Favorites /></RequireAuth>} />
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
-              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
               <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
             </Routes>
           </main>
           <Footer />
         </div>
       </Router>
-    </CartProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

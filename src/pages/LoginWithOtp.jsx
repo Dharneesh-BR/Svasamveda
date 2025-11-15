@@ -46,7 +46,7 @@ export default function LoginWithOtp() {
             pattern="[0-9]{10}"
             maxLength={10}
           />
-          <button type="submit" className="w-full bg-indigo-600 text-white rounded py-2 font-semibold hover:bg-indigo-700">Send OTP</button>
+          <button type="submit" className="w-full bg-main text-white rounded py-2 font-semibold hover:brightness-105">Send OTP</button>
           <div className="text-sm mt-4 text-center">
             Not registered?{' '}
             <Link className="text-indigo-700 underline font-medium" to="/signup">Sign Up</Link>
@@ -66,7 +66,7 @@ export default function LoginWithOtp() {
             maxLength={6}
           />
           {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
-          <button type="submit" className="w-full bg-indigo-600 text-white rounded py-2 font-semibold hover:bg-indigo-700 mb-2">Verify OTP</button>
+          <button type="submit" className="w-full bg-main text-white rounded py-2 font-semibold hover:brightness-105 mb-2">Verify OTP</button>
           <button type="button" className="w-full text-indigo-600 underline" onClick={() => setStep(1)}>Back</button>
         </form>
       )}

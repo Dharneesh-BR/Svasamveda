@@ -2,7 +2,7 @@ import { t } from '../i18n';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen w-full bg-pink-50">
+    <div className="min-h-screen w-full bg-background">
       <div className="max-w-4xl mx-auto py-16 px-4">
         <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">{t('privacy.title')}</h1>
         

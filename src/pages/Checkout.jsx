@@ -4,9 +4,11 @@ import axios from "axios";
 import { useCart } from "../contexts/CartContext";
 import { auth, db } from "../firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
   const { cart, clearCart } = useCart();
+  const navigate = useNavigate();
 
   // Dynamically calculate total from cart (Subtotal)
   const cartTotal = cart.reduce(
@@ -15,6 +17,13 @@ const Checkout = () => {
   );
 
   const handleCheckout = async () => {
+    // Require login before proceeding
+    const user = auth.currentUser;
+    if (!user) {
+      navigate('/login', { state: { from: '/checkout' } });
+      return;
+    }
+
     if (cart.length === 0) {
       alert("Your cart is empty!");
       return;

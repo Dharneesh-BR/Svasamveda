@@ -55,7 +55,7 @@ function AllArticles() {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-pink-50">
+    <div className="min-h-screen w-full bg-background">
       <div className="max-w-4xl mx-auto py-16 px-4">
         <h1 className="text-4xl font-bold text-indigo-800 text-center mb-12">All Articles</h1>
         
@@ -148,7 +148,7 @@ function AllArticles() {
                     placeholder="Enter your email"
                     className="flex-1 px-4 py-2 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
-                  <button className="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold hover:opacity-90 transition">
+                  <button className="px-6 py-2 rounded-lg bg-main text-white font-semibold hover:brightness-105 transition">
                     Subscribe
                   </button>
                 </form>
