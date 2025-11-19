@@ -25,7 +25,7 @@ const FAQItem = ({ question, children, isOpen, onClick }) => (
 );
 
 export default function FAQSection() {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(null);
 
   const faqs = [
     {
@@ -67,7 +67,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-4">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>

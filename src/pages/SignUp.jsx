@@ -143,7 +143,7 @@ export default function SignUp() {
 
   if (signupSuccess) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md text-center">
           <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
             <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +159,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-md">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">Create an account</h2>

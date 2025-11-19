@@ -27,30 +27,30 @@ const ChevronRight = ({ className }) => (
 
 const CategoryCard = ({ to, title, description, image, alt }) => (
   <article className="flex flex-col items-center h-full">
-    <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 w-full h-full flex flex-col">
+    <div className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-full flex flex-col">
       <img 
         src={image} 
         alt={alt} 
-        className="w-36 h-36 mb-6 mx-auto object-contain"
+        className="w-24 h-24 mb-4 mx-auto object-contain"
         loading="lazy"
-        width={144}
-        height={144}
+        width={96}
+        height={96}
       />
       <div className="flex-grow">
-        <h2 className="text-3xl font-bold text-center text-main mb-4">{title}</h2>
-        <p className="text-text text-base leading-relaxed text-center mb-6">
+        <h2 className="text-xl font-bold text-center text-main mb-3">{title}</h2>
+        <p className="text-text text-sm leading-relaxed text-center mb-4">
           {description}
         </p>
       </div>
       <div className="mt-auto">
         <Link 
           to={to} 
-          className="flex items-center justify-center group w-full py-3 text-main hover:text-accent transition-colors text-base font-semibold"
+          className="flex items-center justify-center group w-full py-2 text-main hover:text-accent transition-colors text-sm font-semibold"
           aria-label={t('categories.exploreAriaLabel', { title })}
         >
           <span className="mr-2 font-medium">{t('categories.explore')}</span>
           <svg 
-            className="w-6 h-6 group-hover:translate-x-1 transition-transform" 
+            className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -191,7 +191,7 @@ export default function Categories() {
           </header>
 
           {/* Categories Grid */}
-          <section aria-labelledby="categories-heading" className="py-6 sm:py-8 md:py-12">
+          <section aria-labelledby="categories-heading" className="py-1 sm:py-2 md:py-3">
             <h2 id="categories-heading" className="text-2xl sm:text-3xl font-bold text-main mb-6 sm:mb-8 text-center">Our Categories</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {categories.map((category) => (
@@ -299,18 +299,18 @@ export default function Categories() {
                         {item.imageUrl ? (
                           <img src={item.imageUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">No Image</div>
+                          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">No Image</div>
                         )}
                       </div>
-                      <div className="p-4 flex flex-col flex-grow">
-                        <h3 className="text-lg font-semibold text-[#8e6192] line-clamp-2" title={item.title}>{item.title}</h3>
-                        <p className="text-gray-600 text-sm mt-1 mb-3">
-                          {(() => { const t = (item.shortDescription || item.description || '').trim(); return t.length > 80 ? t.slice(0,80) + '…' : t; })()}
+                      <div className="p-3 flex flex-col flex-grow">
+                        <h3 className="text-sm font-semibold text-[#8e6192] line-clamp-2" title={item.title}>{item.title}</h3>
+                        <p className="text-gray-600 text-xs mt-1 mb-2">
+                          {(() => { const t = (item.shortDescription || item.description || '').trim(); return t.length > 60 ? t.slice(0,60) + '…' : t; })()}
                         </p>
                         <div className="mt-auto flex items-center justify-between">
-                          <span className="text-main font-bold">₹{item.price?.toLocaleString('en-IN')}</span>
+                          <span className="text-main font-bold text-sm">₹{item.price?.toLocaleString('en-IN')}</span>
                           <button
-                            className="px-3 py-1.5 bg-main text-white rounded-md text-xs font-semibold hover:brightness-105"
+                            className="px-2 py-1 bg-main text-white rounded-md text-xs font-semibold hover:brightness-105"
                             onClick={() => handleAddToCart(item)}
                           >
                             Add to Cart

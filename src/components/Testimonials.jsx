@@ -48,7 +48,7 @@ const Testimonials = () => {
   const swiperRef = useRef(null);
 
   return (
-    <section className="py-16 bg-transparent">
+    <section className="py-4 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-extrabold text-main sm:text-4xl">
