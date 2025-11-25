@@ -1,17 +1,45 @@
 // src/pages/Checkout.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../contexts/CartContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FiArrowLeft, FiCheck, FiChevronRight, FiTrash2 } from 'react-icons/fi';
 import { FaRegClock, FaRegUser } from 'react-icons/fa';
 import { auth, db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import axios from 'axios';
+import AddressForm from '../components/AddressForm';
 
 const Checkout = () => {
-  const { cart, removeFromCart } = useCart();
+  const { cart, removeFromCart, clearCart } = useCart();
   const [selectedSession, setSelectedSession] = useState('session1');
+  const [address, setAddress] = useState(null);
+  const [isAddressFilled, setIsAddressFilled] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Load saved address if exists
+  useEffect(() => {
+    const loadAddress = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const addressDoc = await getDoc(doc(db, 'users', user.uid, 'address', 'default'));
+          if (addressDoc.exists()) {
+            setAddress(addressDoc.data());
+            setIsAddressFilled(true);
+          }
+        } catch (error) {
+          console.error('Error loading address:', error);
+        }
+      }
+    };
+    loadAddress();
+  }, []);
+
+  const handleAddressSubmit = (address) => {
+    setAddress(address);
+    setIsAddressFilled(true);
+  };
 
   // Calculate subtotal
   const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -27,10 +55,16 @@ const Checkout = () => {
         // If not logged in, redirect to login page with return URL
         navigate('/login', { 
           state: { 
-            from: '/checkout',
+            from: location.pathname,
             message: 'Please log in to complete your purchase'
           } 
         });
+        return;
+      }
+
+      // Check if address is filled
+      if (!isAddressFilled) {
+        alert('Please fill in your shipping address before checkout');
         return;
       }
 
@@ -51,7 +85,15 @@ const Checkout = () => {
           price: item.price,
           quantity: item.quantity
         })),
-        selectedSession: selectedSession
+        selectedSession: selectedSession,
+        shippingAddress: {
+          ...address,
+          timestamp: serverTimestamp()
+        },
+        status: 'pending',
+        userId: user.uid,
+        userEmail: user.email,
+        createdAt: serverTimestamp()
       };
 
       // Call your backend API to create a Razorpay order
@@ -181,6 +223,32 @@ const Checkout = () => {
       </div>
 
       <main className="container mx-auto px-4 py-6 pb-24">
+        {!isAddressFilled ? (
+          <div className="bg-white p-6 rounded-xl shadow-md mb-6">
+            <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
+            <AddressForm onSave={handleAddressSubmit} />
+          </div>
+        ) : (
+          <div className="bg-white p-6 rounded-xl shadow-md mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Shipping Address</h2>
+              <button 
+                onClick={() => setIsAddressFilled(false)}
+                className="text-purple-600 hover:text-purple-800 text-sm font-medium"
+              >
+                Edit Address
+              </button>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="font-medium">{address.fullName}</p>
+              <p className="text-gray-700">{address.address}</p>
+              <p className="text-gray-700">{address.city}, {address.state} - {address.pincode}</p>
+              <p className="text-gray-700">Phone: {address.phone}</p>
+              {address.landmark && <p className="text-gray-500 text-sm">Landmark: {address.landmark}</p>}
+            </div>
+          </div>
+        )}
+        
         {/* Cart Items */}
         <div className="space-y-4 mb-6">
           {cart.map((item) => (
@@ -313,11 +381,18 @@ const Checkout = () => {
               <p className="text-sm text-gray-500">Total</p>
               <p className="text-xl font-bold">₹{total.toLocaleString()}</p>
             </div>
-            <button 
+            <button
               onClick={handleCheckout}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              disabled={!isAddressFilled}
+              className={`w-full py-3 px-4 rounded-lg font-medium flex items-center justify-center ${
+                isAddressFilled 
+                  ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
             >
-              Proceed to Payment
+              {isAddressFilled 
+                ? `Proceed to Pay ₹${total.toFixed(2)}` 
+                : 'Please add shipping address'}
             </button>
           </div>
         </div>

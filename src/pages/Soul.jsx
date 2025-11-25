@@ -31,8 +31,9 @@ export default function Soul() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background">
-      <div className="max-w-6xl mx-auto py-16 px-4">
+    <main className="relative min-h-screen w-full bg-background/80">
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-[#8e6192] mb-4">Soul Wellness Programs</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -82,7 +83,8 @@ export default function Soul() {
             ))}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -62,7 +62,7 @@ export default function Navbar() {
           </div>
         </li>
         <li><Link to="/store" className="hover:text-main transition font-semibold">Spiritual Store</Link></li>
-        <li><Link to="/sessions" className="hover:text-main transition font-semibold">Personal Sessions</Link></li>
+        <li><Link to="/sessions" className="hover:text-main transition font-semibold">Wellness Library</Link></li>
         <li><Link to="/blog" className="hover:text-main transition font-semibold">Blog</Link></li>
       </ul>
 
@@ -137,7 +137,7 @@ export default function Navbar() {
             )}
           </div>
           <Link to="/store" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Spiritual Store</Link>
-          <Link to="/sessions" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Personal Sessions</Link>
+          <Link to="/sessions" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Wellness Library</Link>
           <Link to="/blog" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Blog</Link>
           
           {/* Mobile Auth Section */}

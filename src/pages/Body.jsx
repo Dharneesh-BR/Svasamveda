@@ -31,8 +31,9 @@ export default function Body() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-background">
-      <div className="max-w-6xl mx-auto py-16 px-4">
+    <main className="relative min-h-screen w-full bg-background/80">
+      <div className="relative z-10">
+        <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-heading mb-4">Body Wellness Programs</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -85,7 +86,8 @@ export default function Body() {
             ))}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
