@@ -118,6 +118,7 @@ const Checkout = () => {
       // Validate Razorpay key
       const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
       if (!razorpayKey) {
+        console.error('Razorpay key is missing. Please check your environment variables.');
         throw new Error('Payment processor configuration error. Please contact support.');
       }
 
@@ -146,16 +147,24 @@ const Checkout = () => {
       console.log('Creating order with data:', orderData);
 
       // Call your backend API to create a Razorpay order
-      const response = await axios.post('/.netlify/functions/create-razorpay-order', orderData);
+      console.log('Sending order data to server...');
+      const response = await axios.post('/.netlify/functions/create-razorpay-order', orderData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 10000 // 10 seconds timeout
+      });
       
       if (!response.data?.order) {
+        console.error('Invalid response from server:', response.data);
         throw new Error('Failed to create order: Invalid response from server');
       }
 
-      const { order } = response.data;
-      console.log('Order created:', order);
+        const { order } = response.data;
+        console.log('Order created:', order);
 
       // Razorpay checkout options
+      console.log('Initializing Razorpay payment...');
       const options = {
         key: razorpayKey,
         amount: order.amount,
@@ -164,8 +173,8 @@ const Checkout = () => {
         description: 'Payment for your order',
         order_id: order.id,
         handler: async function(response) {
+          console.log('Payment successful, verifying...', response);
           try {
-            console.log('Payment successful:', response);
             const verifyResponse = await axios.post('/.netlify/functions/verify-payment', {
               order_id: response.razorpay_order_id,
               payment_id: response.razorpay_payment_id,
@@ -222,21 +231,56 @@ const Checkout = () => {
 
       console.log('Opening Razorpay with options:', options);
       
-      const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function(response) {
-        console.error('Payment failed:', response.error);
-        setError(`Payment failed: ${response.error.description || 'Unknown error'}`);
-      });
-      
-      rzp.open();
+      try {
+        if (!window.Razorpay) {
+          throw new Error('Razorpay SDK not loaded. Please try again.');
+        }
+        
+        const rzp = new window.Razorpay(options);
+        
+        rzp.on('payment.failed', function(response) {
+          const errorMessage = response.error?.description || 'Payment was not successful. Please try again.';
+          console.error('Payment failed:', response.error);
+          setError(`Payment failed: ${errorMessage}`);
+        });
+        
+        rzp.on('payment.authorized', function(response) {
+          console.log('Payment authorized:', response);
+        });
+        
+        rzp.open();
+      } catch (error) {
+        console.error('Error initializing Razorpay:', error);
+        throw new Error(`Failed to initialize payment: ${error.message}`);
+      }
 
     } catch (error) {
       console.error('Checkout error:', error);
-      setError(error.response?.data?.message || error.message || 'Something went wrong. Please try again.');
+      let errorMessage = 'Something went wrong. Please try again.';
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error response data:', error.response.data);
+        console.error('Error status:', error.response.status);
+        console.error('Error headers:', error.response.headers);
+        errorMessage = error.response.data?.message || error.message;
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        errorMessage = 'No response from server. Please check your internet connection.';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Request timed out. Please try again.';
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error message:', error.message);
+      }
+      
+      setError(errorMessage || 'An unexpected error occurred. Please try again later.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   if (isLoading) {
     return (
