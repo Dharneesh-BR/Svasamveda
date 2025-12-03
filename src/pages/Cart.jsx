@@ -1,163 +1,210 @@
-import { FiArrowLeft, FiCheck, FiChevronRight } from 'react-icons/fi';
-import { FaRegClock, FaRupeeSign, FaRegUser } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { Link, useNavigate } from 'react-router-dom';
 
-export default function Cart() {
-  return (
-    <div className="min-h-screen bg-white">
-      {/* Main Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <Link to="/" className="text-xl font-bold text-gray-800">SoulSensei</Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link to="/categories" className="text-gray-600 hover:text-gray-900">Categories</Link>
-                <Link to="/soul-senseis" className="text-gray-600 hover:text-gray-900">Our Soul Senseis</Link>
-                <Link to="/soul-sessions" className="text-gray-600 hover:text-gray-900">SoulSessions</Link>
-                <Link to="/personal-sessions" className="text-gray-600 hover:text-gray-900">Personal Sessions</Link>
-                <Link to="/practice" className="text-gray-600 hover:text-gray-900">Practice</Link>
-              </nav>
-            </div>
-            <button className="bg-purple-100 text-purple-700 px-4 py-2 rounded-full text-sm font-medium">
-              My Sessions
-            </button>
-          </div>
-        </div>
-      </header>
+const Cart = () => {
+  const { 
+    cart, 
+    isOpen, 
+    setIsOpen,
+    removeFromCart,
+    updateQuantity,
+    cartTotal,
+    itemCount,
+    clearCart
+  } = useCart();
+  
+  const navigate = useNavigate();
 
-      {/* Cart Header */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center">
-            <button className="mr-4">
-              <FiArrowLeft className="w-5 h-5 text-gray-600" />
-            </button>
-            <h1 className="text-xl font-bold">Your cart</h1>
+  // If cart is empty, show empty state
+  if (cart.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-xl shadow-sm max-w-md w-full text-center">
+          <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-purple-50 mb-4">
+            <svg
+              className="h-12 w-12 text-purple-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1"
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+              />
+            </svg>
           </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+          <p className="text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
+          <Link
+            to="/store"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-main hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+          >
+            Continue Shopping
+          </Link>
         </div>
       </div>
+    );
+  }
 
-      <main className="container mx-auto px-4 py-6">
-        {/* Gift Banner */}
-        <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-6 mb-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <h2 className="text-lg font-bold text-purple-900 mb-1">A GIFT FOR YOUR JOURNEY</h2>
-            <p className="text-purple-800 text-sm">A FREE session is waiting in your cart - your transformation begins here.</p>
-          </div>
-          <div className="absolute right-4 -bottom-4 w-32 h-32">
-            <img 
-              src="/images/gift-illustration.png" 
-              alt="Gift"
-              className="w-full h-full object-contain"
-            />
-          </div>
-        </div>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl mb-8">
+          Shopping Cart
+        </h1>
 
-        {/* Cart Item */}
-        <div className="border rounded-xl p-4 mb-6">
-          <div className="flex">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0">
-              <img 
-                src="/images/vedas-course.jpg" 
-                alt="Course"
-                className="w-full h-full object-cover rounded-lg"
-              />
-            </div>
-            <div className="ml-4 flex-1">
-              <h3 className="font-medium text-gray-900">Unraveling the Blueprint of Life as per Vedas</h3>
-              <div className="flex items-center text-gray-500 text-xs mt-1">
-                <FaRegUser className="mr-1" />
-                <span>Taught by Devi Divya Shakti</span>
-              </div>
-              <div className="flex items-center text-gray-500 text-xs mt-1">
-                <FaRegClock className="mr-1" />
-                <span>Hosted live Nov 25, 07:00 PM</span>
-              </div>
-              <div className="mt-2 flex items-center">
-                <span className="text-purple-700 font-bold">₹2100</span>
-              </div>
-            </div>
-            <button className="text-red-500 text-sm font-medium">
-              REMOVE
-            </button>
-          </div>
-        </div>
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+          {/* Cart items */}
+          <section aria-labelledby="cart-heading" className="lg:col-span-7">
+            <h2 id="cart-heading" className="sr-only">
+              Items in your shopping cart
+            </h2>
 
-        {/* Gift Session Section */}
-        <div className="bg-purple-50 rounded-xl p-6 mb-6">
-          <h3 className="font-bold text-purple-900 text-lg mb-1">Your Journey Comes With A Gift</h3>
-          <p className="text-purple-800 text-sm mb-6">Choose a free session to meet you where you are</p>
-          
-          {/* Free Session Cards */}
-          <div className="space-y-4">
-            {/* Session 1 */}
-            <div className="bg-white rounded-xl p-4 relative">
-              <div className="absolute top-4 right-4 w-5 h-5 flex items-center justify-center bg-green-500 rounded-full">
-                <FiCheck className="text-white w-3 h-3" />
-              </div>
-              <div className="flex">
-                <div className="w-16 h-16 bg-purple-100 rounded-lg overflow-hidden flex-shrink-0">
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-purple-600 text-2xl">🧘‍♀️</span>
+            <ul className="border-t border-b border-gray-200 divide-y divide-gray-200">
+              {cart.map((item) => (
+                <li key={item.id} className="flex py-6 sm:py-10">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={item.image || '/placeholder-program.jpg'}
+                      alt={item.name}
+                      className="w-24 h-24 rounded-md object-cover object-center sm:w-32 sm:h-32"
+                    />
                   </div>
-                  <div className="absolute top-2 left-2 bg-white text-xs px-2 py-0.5 rounded-full font-medium">Free</div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-medium text-gray-900">Daily SoulSync</h4>
-                  <p className="text-purple-800 text-xs font-medium">SOULSENSEI</p>
-                  <div className="flex items-center text-gray-500 text-xs mt-1">
-                    <FaRegClock className="mr-1" />
-                    <span>Nov 24, 08:00 AM</span>
+
+                  <div className="ml-4 flex-1 flex flex-col justify-between sm:ml-6">
+                    <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                      <div>
+                        <div className="flex justify-between">
+                          <h3 className="text-sm">
+                            <Link
+                              to={`/programs/${item.slug}`}
+                              className="font-medium text-gray-700 hover:text-gray-800"
+                            >
+                              {item.name}
+                            </Link>
+                          </h3>
+                        </div>
+                        <p className="mt-1 text-sm font-medium text-gray-900">
+                          ₹{item.price.toLocaleString()}
+                        </p>
+                      </div>
+
+                      <div className="mt-4 sm:mt-0 sm:pr-9">
+                        <div className="flex items-center border rounded-md">
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="px-3 py-1.5 text-gray-400 hover:text-gray-500"
+                          >
+                            <span className="sr-only">Decrease quantity</span>
+                            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                          <span className="px-3 py-1.5 text-sm font-medium">
+                            {item.quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="px-3 py-1.5 text-gray-400 hover:text-gray-500"
+                          >
+                            <span className="sr-only">Increase quantity</span>
+                            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div className="absolute top-0 right-0">
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(item.id)}
+                            className="-m-2 p-2 inline-flex text-gray-400 hover:text-gray-500"
+                          >
+                            <span className="sr-only">Remove</span>
+                            <svg
+                              className="h-5 w-5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Order summary */}
+          <section
+            aria-labelledby="summary-heading"
+            className="mt-16 bg-gray-50 rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-5"
+          >
+            <h2 id="summary-heading" className="text-lg font-medium text-gray-900">
+              Order summary
+            </h2>
+
+            <dl className="mt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <dt className="text-sm text-gray-600">Subtotal</dt>
+                <dd className="text-sm font-medium text-gray-900">
+                  ₹{cartTotal.toLocaleString()}
+                </dd>
               </div>
-            </div>
-
-            {/* Session 2 */}
-            <div className="bg-white rounded-xl p-4 relative border-2 border-transparent">
-              <div className="absolute top-4 right-4 w-5 h-5 border-2 border-gray-300 rounded-full"></div>
-              <div className="flex">
-                <div className="w-16 h-16 bg-purple-100 rounded-lg overflow-hidden flex-shrink-0">
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-purple-600 text-2xl">🧘‍♀️</span>
-                  </div>
-                  <div className="absolute top-2 left-2 bg-white text-xs px-2 py-0.5 rounded-full font-medium">Free</div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-medium text-gray-900">Daily SoulSync</h4>
-                  <p className="text-purple-800 text-xs font-medium">SOULSENSEI</p>
-                  <div className="flex items-center text-gray-500 text-xs mt-1">
-                    <FaRegClock className="mr-1" />
-                    <span>Nov 26, 08:00 AM</span>
-                  </div>
-                </div>
+              <div className="border-t border-gray-200 pt-4 flex items-center justify-between">
+                <dt className="text-base font-medium text-gray-900">Order total</dt>
+                <dd className="text-base font-medium text-gray-900">
+                  ₹{cartTotal.toLocaleString()}
+                </dd>
               </div>
-            </div>
-          </div>
-        </div>
+            </dl>
 
-        {/* Coupon Section */}
-        <div className="flex items-center justify-between p-4 border rounded-xl mb-6">
-          <span className="text-gray-700">Do you have a coupon</span>
-          <FiChevronRight className="text-gray-500" />
-        </div>
-      </main>
-
-      {/* Fixed Footer */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
-        <div className="container mx-auto">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500">Total</p>
-              <p className="text-xl font-bold">₹2100</p>
+            <div className="mt-6">
+              <button
+                onClick={() => navigate('/checkout')}
+                className="w-full bg-main border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-main"
+              >
+                Checkout
+              </button>
             </div>
-            <button className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium">
-              Proceed to Payment
-            </button>
-          </div>
+
+            <div className="mt-6 text-center text-sm">
+              <p>
+                or{' '}
+                <Link
+                  to="/store"
+                  className="font-medium text-main hover:text-opacity-80"
+                >
+                  Continue Shopping<span aria-hidden="true"> &rarr;</span>
+                </Link>
+              </p>
+            </div>
+          </section>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Cart;

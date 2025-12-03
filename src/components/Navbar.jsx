@@ -36,7 +36,8 @@ export default function Navbar() {
 
   return (
     <>
-    <nav className="bg-background shadow px-4 sm:px-6 py-3 sm:py-4 flex items-center sticky top-0 z-50">
+    {/* Desktop Navigation */}
+    <nav className="hidden md:flex bg-background shadow px-4 sm:px-6 py-3 sm:py-4 items-center sticky top-0 z-50">
       <div className="flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2" aria-label="Svasam Home">
           <img src={SvasamLogo} alt="Svasam Logo" className="h-8 w-8 sm:h-10 sm:w-10" />
@@ -44,8 +45,7 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* Desktop Navigation - Centered */}
-      <ul className="hidden md:flex gap-4 lg:gap-6 font-medium text-accent flex-1 justify-center">
+      <ul className="flex gap-4 lg:gap-6 font-medium text-accent flex-1 justify-center">
         <li className="relative group">
           <button className="flex items-center gap-1 hover:text-main transition font-semibold focus:outline-none">
             Categories
@@ -66,11 +66,13 @@ export default function Navbar() {
         <li><Link to="/blog" className="hover:text-main transition font-semibold">Blog</Link></li>
       </ul>
 
-      <div className="hidden md:flex items-center gap-2 lg:gap-4">
-        {/* Cart Icon */}
-        <div className="relative">
-          <CartIcon />
-        </div>
+      <div className="flex items-center gap-2 lg:gap-4">
+        <Link to="/cart" className="text-gray-700 relative">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
+        </Link>
 
         {user ? (
           <div className="flex items-center gap-2">
@@ -84,7 +86,7 @@ export default function Navbar() {
         ) : (
           <Link
             to="/login"
-            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-main text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-105 hover:-translate-y-0.5 transition-all duration-200 border border-main text-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-main text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-105 hover:-translate-y-0.5 transition-all duration-200 border border-main text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
             <span className="hidden lg:inline">My Sessions</span>
@@ -92,80 +94,200 @@ export default function Navbar() {
           </Link>
         )}
       </div>
-
-      {/* Mobile menu button */}
-      <button
-        className="md:hidden p-2 rounded-lg hover:bg-accent/20 transition-colors ml-auto"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          {isMobileMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          )}
-        </svg>
-      </button>
     </nav>
 
-    {/* Mobile Menu */}
-    {isMobileMenuOpen && (
-      <div className="md:hidden bg-background border-t border-accent/20 shadow-lg">
-        <div className="px-4 py-2 space-y-1">
-          <div className="py-2">
+    {/* Mobile Navigation */}
+    <div className="md:hidden fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            {/* Hamburger Menu Button */}
             <button 
-              onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
-              className="flex items-center justify-between w-full px-3 py-2 rounded-lg text-accent hover:text-main transition font-bold focus:outline-none"
+              className="p-2 -ml-2 text-gray-700"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Menu"
             >
-              <span className="text-xs font-bold text-accent/60 uppercase tracking-wider">Categories</span>
-              <svg 
-                className={`w-4 h-4 transition-transform ${isMobileCategoriesOpen ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
               </svg>
             </button>
-            {isMobileCategoriesOpen && (
-              <div className="space-y-1 pl-2 mt-2">
-                <Link to="/mind" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Mind</Link>
-                <Link to="/body" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Body</Link>
-                <Link to="/soul" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Soul</Link>
-              </div>
-            )}
+
+            {/* Logo - Matches desktop view */}
+            <Link to="/" className="flex items-center gap-2 ml-4" aria-label="Svasam Home">
+              <img 
+                src={SvasamLogo} 
+                alt="Svasam Logo" 
+                className="h-8 w-8 sm:h-10 sm:w-10" 
+              />
+              <span className="text-xl sm:text-2xl font-bold text-main">Svasam</span>
+            </Link>
           </div>
-          <Link to="/store" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Spiritual Store</Link>
-          <Link to="/sessions" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Wellness Library</Link>
-          <Link to="/blog" className="block px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">Blog</Link>
-          
-          {/* Mobile Auth Section */}
-          <div className="border-t border-accent/20 pt-2 mt-2">
-            <Link to="/cart" className="flex items-center gap-2 px-3 py-2 rounded-lg text-accent hover:text-main transition font-semibold">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+
+          {/* Right Icons */}
+          <div className="flex items-center space-x-4">
+            {/* Cart Icon */}
+            <Link to="/cart" className="text-gray-700 relative">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              Cart
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
             </Link>
             
+            {/* Profile Icon - Links to Dashboard */}
             {user ? (
-              <div className="space-y-1">
-                <div className="px-3 py-2 text-sm text-accent font-semibold">
-                  {user?.displayName || user?.email || 'User'}
-                </div>
-                <Link to="/dashboard" className="block px-3 py-2 rounded-lg bg-main text-white font-semibold hover:brightness-105 transition">Dashboard</Link>
-                <button onClick={handleLogout} className="w-full text-left px-3 py-2 rounded-lg bg-main text-white font-semibold hover:brightness-105 transition">Logout</button>
-              </div>
+              <Link to="/dashboard" className="text-gray-700">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </Link>
             ) : (
-              <Link to="/login" className="block px-3 py-2 rounded-lg bg-main text-white font-semibold hover:brightness-105 transition text-center">
-                Login / Register
+              <Link to="/login" className="text-gray-700">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
               </Link>
             )}
           </div>
         </div>
       </div>
-    )}
+    </div>
+
+    {/* Mobile Menu - Sidebar */}
+    <div className={`md:hidden fixed inset-0 z-40 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        onClick={() => setIsMobileMenuOpen(false)}
+      ></div>
+      
+      {/* Sidebar */}
+      <div 
+        className={`fixed top-0 left-0 bottom-0 w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-100">
+          <Link to="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)} aria-label="Svasam Home">
+            <img 
+              src={SvasamLogo} 
+              alt="Svasam Logo" 
+              className="h-8 w-8" 
+            />
+            <span className="text-xl font-bold text-main">Svasam</span>
+          </Link>
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Close menu"
+          >
+            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        
+        {/* Menu Content */}
+        <div className="h-[calc(100%-60px)] overflow-y-auto p-4">
+          <div className="space-y-1">
+            <div className="mb-2">
+              <button 
+                onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
+                className="flex items-center justify-between w-full px-3 py-3 rounded-lg text-left hover:bg-gray-50 transition-colors"
+              >
+                <span className="font-medium text-gray-900">Categories</span>
+                <svg 
+                  className={`w-5 h-5 text-gray-400 transition-transform ${isMobileCategoriesOpen ? 'rotate-180' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              <div className={`overflow-hidden transition-all duration-200 ${isMobileCategoriesOpen ? 'max-h-40' : 'max-h-0'}`}>
+                <div className="pl-4 py-2 space-y-1">
+                  <Link 
+                    to="/mind" 
+                    className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Mind
+                  </Link>
+                  <Link 
+                    to="/body" 
+                    className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Body
+                  </Link>
+                  <Link 
+                    to="/soul" 
+                    className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Soul
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <Link 
+              to="/store" 
+              className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              Spiritual Store
+            </Link>
+            <Link 
+              to="/sessions" 
+              className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              Wellness Library
+            </Link>
+            <Link 
+              to="/blog" 
+              className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              </svg>
+              Blog
+            </Link>
+            
+            {/* User Section - Only show user info and logout */}
+            {user && (
+              <div className="pt-4 mt-4 border-t border-gray-100">
+                <div className="space-y-2">
+                  <div className="px-3 py-2 text-sm text-gray-500 font-medium">
+                    {user?.displayName || user?.email || 'User'}
+                  </div>
+                  <button 
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="flex items-center justify-center w-full px-4 py-3 rounded-xl bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200 transition-colors"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
     </>
   );
 }
