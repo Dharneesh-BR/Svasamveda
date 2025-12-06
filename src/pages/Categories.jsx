@@ -27,50 +27,52 @@ const ChevronRight = ({ className }) => (
 
 const CategoryCard = ({ to, title, description, image, alt }) => {
   return (
-    <div className="h-full">
+    <div className="h-full w-full">
       <Link 
         to={to} 
         className="w-full h-full group block"
         aria-label={t('categories.exploreAriaLabel', { title })}
       >
-        <div className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-full flex flex-col">
-          {/* Fixed size image container with aspect ratio */}
-          <div className="w-full aspect-square max-w-[96px] mx-auto mb-4">
-            <div className="relative w-full h-full">
-              <img 
-                src={image} 
-                alt={alt}
-                className="absolute inset-0 w-full h-full object-contain"
-                loading="lazy"
-                style={{
-                  objectFit: 'contain',
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  width: 'auto',
-                  height: 'auto',
-                  margin: '0 auto',
-                  display: 'block'
-                }}
-              />
-            </div>
+        {/* Mobile View - Stacked Image and Title */}
+        <div className="md:hidden bg-white rounded-xl shadow-md p-4 w-full flex flex-col items-center hover:shadow-lg transition-all duration-200">
+          <div className="h-16 w-16 mb-2">
+            <img 
+              src={image} 
+              alt={alt}
+              className="w-full h-full object-contain"
+              loading="lazy"
+            />
+          </div>
+          <h2 className="text-sm font-semibold text-main text-center line-clamp-2">
+            {title}
+          </h2>
+        </div>
+
+        {/* Desktop View - Full Card */}
+        <div className="hidden md:flex bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-[380px] flex flex-col">
+          <div className="h-24 w-24 mx-auto mb-4 flex-shrink-0">
+            <img 
+              src={image} 
+              alt={alt}
+              className="w-full h-full object-contain"
+              loading="lazy"
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
+            />
           </div>
           
-          {/* Title with fixed height */}
-          <div className="h-16 flex items-center justify-center">
+          <div className="h-14 flex items-center justify-center text-center">
             <h2 className="text-base sm:text-lg font-bold text-center text-main line-clamp-2 px-2">
               {title}
             </h2>
           </div>
           
-          {/* Description with fixed height */}
-          <div className="h-20 overflow-hidden px-2">
+          <div className="h-20 overflow-hidden px-2 flex items-start">
             <p className="text-text text-sm leading-relaxed text-center line-clamp-3">
               {description}
             </p>
           </div>
           
-          {/* Bottom section */}
-          <div className="mt-4 pt-3 border-t border-gray-100">
+          <div className="mt-auto pt-3 border-t border-gray-100">
             <div className="flex items-center justify-center text-sm font-medium text-accent group-hover:underline">
               <span className="mr-1">{t('categories.explore')}</span>
               <svg 

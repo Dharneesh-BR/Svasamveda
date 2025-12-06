@@ -8,13 +8,6 @@ export default function Footer() {
       <section className="bg-pink-50 text-gray-700 px-6 py-10 md:px-24 md:py-20 flex flex-col md:flex-row gap-10 md:gap-20 justify-between">
         <div>
           <Link className="font-medium text-3xl tracking-tight" to="/">{t('footer.brand')}</Link>
-          <p className="mt-6 text-xs md:text-sm md:w-72">
-            Svasam Wellness Pvt. Ltd., Office 2,<br />
-            22 Paradise Villa Compound,<br />
-            Bhulabhai Desai Road, Mahalaxmi Mandir,<br />
-            Cumbala Hill, Mumbai 400026
-          </p>
-
         </div>
         <div className="flex gap-12">
           <div className="flex flex-col w-36 lg:w-60">

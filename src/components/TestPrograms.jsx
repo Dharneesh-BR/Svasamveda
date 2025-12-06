@@ -3,6 +3,9 @@ import { useProgramsByCategory } from '../hooks/useProgramsByCategory';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, Grid } from 'swiper/modules';
+import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase';
+import { FiHeart, FiCheck } from 'react-icons/fi';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -13,13 +16,35 @@ const TestPrograms = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [favorites, setFavorites] = useState({});
   const swiperRef = useRef(null);
+  const user = auth.currentUser;
 
   // Fetch programs for each category
   const { programs: mindPrograms, loading: mindLoading } = useProgramsByCategory('mind');
   const { programs: bodyPrograms, loading: bodyLoading } = useProgramsByCategory('body');
   const { programs: soulPrograms, loading: soulLoading } = useProgramsByCategory('soul');
 
+  // Load user's favorites
+  useEffect(() => {
+    const loadFavorites = async () => {
+      if (!user) return;
+      
+      try {
+        const favoritesRef = doc(db, 'users', user.uid, 'favorites', 'programs');
+        const docSnap = await getDoc(favoritesRef);
+        if (docSnap.exists()) {
+          setFavorites(docSnap.data());
+        }
+      } catch (err) {
+        console.error('Error loading favorites:', err);
+      }
+    };
+    
+    loadFavorites();
+  }, [user]);
+
+  // Combine programs and add favorite status
   useEffect(() => {
     if (!mindLoading && !bodyLoading && !soulLoading) {
       try {
@@ -29,7 +54,14 @@ const TestPrograms = () => {
           ...(bodyPrograms || []),
           ...(soulPrograms || [])
         ];
-        setAllPrograms(combined);
+        
+        // Add favorite status to each program
+        const programsWithFavorites = combined.map(program => ({
+          ...program,
+          isFavorite: !!favorites[program._id]
+        }));
+        
+        setAllPrograms(programsWithFavorites);
         setError(null);
       } catch (err) {
         console.error('Error combining programs:', err);
@@ -38,7 +70,59 @@ const TestPrograms = () => {
         setLoading(false);
       }
     }
-  }, [mindLoading, bodyLoading, soulLoading, mindPrograms, bodyPrograms, soulPrograms]);
+  }, [mindLoading, bodyLoading, soulLoading, mindPrograms, bodyPrograms, soulPrograms, favorites]);
+  
+  // Toggle favorite status
+  const toggleFavorite = async (programId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      // Redirect to login or show login modal
+      alert('Please log in to save favorites');
+      return;
+    }
+    
+    try {
+      const favoritesRef = doc(db, 'users', user.uid, 'favorites', 'programs');
+      const isFavorite = favorites[programId];
+      
+      if (isFavorite) {
+        // Remove from favorites
+        await deleteDoc(doc(db, 'users', user.uid, 'favorites', programId));
+        setFavorites(prev => {
+          const newFavorites = { ...prev };
+          delete newFavorites[programId];
+          return newFavorites;
+        });
+      } else {
+        // Add to favorites
+        const program = allPrograms.find(p => p._id === programId);
+        if (program) {
+          await setDoc(doc(db, 'users', user.uid, 'favorites', programId), {
+            ...program,
+            addedAt: new Date().toISOString()
+          });
+          setFavorites(prev => ({
+            ...prev,
+            [programId]: true
+          }));
+        }
+      }
+      
+      // Update local state
+      setAllPrograms(prev => 
+        prev.map(p => 
+          p._id === programId 
+            ? { ...p, isFavorite: !p.isFavorite } 
+            : p
+        )
+      );
+      
+    } catch (err) {
+      console.error('Error updating favorites:', err);
+    }
+  };
 
   if (loading) {
     return (
@@ -120,36 +204,47 @@ const TestPrograms = () => {
             className="pb-12"
           >
             {allPrograms.map((program) => (
-              <SwiperSlide key={program._id}>
+              <SwiperSlide key={program._id} className="h-auto">
                 <Link to={`/programs/${program.slug}`} className="block h-full">
                   <div className="bg-white rounded-xl shadow-md overflow-hidden h-full mx-2 hover:shadow-lg transition-all duration-300 group flex flex-col">
-                    <div className="relative flex-1 min-h-[180px] overflow-hidden">
+                    <div className="h-48 w-full overflow-hidden flex-shrink-0 relative">
                       <img 
                         src={program.imageUrl || '/placeholder-program.jpg'} 
                         alt={program.title}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                       />
+                      <button 
+                        onClick={(e) => toggleFavorite(program._id, e)}
+                        className={`absolute top-2 right-2 p-2 rounded-full ${
+                          program.isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-600 hover:bg-white'
+                        } transition-colors duration-200 shadow-md`}
+                        aria-label={program.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                      >
+                        {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
+                      </button>
                     </div>
-                    <div className="p-3 flex flex-col">
-                      <div className="mb-1">
+                    <div className="p-4 flex flex-col flex-grow">
+                      <div className="mb-2">
                         <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-main rounded-full">
                           {program.category}
                         </span>
                       </div>
-                      <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-main transition-colors">
+                      <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-main transition-colors min-h-[40px] flex items-center">
                         {program.title}
                       </h3>
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
-                          {program.duration || '4 Weeks'}
-                        </span>
-                        <span className="inline-flex items-center text-sm font-bold text-main">
-                          {program.price ? `$${program.price}` : 'Free'}
-                          <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                        </span>
+                      <div className="mt-auto pt-2">
+                        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                            {program.duration || '4 Weeks'}
+                          </span>
+                          <span className="inline-flex items-center text-sm font-bold text-main">
+                            {program.price ? `$${program.price}` : 'Free'}
+                            <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
