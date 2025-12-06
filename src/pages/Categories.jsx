@@ -25,44 +25,69 @@ const ChevronRight = ({ className }) => (
   </svg>
 );
 
-const CategoryCard = ({ to, title, description, image, alt }) => (
-  <article className="flex flex-col items-center h-full">
-    <div className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-full flex flex-col">
-      <img 
-        src={image} 
-        alt={alt} 
-        className="w-24 h-24 mb-4 mx-auto object-contain"
-        loading="lazy"
-        width={96}
-        height={96}
-      />
-      <div className="flex-grow">
-        <h2 className="text-xl font-bold text-center text-main mb-3">{title}</h2>
-        <p className="text-text text-sm leading-relaxed text-center mb-4">
-          {description}
-        </p>
-      </div>
-      <div className="mt-auto">
-        <Link 
-          to={to} 
-          className="flex items-center justify-center group w-full py-2 text-main hover:text-accent transition-colors text-sm font-semibold"
-          aria-label={t('categories.exploreAriaLabel', { title })}
-        >
-          <span className="mr-2 font-medium">{t('categories.explore')}</span>
-          <svg 
-            className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </Link>
-      </div>
+const CategoryCard = ({ to, title, description, image, alt }) => {
+  return (
+    <div className="h-full">
+      <Link 
+        to={to} 
+        className="w-full h-full group block"
+        aria-label={t('categories.exploreAriaLabel', { title })}
+      >
+        <div className="bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-full flex flex-col">
+          {/* Fixed size image container with aspect ratio */}
+          <div className="w-full aspect-square max-w-[96px] mx-auto mb-4">
+            <div className="relative w-full h-full">
+              <img 
+                src={image} 
+                alt={alt}
+                className="absolute inset-0 w-full h-full object-contain"
+                loading="lazy"
+                style={{
+                  objectFit: 'contain',
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  width: 'auto',
+                  height: 'auto',
+                  margin: '0 auto',
+                  display: 'block'
+                }}
+              />
+            </div>
+          </div>
+          
+          {/* Title with fixed height */}
+          <div className="h-16 flex items-center justify-center">
+            <h2 className="text-base sm:text-lg font-bold text-center text-main line-clamp-2 px-2">
+              {title}
+            </h2>
+          </div>
+          
+          {/* Description with fixed height */}
+          <div className="h-20 overflow-hidden px-2">
+            <p className="text-text text-sm leading-relaxed text-center line-clamp-3">
+              {description}
+            </p>
+          </div>
+          
+          {/* Bottom section */}
+          <div className="mt-4 pt-3 border-t border-gray-100">
+            <div className="flex items-center justify-center text-sm font-medium text-accent group-hover:underline">
+              <span className="mr-1">{t('categories.explore')}</span>
+              <svg 
+                className="w-4 h-4 transition-transform group-hover:translate-x-1" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </Link>
     </div>
-  </article>
-);
+  );
+};
 
 export default function Categories() {
   const navigate = useNavigate();
@@ -168,11 +193,8 @@ export default function Categories() {
     <main className="relative min-h-screen w-full bg-background/80">
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Spacer with semantic meaning */}
-          <div className="h-12 md:h-16 w-full bg-background" aria-hidden="true" />
-          
           {/* Hero Banner with Mind Image */}
-          <header className="relative mb-12 md:mb-16 rounded-xl overflow-hidden h-64 md:h-96">
+          <header className="relative mt-8 md:mt-12 mb-12 md:mb-16 rounded-xl overflow-hidden h-64 md:h-96">
             <div className="absolute inset-0">
               <img 
                 src={BannerImg}
@@ -190,20 +212,27 @@ export default function Categories() {
             </div>
           </header>
 
-          {/* Categories Grid */}
-          <section aria-labelledby="categories-heading" className="py-1 sm:py-2 md:py-3">
-            <h2 id="categories-heading" className="text-2xl sm:text-3xl font-bold text-main mb-6 sm:mb-8 text-center">Our Categories</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-              {categories.map((category) => (
-                <CategoryCard
-                  key={category.id}
-                  to={`/${category.id}`}
-                  title={category.title}
-                  description={category.description}
-                  image={category.image}
-                  alt={category.alt}
-                />
-              ))}
+          {/* Categories Section */}
+          <section aria-labelledby="categories-heading" className="w-full py-3 sm:py-6">
+            <div className="mb-3 text-center">
+              <h2 id="categories-heading" className="text-3xl md:text-4xl font-bold text-main">Our Categories</h2>
+            </div>
+            
+            {/* Horizontal Scrollable Categories for Mobile, Grid for Desktop */}
+            <div className="relative">
+              <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-8 mt-6 px-4 sm:px-6 overflow-x-auto pb-4 sm:pb-0 no-scrollbar">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex-shrink-0 w-32 sm:w-auto sm:flex-shrink">
+                    <CategoryCard
+                      to={`/${category.id}`}
+                      title={category.title}
+                      description={category.description}
+                      image={category.image}
+                      alt={category.alt}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
           

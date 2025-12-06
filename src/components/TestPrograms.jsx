@@ -122,27 +122,31 @@ const TestPrograms = () => {
             {allPrograms.map((program) => (
               <SwiperSlide key={program._id}>
                 <Link to={`/programs/${program.slug}`} className="block h-full">
-                  <div className="bg-white rounded-xl shadow-md overflow-hidden h-full mx-2 hover:shadow-lg transition-all duration-300 group">
-                    <div className="relative h-32">
+                  <div className="bg-white rounded-xl shadow-md overflow-hidden h-full mx-2 hover:shadow-lg transition-all duration-300 group flex flex-col">
+                    <div className="relative flex-1 min-h-[180px] overflow-hidden">
                       <img 
                         src={program.imageUrl || '/placeholder-program.jpg'} 
                         alt={program.title}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                       />
-                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+                    </div>
+                    <div className="p-3 flex flex-col">
+                      <div className="mb-1">
                         <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-main rounded-full">
                           {program.category}
                         </span>
                       </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 h-12 group-hover:text-main transition-colors">{program.title}</h3>
-                      <p className="text-gray-600 mb-3 line-clamp-2 h-10 text-sm">{program.description}</p>
-                      <div className="mt-3">
+                      <h3 className="text-base font-bold text-gray-900 mb-1 line-clamp-2 group-hover:text-main transition-colors">
+                        {program.title}
+                      </h3>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
+                          {program.duration || '4 Weeks'}
+                        </span>
                         <span className="inline-flex items-center text-sm font-bold text-main">
                           {program.price ? `$${program.price}` : 'Free'}
-                          <svg className="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <svg className="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                           </svg>
                         </span>

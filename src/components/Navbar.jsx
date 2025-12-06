@@ -34,10 +34,67 @@ export default function Navbar() {
     refreshPage();
   };
 
+  // Handle navigation and close mobile menu
+  const handleNavigation = (e) => {
+    setIsMobileMenuOpen(false);
+    setIsMobileCategoriesOpen(false);
+    // If it's a link, let it handle the navigation
+    if (e.target.tagName === 'A') {
+      return; // Let the Link component handle the navigation
+    }
+    // If it's a button, prevent default and use the URL from data-href
+    if (e.target.tagName === 'BUTTON' && e.target.dataset.href) {
+      e.preventDefault();
+      navigate(e.target.dataset.href);
+    }
+  };
+
   return (
     <>
+    {/* Mobile Navigation */}
+    <nav className="md:hidden fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+      <div className="container mx-auto px-3 py-2 flex justify-between items-center">
+        <button 
+          className="p-2 -ml-2 text-gray-700"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
+        <Link to="/" className="flex items-center">
+          <span className="text-xl font-bold text-gray-900">SVASAM</span>
+        </Link>
+
+        <div className="flex items-center space-x-4">
+          <Link to="/cart" className="text-gray-700 relative">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
+          </Link>
+          
+          {user ? (
+            <Link to="/profile" className="text-gray-700">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
+          ) : (
+            <Link to="/login" className="text-gray-700">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>
+            </Link>
+          )}
+        </div>
+      </div>
+    </nav>
+
     {/* Desktop Navigation */}
-    <nav className="hidden md:flex bg-background shadow px-4 sm:px-6 py-3 sm:py-4 items-center sticky top-0 z-50">
+    <nav className="hidden md:flex bg-background shadow px-4 sm:px-6 py-2 items-center sticky top-0 z-50">
       <div className="flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2" aria-label="Svasam Home">
           <img src={SvasamLogo} alt="Svasam Logo" className="h-8 w-8 sm:h-10 sm:w-10" />
@@ -55,15 +112,15 @@ export default function Navbar() {
           </button>
           <div className="absolute left-0 mt-1 w-48 bg-gradient-to-br from-background to-white rounded-xl shadow-2xl border border-accent opacity-0 invisible group-hover:visible group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transform scale-95 group-hover:scale-100 transition-all duration-200 z-50">
             <div className="py-2">
-              <Link to="/mind" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Mind</Link>
-              <Link to="/body" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Body</Link>
-              <Link to="/soul" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold">Soul</Link>
+              <Link to="/mind" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Mind</Link>
+              <Link to="/body" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Body</Link>
+              <Link to="/soul" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Soul</Link>
             </div>
           </div>
         </li>
-        <li><Link to="/store" className="hover:text-main transition font-semibold">Spiritual Store</Link></li>
-        <li><Link to="/sessions" className="hover:text-main transition font-semibold">Wellness Library</Link></li>
-        <li><Link to="/blog" className="hover:text-main transition font-semibold">Blog</Link></li>
+        <li><Link to="/store" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Spiritual Store</Link></li>
+        <li><Link to="/sessions" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
+        <li><Link to="/blog" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Blog</Link></li>
       </ul>
 
       <div className="flex items-center gap-2 lg:gap-4">
@@ -153,7 +210,10 @@ export default function Navbar() {
     </div>
 
     {/* Mobile Menu - Sidebar */}
-    <div className={`md:hidden fixed inset-0 z-40 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+    <div 
+      className={`md:hidden fixed inset-0 z-40 ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+      onClick={handleNavigation}
+    >
       {/* Overlay */}
       <div 
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"

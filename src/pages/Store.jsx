@@ -157,8 +157,9 @@ export default function Store() {
   // Main content
   return (
     <div className="min-h-screen w-full bg-background">
-      <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="pt-16 pb-8 text-center">
           <h1 className="text-4xl font-bold text-[#8e6192] mb-4">Svasam Store</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Discover our collection of spiritual and wellness products to support your journey
@@ -178,14 +179,17 @@ export default function Store() {
                 placeholder="Search products..."
                 className="w-full rounded-lg border border-accent/30 bg-white px-3 py-2 pr-9 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent text-xs"
               />
-              <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              <svg className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </div>
           </div>
         </div>
 
-        {/* Category Carousel */}
-        <div className="mb-10 sticky top-16 z-40 bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-accent/10 -mx-4 px-4 py-2">
-          <div className="relative">
+        {/* Sticky Category Carousel - z-30 to stay below mobile menu */}
+        <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-accent/10 -mx-4 px-4 py-3 shadow-sm">
+          <div className="max-w-7xl mx-auto relative">
             <button
               type="button"
               aria-label="Scroll categories left"
@@ -197,24 +201,27 @@ export default function Store() {
 
             <div
               ref={carouselRef}
-              className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-8"
+              className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-10 md:px-12"
               role="tablist"
               aria-label="Product categories"
+              style={{
+                scrollbarWidth: 'none', // For Firefox
+                msOverflowStyle: 'none', // For IE and Edge
+              }}
             >
               {CATEGORIES.map(cat => {
                 const isActive = cat.slug === selectedSlug;
                 const isAll = cat.slug === 'all';
                 return (
-                  <button
-                    key={cat.slug}
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => handleSelectCategory(cat.slug)}
-                    className="flex-shrink-0 snap-start group w-24 sm:w-28 focus:outline-none"
-                    title={cat.title}
-                  >
-                    <div className={`rounded-xl border ${isActive ? 'border-accent ring-2 ring-accent/30' : 'border-accent/20'} bg-white shadow-sm overflow-hidden transition-all`}>
-                      <div className="aspect-square w-full bg-gray-50 overflow-hidden">
+                  <div key={cat.slug} className="flex-shrink-0 snap-center">
+                    <button
+                      role="tab"
+                      aria-selected={isActive}
+                      onClick={() => handleSelectCategory(cat.slug)}
+                      className="flex flex-col items-center w-20 sm:w-24 focus:outline-none"
+                      title={cat.title}
+                    >
+                      <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-xl border-2 ${isActive ? 'border-accent ring-2 ring-accent/30' : 'border-accent/20'} bg-white shadow-sm overflow-hidden transition-all`}>
                         {isAll ? (
                           <div className="w-full h-full flex items-center justify-center text-2xl text-main">🛍️</div>
                         ) : (
@@ -230,9 +237,11 @@ export default function Store() {
                           />
                         )}
                       </div>
-                    </div>
-                    <div className={`mt-2 text-center text-xs font-semibold ${isActive ? 'text-accent' : 'text-main'}`}>{cat.title}</div>
-                  </button>
+                      <span className={`mt-1.5 text-xs font-medium text-center ${isActive ? 'text-accent font-semibold' : 'text-gray-700'}`}>
+                        {cat.title}
+                      </span>
+                    </button>
+                  </div>
                 );
               })}
             </div>
@@ -248,78 +257,78 @@ export default function Store() {
           </div>
         </div>
 
-        {/* Item Grid */}
-        {(!filteredItems || filteredItems.length === 0) ? (
-          <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">
-              No items {searchTerm ? `matching “${searchTerm}”` : 'available'} {selectedCategoryTitle ? `in ${selectedCategoryTitle}` : 'in the store'}.
-            </p>
-            <button
-              onClick={() => navigate('/store')}
-              className="px-4 py-2 bg-accent text-white rounded-lg font-semibold hover:bg-[#704091] transition"
-            >
-              View All Products
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {filteredItems.map((item) => (
-              <div
-                key={item._id || item.title}
-                className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+        {/* Main Content */}
+        <div className="py-4 sm:py-6">
+          {/* Product Grid */}
+          {(!filteredItems || filteredItems.length === 0) ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">
+                No items {searchTerm ? `matching "${searchTerm}"` : 'available'} {selectedCategoryTitle ? `in ${selectedCategoryTitle}` : 'in the store'}.
+              </p>
+              <button
+                onClick={() => navigate('/store')}
+                className="px-4 py-2 bg-accent text-white rounded-lg font-semibold hover:bg-[#704091] transition"
               >
-                <div className="relative pt-[100%] bg-gray-50">
-                  {item.imageUrl ? (
-                    <img 
-                      src={item.imageUrl} 
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                      <span className="text-sm">No Image</span>
-                    </div>
-                  )}
-                  {item.compareAtPrice > item.price && (
-                    <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      SALE
-                    </span>
-                  )}
-                </div>
-                <div className="p-6 flex flex-col flex-grow">
-                  <h2 className="text-xl font-bold text-[#8e6192] mb-2 line-clamp-2" title={item.title}>
-                    {item.title}
-                  </h2>
-                  <p className="text-gray-600 text-sm mb-4 flex-grow">
-                    {(() => {
-                      const t = (item.shortDescription || item.description || '').trim();
-                      return t.length > 100 ? t.slice(0, 100) + '…' : t;
-                    })()}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <div>
-                      <span className="text-lg font-bold text-main">
-                        ₹{item.price?.toLocaleString('en-IN')}
+                View All Products
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {filteredItems.map((item) => (
+                <div
+                  key={item._id || item.slug}
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
+                >
+                  <div className="relative pt-[100%] bg-gray-50">
+                    {item.imageUrl ? (
+                      <img 
+                        src={item.imageUrl} 
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                        <span className="text-sm">No Image</span>
+                      </div>
+                    )}
+                    {item.compareAtPrice > item.price && (
+                      <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        SALE
                       </span>
-                      {item.compareAtPrice > item.price && (
-                        <span className="ml-2 text-sm text-gray-400 line-through">
-                          ₹{item.compareAtPrice?.toLocaleString('en-IN')}
+                    )}
+                  </div>
+                  <div className="p-4 flex flex-col flex-grow">
+                    <h2 className="text-lg font-bold text-[#8e6192] mb-2 line-clamp-2" title={item.title}>
+                      {item.title}
+                    </h2>
+                    <p className="text-gray-600 text-sm mb-3 flex-grow line-clamp-2">
+                      {item.shortDescription || item.description || ''}
+                    </p>
+                    <div className="mt-2 flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-lg font-bold text-main">
+                          ₹{item.price?.toLocaleString('en-IN')}
                         </span>
-                      )}
+                        {item.compareAtPrice > item.price && (
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{item.compareAtPrice?.toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        className="px-3 py-1.5 bg-main text-white rounded-lg font-medium text-sm hover:bg-opacity-90 transition"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        Add to Cart
+                      </button>
                     </div>
-                    <button
-                      className="px-4 py-2 bg-main text-white rounded-lg font-semibold text-sm shadow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 transition"
-                      onClick={() => handleAddToCart(item)}
-                    >
-                      Add to Cart
-                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
