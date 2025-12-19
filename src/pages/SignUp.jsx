@@ -40,7 +40,12 @@ export default function SignUp() {
     setIsSubmitting(true);
     setErrors({});
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      if (result.success) {
+        navigate('/');
+      } else {
+        setErrors({ form: `Google sign-in failed: ${result.error || 'Please try again.'}` });
+      }
     } catch (e) {
       setErrors({ form: 'Google sign-in failed. Please try again.' });
     } finally {

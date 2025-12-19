@@ -1,15 +1,16 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  sendPasswordResetEmail, 
-  updateProfile, 
-  GoogleAuthProvider, 
-  FacebookAuthProvider, 
-  signInWithRedirect, 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+  updateProfile,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup,
+  signInWithRedirect,
   getRedirectResult,
   setPersistence,
   browserLocalPersistence
@@ -37,7 +38,6 @@ const analytics = getAnalytics(app);
 setPersistence(auth, browserLocalPersistence).catch((error) => {
   console.error('Error setting auth persistence:', error);
 });
-
 // Sign up function
 export const signUp = async (name, email, password, mobile) => {
   try {
@@ -137,27 +137,66 @@ export const resetPassword = async (email) => {
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
- // Sign in with Google using redirect
 export const signInWithGoogle = async () => {
   try {
-    await signInWithRedirect(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    await setDoc(
+      doc(db, 'users', user.uid),
+      {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        mobile: '',
+        photoURL: user.photoURL || '',
+        provider: 'google',
+        role: 'user',
+        emailVerified: user.emailVerified,
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
+    return { success: true, user };
   } catch (error) {
-    console.error('Error initiating Google sign-in:', error);
-    throw error;
+    const code = error?.code || '';
+    if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user') {
+      await signInWithRedirect(auth, googleProvider);
+      return { success: true, redirect: true };
+    }
+    return { success: false, error: error.code || error.message };
   }
 };
 
-// Sign in with Facebook using redirect
 export const signInWithFacebook = async () => {
   try {
-    await signInWithRedirect(auth, facebookProvider);
+    const result = await signInWithPopup(auth, facebookProvider);
+    const user = result.user;
+    await setDoc(
+      doc(db, 'users', user.uid),
+      {
+        uid: user.uid,
+        name: user.displayName || '',
+        email: user.email || '',
+        mobile: '',
+        photoURL: user.photoURL || '',
+        provider: 'facebook',
+        role: 'user',
+        emailVerified: user.emailVerified,
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
+    return { success: true, user };
   } catch (error) {
-    console.error('Error initiating Facebook sign-in:', error);
-    throw error;
+    const code = error?.code || '';
+    if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user') {
+      await signInWithRedirect(auth, facebookProvider);
+      return { success: true, redirect: true };
+    }
+    return { success: false, error: error.code || error.message };
   }
 };
 
-// Handle redirect result for both Google and Facebook
 export const handleAuthRedirect = async () => {
   try {
     const result = await getRedirectResult(auth);
@@ -165,7 +204,7 @@ export const handleAuthRedirect = async () => {
       const { user } = result;
       const providerId = result.providerId || result?._tokenResponse?.providerId || '';
       const provider = providerId.includes('google') ? 'google' : providerId.includes('facebook') ? 'facebook' : '';
-      
+
       const userRef = doc(db, 'users', user.uid);
       const existing = await getDoc(userRef);
       const now = new Date().toISOString();
@@ -186,7 +225,7 @@ export const handleAuthRedirect = async () => {
       } else {
         await setDoc(userRef, { updatedAt: now, lastLogin: now }, { merge: true });
       }
-      
+
       return { success: true, user };
     }
     return { success: false };

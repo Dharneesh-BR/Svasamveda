@@ -15,7 +15,6 @@
     @apply rounded-lg border border-gray-200/70 bg-gradient-to-br from-white via-white to-gray-50 shadow-[0_8px_20px_-14px_rgba(17,24,39,0.3)] transition-all duration-300;
   }
 }
-
 body {
   font-family: 'Inter', sans-serif;
 }

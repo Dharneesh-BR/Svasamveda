@@ -38,7 +38,7 @@ const Cart = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
           <p className="text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
           <Link
-            to="/"
+            to="/store"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-main hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
           >
             Continue Shopping
@@ -193,7 +193,7 @@ const Cart = () => {
               <p>
                 or{' '}
                 <Link
-                  to="/"
+                  to="/store"
                   className="font-medium text-main hover:text-opacity-80"
                 >
                   Continue Shopping<span aria-hidden="true"> &rarr;</span>

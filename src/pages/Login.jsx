@@ -17,7 +17,12 @@ export default function Login() {
     setIsSubmitting(true);
     setErrors({});
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      if (result.success) {
+        navigate(from, { replace: true });
+      } else {
+        setErrors({ submit: `Google login failed: ${result.error || 'Please try again.'}` });
+      }
     } catch (e) {
       setErrors({ submit: 'Google login failed. Please try again.' });
     } finally {
