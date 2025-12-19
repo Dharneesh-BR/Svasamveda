@@ -108,7 +108,6 @@ export default function Navbar() {
             </div>
           </div>
         </li>
-        <li><Link to="/store" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Spiritual Store</Link></li>
         <li><Link to="/sessions" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
         <li><Link to="/blog" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Blog</Link></li>
       </ul>
@@ -281,16 +280,6 @@ export default function Navbar() {
                 </div>
               </div>
             </div>
-            <Link 
-              to="/store" 
-              className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-              </svg>
-              Spiritual Store
-            </Link>
             <Link 
               to="/sessions" 
               className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"

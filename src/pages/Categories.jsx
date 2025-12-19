@@ -145,8 +145,7 @@ export default function Categories() {
   }, []);
 
   const goToCategory = useCallback((slug) => {
-    const pathSlug = slug === 'rudraksha' ? 'rudrakshas' : slug;
-    navigate(`/store/${pathSlug}`);
+    navigate(`/`);
   }, [navigate]);
 
   // Two-row items carousel controls
@@ -243,126 +242,128 @@ export default function Categories() {
             <TestPrograms />
           </div>
 
-          {/* Store Categories Carousel (moved below Our Programs) */}
-          <section className="mb-12">
-            <div className="mb-3 text-center">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-main">Shop by Category</h2>
-              <Link to="/store" className="block mt-2 text-base text-accent hover:text-[#704091] font-semibold">View all</Link>
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Scroll categories left"
-                onClick={() => scrollLeft()}
-                className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-
-              <div
-                ref={carouselRef}
-                className="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-10"
-                role="tablist"
-                aria-label="Store categories"
-              >
-                {STORE_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.slug}
-                    role="tab"
-                    onClick={() => goToCategory(cat.slug)}
-                    className="flex-shrink-0 snap-start group w-20 sm:w-28 md:w-36 focus:outline-none"
-                    title={cat.title}
-                  >
-                    <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all">
-                      <div className="aspect-square w-full bg-gray-50 overflow-hidden">
-                        <img
-                          src={imageFor(cat.slug)}
-                          alt={`${cat.title} thumbnail`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextElementSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm" style={{ display: 'none' }}>No Image</div>
-                      </div>
-                    </div>
-                    <div className="mt-2 text-center text-sm font-semibold text-main">{cat.title}</div>
-                  </button>
-                ))}
+          {false && (
+            <section className="mb-12">
+              <div className="mb-3 text-center">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-main">Shop by Category</h2>
+                <Link to="/" className="block mt-2 text-base text-accent hover:text-[#704091] font-semibold">View all</Link>
               </div>
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-label="Scroll categories left"
+                  onClick={() => scrollLeft()}
+                  className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                >
+                  <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                </button>
 
-              <button
-                type="button"
-                aria-label="Scroll categories right"
-                onClick={() => scrollRight()}
-                className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-            </div>
-          </section>
-
-          {/* Store Items Two-Row Carousel */}
-          <section className="mb-12">
-            <div className="mb-3 text-center">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-main">Featured Products</h2>
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Scroll items left"
-                onClick={itemsScrollLeft}
-                className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
-              </button>
-
-              <div
-                ref={itemsRef}
-                className="overflow-x-auto no-scrollbar px-2"
-              >
-                <div className="grid grid-rows-2 grid-flow-col gap-5 auto-cols-[minmax(220px,260px)]">
-                  {(items || []).slice(0, 20).map((item) => (
-                    <div key={item._id || item.title} className="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden flex flex-col">
-                      <div className="relative aspect-[4/3] bg-gray-50">
-                        {item.imageUrl ? (
-                          <img src={item.imageUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-                        ) : (
-                          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">No Image</div>
-                        )}
-                      </div>
-                      <div className="p-3 flex flex-col flex-grow">
-                        <h3 className="text-sm font-semibold text-[#8e6192] line-clamp-2" title={item.title}>{item.title}</h3>
-                        <p className="text-gray-600 text-xs mt-1 mb-2">
-                          {(() => { const t = (item.shortDescription || item.description || '').trim(); return t.length > 60 ? t.slice(0,60) + '…' : t; })()}
-                        </p>
-                        <div className="mt-auto flex items-center justify-between">
-                          <span className="text-main font-bold text-sm">₹{item.price?.toLocaleString('en-IN')}</span>
-                          <button
-                            className="px-2 py-1 bg-main text-white rounded-md text-xs font-semibold hover:brightness-105"
-                            onClick={() => handleAddToCart(item)}
-                          >
-                            Add to Cart
-                          </button>
+                <div
+                  ref={carouselRef}
+                  className="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-10"
+                  role="tablist"
+                  aria-label="Store categories"
+                >
+                  {STORE_CATEGORIES.map(cat => (
+                    <button
+                      key={cat.slug}
+                      role="tab"
+                      onClick={() => goToCategory(cat.slug)}
+                      className="flex-shrink-0 snap-start group w-20 sm:w-28 md:w-36 focus:outline-none"
+                      title={cat.title}
+                    >
+                      <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all">
+                        <div className="aspect-square w-full bg-gray-50 overflow-hidden">
+                          <img
+                            src={imageFor(cat.slug)}
+                            alt={`${cat.title} thumbnail`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextElementSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm" style={{ display: 'none' }}>No Image</div>
                         </div>
                       </div>
-                    </div>
+                      <div className="mt-2 text-center text-sm font-semibold text-main">{cat.title}</div>
+                    </button>
                   ))}
                 </div>
-              </div>
 
-              <button
-                type="button"
-                aria-label="Scroll items right"
-                onClick={itemsScrollRight}
-                className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-          </section>
+                <button
+                  type="button"
+                  aria-label="Scroll categories right"
+                  onClick={() => scrollRight()}
+                  className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                >
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                </button>
+              </div>
+            </section>
+          )}
+
+          {false && (
+            <section className="mb-12">
+              <div className="mb-3 text-center">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-main">Featured Products</h2>
+              </div>
+              <div className="relative">
+                <button
+                  type="button"
+                  aria-label="Scroll items left"
+                  onClick={itemsScrollLeft}
+                  className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+
+                <div
+                  ref={itemsRef}
+                  className="overflow-x-auto no-scrollbar px-2"
+                >
+                  <div className="grid grid-rows-2 grid-flow-col gap-5 auto-cols-[minmax(220px,260px)]">
+                    {(items || []).slice(0, 20).map((item) => (
+                      <div key={item._id || item.title} className="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden flex flex-col">
+                        <div className="relative aspect-[4/3] bg-gray-50">
+                          {item.imageUrl ? (
+                            <img src={item.imageUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-xs">No Image</div>
+                          )}
+                        </div>
+                        <div className="p-3 flex flex-col flex-grow">
+                          <h3 className="text-sm font-semibold text-[#8e6192] line-clamp-2" title={item.title}>{item.title}</h3>
+                          <p className="text-gray-600 text-xs mt-1 mb-2">
+                            {(() => { const t = (item.shortDescription || item.description || '').trim(); return t.length > 60 ? t.slice(0,60) + '…' : t; })()}
+                          </p>
+                          <div className="mt-auto flex items-center justify-between">
+                            <span className="text-main font-bold text-sm">₹{item.price?.toLocaleString('en-IN')}</span>
+                            <button
+                              className="px-2 py-1 bg-main text-white rounded-md text-xs font-semibold hover:brightness-105"
+                              onClick={() => handleAddToCart(item)}
+                            >
+                              Add to Cart
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  aria-label="Scroll items right"
+                  onClick={itemsScrollRight}
+                  className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-10 w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </section>
+          )}
 
           {/* Testimonials Section */}
           <Testimonials />

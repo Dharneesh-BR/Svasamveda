@@ -17,7 +17,6 @@ import Categories from './pages/Categories';
 import Mind from './pages/Mind';
 import Body from './pages/Body';
 import Soul from './pages/Soul';
-import Store from './pages/Store';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ResetPassword from './pages/ResetPassword';
@@ -46,18 +45,6 @@ import TraumaHealing from './pages/soul/TraumaHealing';
 import SoundTherapy from './pages/soul/SoundTherapy';
 import Breathwork from './pages/soul/Breathwork';
 import SelfSessionsSoul from './pages/soul/SelfSessions';
-// Store subpages
-import MoneyStore from './pages/store/MoneyStore';
-import Rudrakshas from './pages/store/Rudraksha';
-import Bracelets from './pages/store/Bracelets';
-import Murti from './pages/store/Murti';
-import Anklet from './pages/store/Anklet';
-import Frames from './pages/store/Frames';
-import Karungali from './pages/store/Karungali';
-import Zodiac from './pages/store/Zodiac';
-import Pyrite from './pages/store/Pyrite';
-import Gemstones from './pages/store/Gemstones';
-import Pendant from './pages/store/Pendant';
 // Cart, Favorites, Coaching History
 import Cart from './pages/Cart';
 import Favorites from './pages/Favorites';
@@ -92,7 +79,7 @@ function App() {
               <Route path="/soul/sound-therapy" element={<SoundTherapy />} />
               <Route path="/soul/breathwork" element={<Breathwork />} />
               <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} />
-              <Route path="/store" element={<Store />} />
+              <Route path="/store" element={<Navigate to="/" replace />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/refund-and-cancellation" element={<CancellationPolicy />} />
@@ -102,19 +89,8 @@ function App() {
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/all-articles" element={<AllArticles />} />
-              <Route path="/store/money-store" element={<MoneyStore />} />
+              <Route path="/store/*" element={<Navigate to="/" replace />} />
               <Route path="/test-programs" element={<TestPrograms />} />
-              <Route path="/store/rudraksha" element={<Rudrakshas />} />
-              <Route path="/store/rudrakshas" element={<Rudrakshas />} />
-              <Route path="/store/bracelets" element={<Bracelets />} />
-              <Route path="/store/murti" element={<Murti />} />
-              <Route path="/store/anklet" element={<Anklet />} />
-              <Route path="/store/frames" element={<Frames />} />
-              <Route path="/store/karungali" element={<Karungali />} />
-              <Route path="/store/zodiac" element={<Zodiac />} />
-              <Route path="/store/pyrite" element={<Pyrite />} />
-              <Route path="/store/gemstones" element={<Gemstones />} />
-              <Route path="/store/pendant" element={<Pendant />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
