@@ -1,0 +1,10 @@
+{
+  "name": "Svasam",
+  "short_name": "Svasam",
+  "description": "Svasam - Mind, Body, Soul Wellness Platform",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fdf2f8",
+  "theme_color": "#6366f1",
+  "icons": []
+}

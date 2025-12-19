@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+# Ensure Netlify Functions route properly
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# ✅ Catch-all redirect for React Router (Fixes 404 on /mind and others)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
