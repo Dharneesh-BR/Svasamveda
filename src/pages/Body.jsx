@@ -66,11 +66,31 @@ export default function Body() {
                     {program.description}
                   </p>
                   <div className="flex justify-between items-center mt-4">
-                    {program.price && (
-                      <span className="text-lg font-semibold text-purple-700">
-                        ₹{program.price.toLocaleString()}
-                      </span>
-                    )}
+                    {(() => {
+                      const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+                      const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+                      const showDiscount = hasPrice && hasDiscount && program.discountPrice < program.price;
+                      const displayPrice = showDiscount ? program.discountPrice : program.price;
+
+                      if (!hasPrice || program.price === 0) {
+                        return (
+                          <span className="text-lg font-semibold text-purple-700">
+                            Free
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <span className="text-lg font-semibold text-purple-700">
+                          ₹{displayPrice.toLocaleString('en-IN')}
+                          {showDiscount ? (
+                            <span className="ml-2 text-sm text-gray-500 line-through font-semibold">
+                              ₹{program.price.toLocaleString('en-IN')}
+                            </span>
+                          ) : null}
+                        </span>
+                      );
+                    })()}
                     {program.duration && (
                       <span className="text-sm text-gray-500">{program.duration}</span>
                     )}

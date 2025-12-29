@@ -292,7 +292,7 @@ const Checkout = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen bg-background/80 pt-24 pb-32 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
         <div className="text-center">
           <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg 
@@ -324,11 +324,11 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background/80 pt-24 pb-32 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-600 hover:text-purple-600 mb-6"
+          className="flex items-center text-gray-600 hover:text-main transition-colors"
         >
           <FiArrowLeft className="mr-2" /> Back
         </button>

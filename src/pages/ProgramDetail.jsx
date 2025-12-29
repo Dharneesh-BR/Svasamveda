@@ -62,6 +62,7 @@ function ProgramDetail() {
           hasImage: !!(result.image || result.imageUrl),
           imageUrl: result.image?.url || result.imageUrl,
           price: result.price,
+          discountPrice: result.discountPrice,
           includes: Array.isArray(result.includes) ? result.includes : [],
           benefits: Array.isArray(result.benefits) ? result.benefits : [],
           requirements: Array.isArray(result.requirements) ? result.requirements : [],
@@ -103,10 +104,14 @@ function ProgramDetail() {
   }, [slug]);
 
   const handleAddToCart = () => {
+    const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+    const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+    const effectivePrice = hasDiscount && hasPrice && program.discountPrice < program.price ? program.discountPrice : program.price;
+
     addToCart({
       id: program._id,
       name: program.title,
-      price: program.price,
+      price: effectivePrice,
       image: program.imageUrl,
       quantity,
       slug: program.slug
@@ -115,7 +120,7 @@ function ProgramDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-32 md:pb-24 pt-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-background/80 pb-32 md:pb-24 pt-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
@@ -162,7 +167,7 @@ function ProgramDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background/80">
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -310,14 +315,31 @@ function ProgramDetail() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Ready to get started?</h2>
               <div className="flex items-baseline mt-2">
-                <span className="text-3xl font-bold text-main">
-                  ₹{program.price?.toLocaleString() || 'Free'}
-                </span>
-                {program.originalPrice && (
-                  <span className="ml-2 text-lg text-gray-500 line-through">
-                    ₹{program.originalPrice.toLocaleString()}
-                  </span>
-                )}
+                {(() => {
+                  const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+                  const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+                  const showDiscount = hasPrice && hasDiscount && program.discountPrice < program.price;
+                  const displayPrice = showDiscount ? program.discountPrice : program.price;
+
+                  if (!hasPrice || program.price === 0) {
+                    return (
+                      <span className="text-3xl font-bold text-main">Free</span>
+                    );
+                  }
+
+                  return (
+                    <>
+                      <span className="text-3xl font-bold text-main">
+                        ₹{displayPrice.toLocaleString('en-IN')}
+                      </span>
+                      {showDiscount ? (
+                        <span className="ml-2 text-lg text-gray-500 line-through">
+                          ₹{program.price.toLocaleString('en-IN')}
+                        </span>
+                      ) : null}
+                    </>
+                  );
+                })()}
                 <span className="ml-2 text-gray-600">• {program.duration || 'Lifetime access'}</span>
               </div>
             </div>
@@ -367,6 +389,7 @@ function RelatedPrograms({ currentProgramId, category }) {
           _id,
           title,
           price,
+          discountPrice,
           duration,
           "imageUrl": image.asset->url,
           "slug": slug.current,
@@ -447,9 +470,27 @@ function RelatedPrograms({ currentProgramId, category }) {
               {program.duration && (
                 <p className="text-gray-500 text-sm mb-2">{program.duration}</p>
               )}
-              {program.price && (
-                <p className="text-lg font-bold text-main">₹{program.price.toLocaleString()}</p>
-              )}
+              {(() => {
+                const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+                const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+                const showDiscount = hasPrice && hasDiscount && program.discountPrice < program.price;
+                const displayPrice = showDiscount ? program.discountPrice : program.price;
+
+                if (!hasPrice || program.price === 0) {
+                  return <p className="text-lg font-bold text-main">Free</p>;
+                }
+
+                return (
+                  <p className="text-lg font-bold text-main">
+                    ₹{displayPrice.toLocaleString('en-IN')}
+                    {showDiscount ? (
+                      <span className="ml-2 text-sm text-gray-500 line-through font-semibold">
+                        ₹{program.price.toLocaleString('en-IN')}
+                      </span>
+                    ) : null}
+                  </p>
+                );
+              })()}
             </div>
           </a>
         </div>

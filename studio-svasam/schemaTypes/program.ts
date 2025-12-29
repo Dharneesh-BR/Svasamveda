@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import type {PreviewValue} from 'sanity'
 
 export default defineType({
   name: 'program',
@@ -9,7 +10,7 @@ export default defineType({
       name: 'title',
       type: 'string',
       title: 'Title',
-      validation: rule => rule.required().error('Title is required')
+      validation: (rule: any) => rule.required().error('Title is required')
     }),
     defineField({
       name: 'slug',
@@ -19,7 +20,7 @@ export default defineType({
         source: 'title',
         maxLength: 96,
       },
-      validation: rule => rule.required().error('Slug is required')
+      validation: (rule: any) => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'category',
@@ -34,14 +35,14 @@ export default defineType({
         layout: 'radio',
         direction: 'horizontal'
       },
-      validation: rule => rule.required().error('Slug is required')
+      validation: (rule: any) => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'description',
       type: 'text',
       title: 'Short Description',
       description: 'A brief description shown in program listings',
-      validation: rule => rule.required().error('Slug is required')
+      validation: (rule: any) => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'body',
@@ -93,7 +94,7 @@ export default defineType({
           type: 'string',
           title: 'Alternative text',
           description: 'Important for SEO and accessibility',
-          validation: rule => rule.required().error('Slug is required')
+          validation: (rule: any) => rule.required().error('Slug is required')
         }
       ]
     }),
@@ -101,14 +102,20 @@ export default defineType({
       name: 'price',
       type: 'number',
       title: 'Price (INR)',
-      validation: rule => rule.required().min(0).error('Price is required and must be 0 or more')
+      validation: (rule: any) => rule.required().min(0).error('Price is required and must be 0 or more')
+    }),
+    defineField({
+      name: 'discountPrice',
+      type: 'number',
+      title: 'Discount Price (INR)',
+      validation: (rule: any) => rule.min(0).error('Discount price must be 0 or more')
     }),
     defineField({
       name: 'duration',
       type: 'string',
       title: 'Duration',
       description: 'e.g., "8 weeks", "1 hour"',
-      validation: rule => rule.required().error('Slug is required')
+      validation: (rule: any) => rule.required().error('Slug is required')
     }),
     defineField({
       name: 'isFeatured',
@@ -124,8 +131,8 @@ export default defineType({
       category: 'category',
       media: 'image'
     },
-    prepare(selection) {
-      const { title, category } = selection
+    prepare(selection: { title?: string; category?: string; media?: PreviewValue['media'] }): PreviewValue {
+      const { category } = selection
       return {
         ...selection,
         subtitle: category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Program` : 'No category'

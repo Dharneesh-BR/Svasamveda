@@ -141,21 +141,33 @@ export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
-    await setDoc(
-      doc(db, 'users', user.uid),
-      {
-        uid: user.uid,
-        name: user.displayName || '',
-        email: user.email || '',
-        mobile: '',
-        photoURL: user.photoURL || '',
-        provider: 'google',
-        role: 'user',
-        emailVerified: user.emailVerified,
-        updatedAt: new Date().toISOString()
-      },
-      { merge: true }
-    );
+    try {
+      await setDoc(
+        doc(db, 'users', user.uid),
+        {
+          uid: user.uid,
+          name: user.displayName || '',
+          email: user.email || '',
+          mobile: '',
+          photoURL: user.photoURL || '',
+          provider: 'google',
+          role: 'user',
+          emailVerified: user.emailVerified,
+          updatedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
+    } catch (dbError) {
+      const code = dbError?.code || '';
+      // Auth succeeded; Firestore rules may block profile sync. Don't treat this as login failure.
+      if (code === 'permission-denied') {
+        console.warn('Firestore user sync blocked (permission-denied). Continuing auth session.', dbError);
+        return { success: true, user, warning: 'permission-denied' };
+      }
+      console.warn('Firestore user sync failed. Continuing auth session.', dbError);
+      return { success: true, user, warning: code || 'firestore-sync-failed' };
+    }
+
     return { success: true, user };
   } catch (error) {
     const code = error?.code || '';
@@ -205,25 +217,35 @@ export const handleAuthRedirect = async () => {
       const providerId = result.providerId || result?._tokenResponse?.providerId || '';
       const provider = providerId.includes('google') ? 'google' : providerId.includes('facebook') ? 'facebook' : '';
 
-      const userRef = doc(db, 'users', user.uid);
-      const existing = await getDoc(userRef);
-      const now = new Date().toISOString();
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const existing = await getDoc(userRef);
+        const now = new Date().toISOString();
 
-      if (!existing.exists()) {
-        await setDoc(userRef, {
-          uid: user.uid,
-          name: user.displayName || '',
-          email: user.email || '',
-          mobile: '',
-          photoURL: user.photoURL || '',
-          provider,
-          role: 'user',
-          emailVerified: user.emailVerified,
-          createdAt: now,
-          updatedAt: now
-        });
-      } else {
-        await setDoc(userRef, { updatedAt: now, lastLogin: now }, { merge: true });
+        if (!existing.exists()) {
+          await setDoc(userRef, {
+            uid: user.uid,
+            name: user.displayName || '',
+            email: user.email || '',
+            mobile: '',
+            photoURL: user.photoURL || '',
+            provider,
+            role: 'user',
+            emailVerified: user.emailVerified,
+            createdAt: now,
+            updatedAt: now
+          });
+        } else {
+          await setDoc(userRef, { updatedAt: now, lastLogin: now }, { merge: true });
+        }
+      } catch (dbError) {
+        const code = dbError?.code || '';
+        if (code === 'permission-denied') {
+          console.warn('Firestore user sync blocked (permission-denied) after redirect. Continuing auth session.', dbError);
+          return { success: true, user, warning: 'permission-denied' };
+        }
+        console.warn('Firestore user sync failed after redirect. Continuing auth session.', dbError);
+        return { success: true, user, warning: code || 'firestore-sync-failed' };
       }
 
       return { success: true, user };

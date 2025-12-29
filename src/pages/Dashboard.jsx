@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import { auth, db } from '../firebase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase';
+import { useAuth } from '../contexts/AuthContext';
+import AddressForm from '../components/AddressForm';
+import { collection, doc, getDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { FiShoppingBag, FiBookOpen, FiHeart, FiArrowRight } from 'react-icons/fi';
 
 export default function Dashboard() {
-  const user = auth.currentUser;
+  const { user } = useAuth();
   const uid = user?.uid;
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,25 +15,53 @@ export default function Dashboard() {
   const [orders, setOrders] = useState([]);
   const [favorites, setFavorites] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [address, setAddress] = useState(null);
+  const [profileAddressFallback, setProfileAddressFallback] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const formatAddress = (data) => {
+    if (!data) return '';
+    const lines = [];
+    if (data.fullName) lines.push(data.fullName);
+    if (data.address) lines.push(data.address);
+    const cityStatePin = [data.city, data.state].filter(Boolean).join(', ');
+    const pin = data.pincode ? ` - ${data.pincode}` : '';
+    if (cityStatePin || pin) lines.push(`${cityStatePin}${pin}`.trim());
+    if (data.phone) lines.push(`Phone: ${data.phone}`);
+    if (data.landmark) lines.push(`Landmark: ${data.landmark}`);
+    return lines.filter(Boolean).join('\n');
+  };
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      if (!uid) return;
+      if (!uid) {
+        setAddress(null);
+        setProfileAddressFallback('');
+        setOrders([]);
+        setFavorites([]);
+        setEnrollments([]);
+        return;
+      }
       setLoading(true);
       setError(null);
       try {
-        const [ordersSnap, favSnap, enrollSnap] = await Promise.all([
+        const [ordersSnap, favSnap, enrollSnap, addressSnap, userSnap] = await Promise.all([
           getDocs(query(collection(db, 'users', uid, 'orders'), orderBy('createdAt', 'desc'))),
           getDocs(collection(db, 'users', uid, 'favorites')),
           getDocs(collection(db, 'users', uid, 'enrollments')),
+          getDoc(doc(db, 'users', uid, 'addresses', 'default')),
+          getDoc(doc(db, 'users', uid)),
         ]);
         if (cancelled) return;
         setOrders(ordersSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setFavorites(favSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setEnrollments(enrollSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setAddress(addressSnap.exists() ? addressSnap.data() : null);
+        const fallback = userSnap.exists() ? (userSnap.data()?.address || '') : '';
+        setProfileAddressFallback(fallback);
       } catch (e) {
         if (!cancelled) setError(e);
       } finally {
@@ -49,7 +79,7 @@ export default function Dashboard() {
 
   // Main dashboard landing page
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background/80">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -76,7 +106,56 @@ export default function Dashboard() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-6">
+            <div className="svasam-card p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <h3 className="text-lg font-medium text-gray-900">Address</h3>
+                  {!isEditingAddress ? (
+                    <p className="mt-1 text-sm text-gray-600 whitespace-pre-line break-words">
+                      {address ? formatAddress(address) : (profileAddressFallback ? profileAddressFallback : 'No address saved yet.')}
+                    </p>
+                  ) : (
+                    <div className="mt-2">
+                      <AddressForm
+                        initialData={address || {}}
+                        onSave={(addressData) => {
+                          setAddress(addressData);
+                          setIsEditingAddress(false);
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-2">
+                  {!isEditingAddress ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditingAddress(true);
+                      }}
+                      className="px-4 py-2 rounded-full bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200 transition text-sm"
+                    >
+                      Edit
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsEditingAddress(false);
+                        }}
+                        className="px-4 py-2 rounded-full bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200 transition text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Orders Card */}
             <div 
               onClick={() => navigate('/dashboard/orders')}
@@ -138,6 +217,7 @@ export default function Dashboard() {
               <div className="mt-4 flex items-center text-sm font-medium text-main">
                 View favorites <FiArrowRight className="ml-1 h-4 w-4" />
               </div>
+            </div>
             </div>
           </div>
         )}

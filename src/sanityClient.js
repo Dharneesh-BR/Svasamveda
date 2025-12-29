@@ -22,6 +22,7 @@ export const getAllPrograms = async () => {
     title,
     description,
     price,
+    discountPrice,
     duration,
     category,
     "imageUrl": image.asset->url,
@@ -49,6 +50,7 @@ export const getProgramBySlug = async (slug) => {
       title,
       description,
       price,
+      discountPrice,
       duration,
       category,
       "image": image.asset->{
@@ -124,6 +126,7 @@ export const getProgramById = async (id) => {
       title,
       description,
       price,
+      discountPrice,
       duration,
       category,
       "image": image.asset->{

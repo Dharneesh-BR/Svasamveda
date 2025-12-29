@@ -58,7 +58,7 @@ function App() {
       <CartProvider>
         <Router>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-background/80">
           <Navbar />
           <CartDrawer />
           <main className="flex-grow pt-16 md:pt-0">

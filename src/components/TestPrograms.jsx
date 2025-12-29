@@ -204,82 +204,96 @@ const TestPrograms = () => {
             className="pb-12"
           >
             {allPrograms.map((program) => (
-              <SwiperSlide key={program._id} className="h-auto">
+              <SwiperSlide key={program._id} className="h-full">
                 <Link to={`/programs/${program.slug}`} className="block h-full">
-                  <div className="svasam-card svasam-card-hover overflow-hidden h-full mx-2 group flex flex-col">
-                    <div className="h-48 w-full overflow-hidden flex-shrink-0 relative">
-                      <img 
-                        src={program.imageUrl || '/placeholder-program.jpg'} 
+                  <div className="rounded-2xl overflow-hidden bg-[#F7EEF5] shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[480px] mx-2 group flex flex-col">
+                    <div className="relative h-52 flex-shrink-0">
+                      <img
+                        src={program.imageUrl || '/placeholder-program.jpg'}
                         alt={program.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                       />
-                      <button 
-                        onClick={(e) => toggleFavorite(program._id, e)}
-                        className={`absolute top-2 right-2 p-2 rounded-full ${
-                          program.isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-600 hover:bg-white'
-                        } transition-colors duration-200 shadow-md`}
-                        aria-label={program.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                      >
-                        {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
-                      </button>
-                    </div>
-                    <div className="p-4 flex flex-col flex-grow">
-                      <div className="mb-2">
-                        <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-main rounded-full">
-                          {program.category}
-                        </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
+
+                      <div className="absolute inset-0 p-4 flex flex-col justify-between">
+                        <div>
+                          <h3 className="text-white text-2xl font-extrabold leading-tight line-clamp-2">
+                            {program.title}
+                          </h3>
+                          {program.category ? (
+                            <div className="mt-2 text-white/95 text-base font-extrabold uppercase tracking-wide line-clamp-1">
+                              {String(program.category)}
+                            </div>
+                          ) : null}
+                        </div>
+
+                        <button
+                          onClick={(e) => toggleFavorite(program._id, e)}
+                          className={`absolute top-3 right-3 p-2 rounded-full ${
+                            program.isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-600 hover:bg-white'
+                          } transition-colors duration-200 shadow-md`}
+                          aria-label={program.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                        >
+                          {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
+                        </button>
                       </div>
-                      <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-main transition-colors min-h-[40px] flex items-center">
-                        {program.title}
-                      </h3>
-                      <div className="mt-auto pt-2">
-                        <div className="flex items-center justify-between border-t border-gray-100 pt-3">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent/10 text-accent">
-                            {program.duration || '4 Weeks'}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            {(() => {
-                              const price = program.price;
-                              const mrp = program.originalPrice;
-                              const hasPrice = typeof price === 'number' && !Number.isNaN(price);
-                              const hasMrp = typeof mrp === 'number' && !Number.isNaN(mrp) && mrp > 0;
-                              const showMrp = hasPrice && hasMrp && mrp > price;
-                              const discountPct = showMrp ? Math.round(((mrp - price) / mrp) * 100) : null;
+                    </div>
 
-                              if (!hasPrice || price === 0) {
-                                return (
-                                  <span className="inline-flex items-center text-sm font-bold text-main">
-                                    Free
-                                  </span>
-                                );
-                              }
+                    <div className="relative bg-gradient-to-r from-[#2B0B3C] via-[#6B1E70] to-[#B42A6B] text-white px-4 py-3">
+                      <div className="text-sm font-semibold">
+                        <span className="font-extrabold">700+</span> Lives Transformed
+                      </div>
+                    </div>
 
+                    <div className="px-4 pt-4 flex flex-wrap gap-3 min-h-[52px] max-h-[72px] overflow-hidden">
+                      {(Array.isArray(program.tags) ? program.tags : [program.category]).filter(Boolean).slice(0, 3).map((tag, idx) => (
+                        <span
+                          key={`${tag}-${idx}`}
+                          className="px-4 py-2 rounded-full text-xs font-extrabold tracking-wide border border-[#D6B0CF] text-gray-800 bg-white/75"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="px-4 pb-5 pt-4 mt-auto">
+                      <div className="grid grid-cols-2 gap-4 items-start">
+                        <div>
+                          <div className="text-xl font-extrabold text-gray-900">{program.duration || 'Self paced'}</div>
+                          <div className="text-base text-gray-700">Sessions & Recording</div>
+                        </div>
+
+                        <div className="border-l border-black/10 pl-4">
+                          {(() => {
+                            const price = program.price;
+                            const discountPrice = program.discountPrice;
+                            const hasPrice = typeof price === 'number' && !Number.isNaN(price);
+                            const hasDiscount = typeof discountPrice === 'number' && !Number.isNaN(discountPrice);
+                            const showDiscount = hasPrice && hasDiscount && discountPrice < price;
+                            const displayPrice = showDiscount ? discountPrice : price;
+
+                            if (!hasPrice || price === 0) {
                               return (
-                                <>
-                                  {discountPct ? (
-                                    <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                                      {discountPct}% OFF
-                                    </span>
-                                  ) : null}
-
-                                  <div className="flex items-baseline gap-2">
-                                    <span className="inline-flex items-center text-sm font-bold text-main">
-                                      ₹{price.toLocaleString('en-IN')}
-                                    </span>
-                                    {showMrp ? (
-                                      <span className="text-xs text-gray-500 line-through">
-                                        ₹{mrp.toLocaleString('en-IN')}
-                                      </span>
-                                    ) : null}
-                                  </div>
-                                </>
+                                <div className="text-2xl font-extrabold text-gray-900">Free</div>
                               );
-                            })()}
-                            <svg className="w-3 h-3 text-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                          </div>
+                            }
+
+                            return (
+                              <div className="flex items-baseline gap-2 flex-wrap">
+                                <div className="text-2xl font-extrabold text-gray-900">
+                                  ₹{displayPrice.toLocaleString('en-IN')}
+                                </div>
+                                <div className="text-xs text-gray-600">per session</div>
+                                {showDiscount ? (
+                                  <div className="w-full text-sm text-gray-600 line-through">
+                                    ₹{price.toLocaleString('en-IN')}
+                                  </div>
+                                ) : null}
+                              </div>
+                            );
+                          })()}
+                          <div className="text-base text-gray-700 mt-1">Recording Available</div>
                         </div>
                       </div>
                     </div>

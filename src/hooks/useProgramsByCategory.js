@@ -42,6 +42,7 @@ export function useProgramsByCategory(category) {
         category,
         "imageUrl": image.asset->url,
         price,
+        discountPrice,
         originalPrice,
         duration,
         "slug": select(slug.current != null => slug.current, _id) // Fallback to _id if no slug
