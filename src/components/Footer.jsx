@@ -29,7 +29,7 @@ export default function Footer() {
 
       {/* Copyright Section */}
       <section className="py-4 md:py-8 px-6 md:px-24 flex bg-pink-50 text-gray-700">
-        <span className="ml-auto text-right text-xs md:text-base">© 2025 Svasam Wellness. All rights reserved</span>
+        <span className="ml-auto text-right text-xs md:text-base">© 2025 Svasam Veda Lifesciences Pvt Ltd. All rights reserved</span>
       </section>
     </footer>
   );

@@ -1,9 +1,26 @@
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useProgramsByCategory } from '../hooks/useProgramsByCategory';
 
 export default function Soul() {
   const navigate = useNavigate();
   const { programs, loading, error } = useProgramsByCategory('soul');
+  const [favourites, setFavourites] = useState(() => new Set());
+
+  const toggleFavourite = (programKey) => {
+    setFavourites((prev) => {
+      const next = new Set(prev);
+      if (next.has(programKey)) next.delete(programKey);
+      else next.add(programKey);
+      return next;
+    });
+  };
+
+  const getProgramKey = useMemo(
+    () => (program) => program?._id || program?.slug?.current || program?.slug || program?.title,
+    []
+  );
 
   if (loading) {
     return (
@@ -48,10 +65,31 @@ export default function Soul() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {programs.map((program) => (
+              (() => {
+                const programKey = getProgramKey(program);
+                const isFavourite = favourites.has(programKey);
+
+                return (
               <div
                 key={program._id || program.title}
-                className="bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="relative bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               >
+                <button
+                  type="button"
+                  aria-label={isFavourite ? 'Remove from favourites' : 'Add to favourites'}
+                  className="absolute top-4 right-4 z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleFavourite(programKey);
+                  }}
+                >
+                  {isFavourite ? (
+                    <FaHeart className="text-red-500" />
+                  ) : (
+                    <FaRegHeart className="text-gray-500" />
+                  )}
+                </button>
                 {program.imageUrl && (
                   <img 
                     src={program.imageUrl} 
@@ -100,6 +138,8 @@ export default function Soul() {
                   </div>
                 </div>
               </div>
+                );
+              })()
             ))}
           </div>
         )}

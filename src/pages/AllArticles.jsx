@@ -7,7 +7,7 @@ function AllArticles() {
       title: 'The Power of Positive Thinking',
       category: 'Mind',
       date: 'July 1, 2025',
-      author: 'Dr. Anjali Sharma',
+      instructor: 'Dr. Anjali Sharma',
       image: '/blog-1.jpg',
       excerpt: 'Discover how positive thinking can transform your life and improve your overall well-being.',
       tags: ['Mindfulness', 'Wellness', 'Self-Improvement']
@@ -17,7 +17,7 @@ function AllArticles() {
       title: 'Yoga for Better Sleep',
       category: 'Body',
       date: 'June 25, 2025',
-      author: 'Yogi Raj',
+      instructor: 'Yogi Raj',
       image: '/blog-2.jpg',
       excerpt: 'Learn yoga poses and techniques to help you get a better night\'s sleep.',
       tags: ['Yoga', 'Sleep', 'Wellness']
@@ -27,7 +27,7 @@ function AllArticles() {
       title: 'Understanding Chakras',
       category: 'Soul',
       date: 'June 20, 2025',
-      author: 'Priya Patel',
+      instructor: 'Priya Patel',
       image: '/blog-3.jpg',
       excerpt: 'A comprehensive guide to the seven major chakras and their significance.',
       tags: ['Soul', 'Energy', 'Healing']
@@ -37,7 +37,7 @@ function AllArticles() {
       title: 'Stress Management Techniques',
       category: 'Mind',
       date: 'June 15, 2025',
-      author: 'Dr. Anjali Sharma',
+      instructor: 'Dr. Anjali Sharma',
       image: '/blog-4.jpg',
       excerpt: 'Effective strategies to manage and reduce stress in your daily life.',
       tags: ['Mindfulness', 'Stress', 'Wellness']
@@ -47,7 +47,7 @@ function AllArticles() {
       title: 'Nutrition for Wellness',
       category: 'Body',
       date: 'June 10, 2025',
-      author: 'Neha Verma',
+      instructor: 'Neha Verma',
       image: '/blog-5.jpg',
       excerpt: 'How proper nutrition can support your wellness journey.',
       tags: ['Nutrition', 'Wellness', 'Health']
@@ -87,7 +87,7 @@ function AllArticles() {
                   <p className="text-gray-600 mb-4">{post.excerpt}</p>
                   <div className="flex justify-between items-center text-sm text-gray-500">
                     <span>{post.date}</span>
-                    <span>{post.author}</span>
+                    <span>{post.instructor}</span>
                   </div>
                   <div className="mt-4 flex gap-2">
                     {post.tags.map((tag) => (

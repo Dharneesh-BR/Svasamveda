@@ -28,20 +28,6 @@ const blogPost: SchemaTypeDefinition = {
         validation: (Rule: Rule) => Rule.required()
       },
       {
-        name: 'author',
-        type: 'reference',
-        title: 'Author',
-        to: [{type: 'author'}],
-        validation: (Rule: Rule) => {
-          try {
-            return Rule.required();
-          } catch (error) {
-            console.error('Validation error for author field:', error);
-            return Rule;
-          }
-        }
-      },
-      {
         name: 'mainImage',
         type: 'image',
         title: 'Main image',

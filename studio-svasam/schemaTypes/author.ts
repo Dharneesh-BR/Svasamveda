@@ -3,7 +3,7 @@ import { type Rule, type SchemaTypeDefinition } from 'sanity'
 export default {
   name: 'author',
   type: 'document',
-  title: 'Author',
+  title: 'Instructors',
   fields: [
     {
       name: 'name',
