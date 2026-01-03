@@ -52,15 +52,15 @@ function Mind() {
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#8e6192] mb-4">Mind Wellness Programs</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Mind Wellness Programs</h1>
+          <p className="text-lg text-white/70 max-w-3xl mx-auto">
             Discover our transformative programs designed to enhance your mental well-being and unlock your full potential.
           </p>
         </div>
         
         {(!programs || programs.length === 0) ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No mind programs available at the moment. Please check back later.</p>
+            <p className="text-white/70">No mind programs available at the moment. Please check back later.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -99,7 +99,7 @@ function Mind() {
                   />
                 )}
                 <div className="p-4">
-                  <h2 className="text-xl font-bold text-[#8e6192] mb-3">{program.title}</h2>
+                  <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
                   <p className="text-gray-600 mb-4 line-clamp-3">
                     {program.description}
                   </p>
@@ -112,14 +112,14 @@ function Mind() {
 
                       if (!hasPrice || program.price === 0) {
                         return (
-                          <span className="text-lg font-semibold text-purple-700">
+                          <span className="text-lg font-semibold text-purple-600">
                             Free
                           </span>
                         );
                       }
 
                       return (
-                        <span className="text-lg font-semibold text-purple-700">
+                        <span className="text-lg font-semibold text-purple-600">
                           ₹{displayPrice.toLocaleString('en-IN')}
                           {showDiscount ? (
                             <span className="ml-2 text-sm text-gray-500 line-through font-semibold">
@@ -130,7 +130,7 @@ function Mind() {
                       );
                     })()}
                     <button
-                      className="px-4 py-2 bg-accent text-white rounded-lg font-semibold shadow hover:bg-[#704091] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition"
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 transition"
                       onClick={() => program.slug ? navigate(`/programs/${program.slug.current || program.slug}`) : '#'}
                     >
                       Read More

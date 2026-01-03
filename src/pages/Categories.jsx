@@ -33,48 +33,48 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
         className="w-full h-full group block"
         aria-label={t('categories.exploreAriaLabel', { title })}
       >
-        {/* Mobile View - Stacked Image and Title */}
-        <div className="md:hidden bg-white rounded-xl shadow-md p-4 w-full flex flex-col items-center hover:shadow-lg transition-all duration-200">
-          <div className="h-16 w-16 mb-2">
+        {/* Mobile View - Compact Card */}
+        <div className="md:hidden bg-white rounded-2xl shadow-xl p-6 w-full flex flex-col items-center hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-purple-100 mx-auto max-w-sm">
+          <div className="h-20 w-20 mb-4 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full"></div>
             <img 
               src={image} 
               alt={alt}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain relative z-10"
               loading="lazy"
             />
           </div>
-          <h2 className="text-sm font-semibold text-main text-center line-clamp-2">
+          <h2 className="text-base font-semibold text-gray-800 text-center line-clamp-2">
             {title}
           </h2>
         </div>
 
-        {/* Desktop View - Full Card */}
-        <div className="hidden md:flex bg-white rounded-2xl shadow-lg p-4 hover:shadow-2xl transition-all duration-300 w-full h-[380px] flex flex-col">
-          <div className="h-24 w-24 mx-auto mb-4 flex-shrink-0">
+        {/* Desktop View - Elegant Card */}
+        <div className="hidden md:flex bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300 w-full h-[420px] flex flex-col border border-purple-100 mx-auto max-w-md">
+          <div className="h-32 w-32 mx-auto mb-6 flex-shrink-0 relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl"></div>
             <img 
               src={image} 
               alt={alt}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain relative z-10"
               loading="lazy"
               style={{ maxWidth: '100%', maxHeight: '100%' }}
             />
           </div>
           
-          <div className="h-14 flex items-center justify-center text-center">
-            <h2 className="text-base sm:text-lg font-bold text-center text-main line-clamp-2 px-2">
+          <div className="flex-1 flex flex-col justify-center text-center">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 line-clamp-2 px-2">
               {title}
             </h2>
-          </div>
-          
-          <div className="h-20 overflow-hidden px-2 flex items-start">
-            <p className="text-text text-sm leading-relaxed text-center line-clamp-3">
+            
+            <p className="text-gray-600 text-sm leading-relaxed text-center line-clamp-3 px-4">
               {description}
             </p>
           </div>
           
-          <div className="mt-auto pt-3 border-t border-gray-100">
-            <div className="flex items-center justify-center text-sm font-medium text-accent group-hover:underline">
-              <span className="mr-1">{t('categories.explore')}</span>
+          <div className="mt-6 pt-4 border-t border-purple-100">
+            <div className="flex items-center justify-center text-sm font-semibold text-purple-600 group-hover:text-purple-700 transition-colors">
+              <span className="mr-2">{t('categories.explore')}</span>
               <svg 
                 className="w-4 h-4 transition-transform group-hover:translate-x-1" 
                 fill="none" 
@@ -191,39 +191,33 @@ export default function Categories() {
   ];
 
   return (
-    <main className="relative min-h-screen w-full bg-background/80">
+    <main className="relative min-h-screen w-full">
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Banner with Mind Image */}
-          <header className="relative mt-8 md:mt-12 mb-12 md:mb-16 rounded-xl overflow-hidden h-64 md:h-96">
-            <div className="absolute inset-0">
-              <img 
-                src={BannerImg}
-                alt="Svasam banner"
-                className="w-full h-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-main/90 to-accent/80" />
-            </div>
+          {/* Hero Banner */}
+          <header className="relative mt-8 md:mt-12 mb-12 md:mb-16 rounded-2xl overflow-hidden h-64 md:h-96 bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
             <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('categories.title')}</h1>
-              <p className="text-lg md:text-xl text-white/90 max-w-3xl">
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg">{t('categories.title')}</h1>
+              <p className="text-lg md:text-xl text-white/95 max-w-3xl drop-shadow-md">
                 {t('categories.description')}
               </p>
             </div>
+            {/* Subtle gradient overlay for depth */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-transparent to-purple-800/20 pointer-events-none" />
           </header>
 
           {/* Categories Section */}
-          <section aria-labelledby="categories-heading" className="w-full py-3 sm:py-6">
-            <div className="mb-3 text-center">
-              <h2 id="categories-heading" className="text-3xl md:text-4xl font-bold text-main">Our Categories</h2>
+          <section aria-labelledby="categories-heading" className="w-full py-8 sm:py-12">
+            <div className="mb-8 text-center">
+              <h2 id="categories-heading" className="text-4xl md:text-5xl font-bold text-white mb-4">Our Categories</h2>
+              <p className="text-white/70 text-lg max-w-2xl mx-auto">Explore our transformative wellness programs designed to nurture your mind, body, and soul</p>
             </div>
             
-            {/* Horizontal Scrollable Categories for Mobile, Grid for Desktop */}
+            {/* Categories Grid */}
             <div className="relative">
-              <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-6 md:gap-8 mt-6 px-4 sm:px-6 overflow-x-auto pb-4 sm:pb-0 no-scrollbar">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-8 px-4 sm:px-6 lg:px-8">
                 {categories.map((category) => (
-                  <div key={category.id} className="flex-shrink-0 w-32 sm:w-auto sm:flex-shrink">
+                  <div key={category.id} className="w-full">
                     <CategoryCard
                       to={`/${category.id}`}
                       title={category.title}
@@ -245,8 +239,8 @@ export default function Categories() {
           {false && (
             <section className="mb-12">
               <div className="mb-3 text-center">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-main">Shop by Category</h2>
-                <Link to="/" className="block mt-2 text-base text-accent hover:text-[#704091] font-semibold">View all</Link>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-white">Shop by Category</h2>
+                <Link to="/" className="block mt-2 text-base text-white/70 hover:text-white font-semibold">View all</Link>
               </div>
               <div className="relative">
                 <button
@@ -287,7 +281,7 @@ export default function Categories() {
                           <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm" style={{ display: 'none' }}>No Image</div>
                         </div>
                       </div>
-                      <div className="mt-2 text-center text-sm font-semibold text-main">{cat.title}</div>
+                      <div className="mt-2 text-center text-sm font-semibold text-white">{cat.title}</div>
                     </button>
                   ))}
                 </div>
@@ -307,7 +301,7 @@ export default function Categories() {
           {false && (
             <section className="mb-12">
               <div className="mb-3 text-center">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-main">Featured Products</h2>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-white">Featured Products</h2>
               </div>
               <div className="relative">
                 <button
@@ -339,9 +333,9 @@ export default function Categories() {
                             {(() => { const t = (item.shortDescription || item.description || '').trim(); return t.length > 60 ? t.slice(0,60) + '…' : t; })()}
                           </p>
                           <div className="mt-auto flex items-center justify-between">
-                            <span className="text-main font-bold text-sm">₹{item.price?.toLocaleString('en-IN')}</span>
+                            <span className="text-white font-bold text-sm">₹{item.price?.toLocaleString('en-IN')}</span>
                             <button
-                              className="px-2 py-1 bg-main text-white rounded-md text-xs font-semibold hover:brightness-105"
+                              className="px-2 py-1 bg-purple-600 text-white rounded-md text-xs font-semibold hover:bg-purple-700"
                               onClick={() => handleAddToCart(item)}
                             >
                               Add to Cart

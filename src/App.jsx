@@ -58,10 +58,10 @@ function App() {
       <CartProvider>
         <Router>
         <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-background/80">
+        <div className="flex flex-col min-h-screen bg-background">
           <Navbar />
           <CartDrawer />
-          <main className="flex-grow pt-16 md:pt-0">
+          <main className="flex-grow pt-20 md:pt-16">
             <Routes>
               <Route path="/" element={<Categories />} />
               <Route path="/mind" element={<Mind />} />

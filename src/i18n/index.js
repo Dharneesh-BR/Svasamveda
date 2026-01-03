@@ -122,7 +122,7 @@ export const translations = {
       faqQuestion3: 'Can I cancel my appointment?'
     },
     blog: {
-      title: 'Our Blog',
+      title: 'Svasam Journal',
       description: 'Discover insightful articles on mind, body, and soul wellness from our experts.',
       stayUpdated: 'Stay Updated',
       subscribeText: 'Get our latest wellness articles straight to your inbox.',

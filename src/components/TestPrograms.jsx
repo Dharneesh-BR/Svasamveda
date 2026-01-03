@@ -152,8 +152,8 @@ const TestPrograms = () => {
   return (
     <div className="py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-main mb-4">Featured Sessions</h2>
-        <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+        <h2 className="text-3xl font-bold text-center text-white mb-4">Featured Sessions</h2>
+        <p className="text-center text-white/70 mb-12 max-w-3xl mx-auto">
           Explore our carefully curated programs designed to nurture your mind, body, and soul
         </p>
         
@@ -198,7 +198,7 @@ const TestPrograms = () => {
               clickable: true,
               el: '.programs-pagination',
               bulletClass: 'w-2 h-2 bg-gray-300 rounded-full inline-block mx-1 cursor-pointer',
-              bulletActiveClass: 'bg-main w-6',
+              bulletActiveClass: 'bg-white w-6',
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             className="pb-12"
@@ -310,7 +310,7 @@ const TestPrograms = () => {
                 <span 
                   key={index}
                   className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    index === Math.floor(activeIndex / 6) ? 'bg-main w-6' : 'bg-gray-300'
+                    index === Math.floor(activeIndex / 6) ? 'bg-white w-6' : 'bg-gray-300'
                   }`}
                   onClick={() => swiperRef.current?.swiper.slideTo(index * 6)}
                 />
@@ -322,7 +322,7 @@ const TestPrograms = () => {
         <div className="mt-12 text-center">
           <Link 
             to="/sessions" 
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-main hover:bg-accent transition-colors duration-200"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200"
           >
             View All Sessions
             <svg className="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">

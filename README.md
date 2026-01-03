@@ -108,7 +108,6 @@ VITE_SANITY_PROJECT_ID=n5smwbzi
 VITE_SANITY_DATASET=production1
 VITE_SANITY_API_VERSION=2023-07-21
 VITE_SANITY_USE_CDN=true
-NODE_ENV=production
 ```
 
 ## 🚀 Deployment
@@ -130,6 +129,26 @@ The project is configured for Netlify deployment:
 ### Alternative Deployments
 - **Vercel**: Use `npm run vercel-build`
 - **Manual**: Use `deploy.sh` script
+
+### Sanity Studio (CMS)
+
+Sanity Studio lives in `studio-svasam/`.
+
+1. **Install dependencies**
+   ```bash
+   cd studio-svasam
+   npm install
+   ```
+
+2. **Run locally**
+   ```bash
+   npm run dev
+   ```
+
+3. **Deploy Studio**
+   ```bash
+   npm run deploy
+   ```
 
 ## 🎨 Key Features
 
@@ -204,14 +223,17 @@ Access the CMS at your Sanity Studio URL to manage:
 - Wellness programs
 - Store products  
 - Blog posts
-- Author profiles
+- Instructor profiles
 - Media assets
 
 ### Content Types
 - `program`: Wellness programs
 - `storeItem`: E-commerce products
 - `blogPost`: Blog articles
-- `author`: Content authors
+- `author`: Instructors (display name in Studio)
+
+### Notes
+- Blog posts no longer include an `author` field.
 
 ## 🤝 Contributing
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { logOut } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
-import SvasamLogo from '../assets/Logo.png';
+import SvasamLogo from '../assets/svasam logo copy.png';
 import CartIcon from './CartIcon';
 
 export default function Navbar() {
@@ -42,7 +42,7 @@ export default function Navbar() {
   return (
     <>
     {/* Mobile Navigation */}
-    <nav className="md:hidden fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+    <nav className="md:hidden fixed top-0 left-0 right-0 bg-gradient-to-r from-[#2d1b69] via-[#8b5cf6] to-[#a78bfa] shadow-lg z-50">
       <div className="container mx-auto px-3 py-2 flex justify-between items-center">
         <button 
           className="p-2 -ml-2 text-gray-700"
@@ -55,11 +55,11 @@ export default function Navbar() {
         </button>
 
         <Link to="/" className="flex items-center">
-          <span className="text-xl font-bold text-gray-900">SVASAM</span>
+          <img src={SvasamLogo} alt="Svasam" className="h-8 w-auto" />
         </Link>
 
         <div className="flex items-center space-x-4">
-          <Link to="/cart" className="text-gray-700 relative">
+          <Link to="/cart" className="text-white relative">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
@@ -67,7 +67,7 @@ export default function Navbar() {
           </Link>
           
           {user ? (
-            <Link to="/profile" className="text-gray-700">
+            <Link to="/profile" className="text-white">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
@@ -84,32 +84,31 @@ export default function Navbar() {
     </nav>
 
     {/* Desktop Navigation */}
-    <nav className="hidden md:flex bg-background shadow px-4 sm:px-6 py-2 items-center sticky top-0 z-50">
+    <nav className="hidden md:flex bg-gradient-to-r from-[#2d1b69] via-[#8b5cf6] to-[#a78bfa] shadow-lg px-4 sm:px-6 py-2 items-center fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center gap-2">
-        <Link to="/" className="flex items-center gap-2" aria-label="Svasam Home">
-          <img src={SvasamLogo} alt="Svasam Logo" className="h-8 w-8 sm:h-10 sm:w-10" />
-          <span className="text-xl sm:text-2xl font-bold text-main">Svasam</span>
+        <Link to="/" className="flex items-center" aria-label="Svasam Home">
+          <img src={SvasamLogo} alt="Svasam" className="h-10 w-auto" />
         </Link>
       </div>
 
-      <ul className="flex gap-4 lg:gap-6 font-medium text-accent flex-1 justify-center">
+      <ul className="flex gap-4 lg:gap-6 font-medium text-white flex-1 justify-center">
         <li className="relative group">
-          <button className="flex items-center gap-1 hover:text-main transition font-semibold focus:outline-none">
+          <button className="flex items-center gap-1 hover:text-yellow-300 transition font-semibold focus:outline-none text-white">
             Categories
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          <div className="absolute left-0 mt-1 w-48 bg-gradient-to-br from-background to-white rounded-xl shadow-2xl border border-accent opacity-0 invisible group-hover:visible group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transform scale-95 group-hover:scale-100 transition-all duration-200 z-50">
+          <div className="absolute left-0 mt-1 w-48 bg-white rounded-xl shadow-2xl border border-purple-100 opacity-0 invisible group-hover:visible group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transform scale-95 group-hover:scale-100 transition-all duration-200 z-50">
             <div className="py-2">
-              <Link to="/mind" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Mind</Link>
-              <Link to="/body" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Body</Link>
-              <Link to="/soul" className="block px-5 py-2 rounded-lg text-main hover:bg-accent hover:text-background transition font-semibold" onClick={handleNavigation}>Soul</Link>
+              <Link to="/mind" className="block px-5 py-2 rounded-lg text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition font-semibold" onClick={handleNavigation}>Mind</Link>
+              <Link to="/body" className="block px-5 py-2 rounded-lg text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition font-semibold" onClick={handleNavigation}>Body</Link>
+              <Link to="/soul" className="block px-5 py-2 rounded-lg text-gray-800 hover:bg-purple-50 hover:text-purple-700 transition font-semibold" onClick={handleNavigation}>Soul</Link>
             </div>
           </div>
         </li>
-        <li><Link to="/sessions" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
-        <li><Link to="/blog" className="hover:text-main transition font-semibold" onClick={handleNavigation}>Blog</Link></li>
+        <li><Link to="/sessions" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
+        <li><Link to="/blog" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Svasam Journal</Link></li>
       </ul>
 
       <div className="flex items-center gap-2 lg:gap-4">
@@ -122,17 +121,17 @@ export default function Navbar() {
 
         {user ? (
           <div className="flex items-center gap-2">
-            <span className="hidden lg:flex px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 via-purple-200 to-blue-100 text-main font-semibold shadow border border-purple-200 text-sm">
+            <span className="hidden lg:flex px-4 py-2 rounded-full bg-white/20 text-white font-semibold shadow border border-white/30 text-sm backdrop-blur-sm">
               <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               {user?.displayName || user?.email || 'User'}
             </span>
-            <Link to="/dashboard" className="px-3 py-2 rounded-full bg-main text-white font-semibold shadow border border-main hover:brightness-105 transition text-sm">Dashboard</Link>
-            <button onClick={handleLogout} className="px-3 py-2 rounded-full bg-main text-white font-semibold shadow border border-main hover:brightness-105 transition text-sm">Logout</button>
+            <Link to="/dashboard" className="px-3 py-2 rounded-full bg-white/20 text-white font-semibold shadow border border-white/30 hover:bg-white/30 transition text-sm backdrop-blur-sm">Dashboard</Link>
+            <button onClick={handleLogout} className="px-3 py-2 rounded-full bg-white/20 text-white font-semibold shadow border border-white/30 hover:bg-white/30 transition text-sm backdrop-blur-sm">Logout</button>
           </div>
         ) : (
           <Link
             to="/login"
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-main text-white font-semibold shadow-lg hover:shadow-xl hover:brightness-105 hover:-translate-y-0.5 transition-all duration-200 border border-main text-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-purple-700 font-semibold shadow-lg hover:shadow-xl hover:bg-purple-50 hover:-translate-y-0.5 transition-all duration-200 border border-purple-200 text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
             <span className="hidden lg:inline">My Sessions</span>
@@ -159,13 +158,12 @@ export default function Navbar() {
             </button>
 
             {/* Logo - Matches desktop view */}
-            <Link to="/" className="flex items-center gap-2 ml-4" aria-label="Svasam Home">
+            <Link to="/" className="flex items-center ml-4" aria-label="Svasam Home">
               <img 
                 src={SvasamLogo} 
-                alt="Svasam Logo" 
-                className="h-8 w-8 sm:h-10 sm:w-10" 
+                alt="Svasam" 
+                className="h-10 w-auto" 
               />
-              <span className="text-xl sm:text-2xl font-bold text-main">Svasam</span>
             </Link>
           </div>
 
@@ -216,13 +214,12 @@ export default function Navbar() {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
-          <Link to="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)} aria-label="Svasam Home">
+          <Link to="/" className="flex items-center" onClick={() => setIsMobileMenuOpen(false)} aria-label="Svasam Home">
             <img 
               src={SvasamLogo} 
-              alt="Svasam Logo" 
-              className="h-8 w-8" 
+              alt="Svasam" 
+              className="h-8 w-auto" 
             />
-            <span className="text-xl font-bold text-main">Svasam</span>
           </Link>
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
@@ -298,7 +295,7 @@ export default function Navbar() {
               <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
-              Blog
+              Svasam Journal
             </Link>
             
             {/* User Section - Only show user info and logout */}

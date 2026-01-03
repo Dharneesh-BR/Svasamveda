@@ -17,7 +17,13 @@
 }
 body {
   font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #2d1b69 0%, #5b3fa8 20%, #8b5cf6 40%, #a78bfa 60%, #c4b5fd 80%, #ddd6fe 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
 }
+
 
 /* Utility: hide scrollbars (keeps scrolling functional) */
 .no-scrollbar {

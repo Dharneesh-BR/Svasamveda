@@ -51,10 +51,10 @@ const Testimonials = () => {
     <section className="py-4 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-main sm:text-4xl">
+          <h2 className="text-4xl md:text-5xl font-bold text-white sm:text-4xl">
             What Our Community Says
           </h2>
-          <p className="mt-3 max-w-2xl mx-auto text-lg text-gray-500 sm:mt-4">
+          <p className="mt-3 max-w-2xl mx-auto text-lg text-white/70 sm:mt-4">
             Hear from people who have transformed their lives with our programs
           </p>
         </div>
@@ -84,27 +84,27 @@ const Testimonials = () => {
               clickable: true,
               el: '.testimonial-pagination',
               bulletClass: 'w-2 h-2 bg-gray-300 rounded-full inline-block mx-1 cursor-pointer',
-              bulletActiveClass: 'bg-main w-6',
+              bulletActiveClass: 'bg-white w-6',
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
             className="pb-12"
           >
             {testimonials.map((testimonial) => (
               <SwiperSlide key={testimonial.id}>
-                <div className="bg-white/90 p-6 rounded-lg shadow-md h-full mx-2 backdrop-blur-sm">
+                <div className="bg-white rounded-3xl shadow-xl p-6 hover:shadow-2xl h-[315px] mx-2 transition-all duration-300 flex flex-col">
                   <div className="flex items-center mb-4">
                     <img 
-                      className="h-14 w-14 rounded-full object-cover" 
+                      className="h-12 w-12 rounded-full object-cover" 
                       src={testimonial.image} 
                       alt={testimonial.name} 
                     />
-                    <div className="ml-4">
-                      <h3 className="text-lg font-medium text-gray-900">{testimonial.name}</h3>
-                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                    <div className="ml-3">
+                      <h3 className="text-lg font-semibold text-gray-900">{testimonial.name}</h3>
+                      <p className="text-xs text-gray-600">{testimonial.role}</p>
                     </div>
                   </div>
-                  <p className="text-gray-600 italic">"{testimonial.content}"</p>
-                  <div className="mt-4 flex">
+                  <p className="text-gray-700 italic flex-grow mb-4 text-sm leading-relaxed">"{testimonial.content}"</p>
+                  <div className="mt-auto pt-2 flex">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <svg
                         key={star}
@@ -128,7 +128,7 @@ const Testimonials = () => {
                 <span 
                   key={index}
                   className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    index === activeIndex ? 'bg-main w-6' : 'bg-gray-300'
+                    index === activeIndex ? 'bg-white w-6' : 'bg-gray-300'
                   }`}
                   onClick={() => swiperRef.current?.swiper.slideTo(index)}
                 />
