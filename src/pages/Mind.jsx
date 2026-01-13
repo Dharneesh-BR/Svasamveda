@@ -72,7 +72,7 @@ function Mind() {
                 return (
               <div
                 key={program._id || program.title}
-                className="relative bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               >
                 <button
                   type="button"
@@ -94,11 +94,11 @@ function Mind() {
                   <img 
                     src={program.imageUrl} 
                     alt={program.title}
-                    className="w-full h-48 object-cover rounded-t-lg mb-4"
+                    className="w-full h-48 object-cover"
                     loading="lazy"
                   />
                 )}
-                <div className="p-4">
+                <div className="p-6">
                   <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
                   <p className="text-gray-600 mb-4 line-clamp-3">
                     {program.description}
@@ -112,7 +112,7 @@ function Mind() {
 
                       if (!hasPrice || program.price === 0) {
                         return (
-                          <span className="text-lg font-semibold text-purple-600">
+                          <span className="text-lg font-semibold text-purple-700">
                             Free
                           </span>
                         );

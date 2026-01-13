@@ -206,8 +206,8 @@ const TestPrograms = () => {
             {allPrograms.map((program) => (
               <SwiperSlide key={program._id} className="h-full">
                 <Link to={`/programs/${program.slug}`} className="block h-full">
-                  <div className="rounded-2xl overflow-hidden bg-[#F7EEF5] shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[480px] mx-2 group flex flex-col">
-                    <div className="relative h-52 flex-shrink-0">
+                  <div className="rounded-2xl overflow-hidden bg-[#F7EEF5] shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[380px] mx-2 group flex flex-col">
+                    <div className="relative h-40 flex-shrink-0">
                       <img
                         src={program.imageUrl || '/placeholder-program.jpg'}
                         alt={program.title}
@@ -237,12 +237,6 @@ const TestPrograms = () => {
                         >
                           {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
                         </button>
-                      </div>
-                    </div>
-
-                    <div className="relative bg-gradient-to-r from-[#2B0B3C] via-[#6B1E70] to-[#B42A6B] text-white px-4 py-3">
-                      <div className="text-sm font-semibold">
-                        <span className="font-extrabold">700+</span> Lives Transformed
                       </div>
                     </div>
 

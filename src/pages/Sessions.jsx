@@ -50,7 +50,14 @@ function Sessions() {
             >
               <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <div className="relative bg-gray-100">
-                  {session.mediaType === 'audio' && session.fileUrl ? (
+                  {session.thumbnail ? (
+                    <img 
+                      src={session.thumbnail} 
+                      alt={session.title || 'Session thumbnail'}
+                      className="w-full h-48 object-cover"
+                      loading="lazy"
+                    />
+                  ) : session.mediaType === 'audio' && session.fileUrl ? (
                     <div className="p-4">
                       <audio controls className="w-full" src={session.fileUrl} preload="none" />
                     </div>

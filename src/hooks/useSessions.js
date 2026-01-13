@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { client } from '@/lib/sanity';
 
 // Fetches sessions from Sanity
-// Schema: session { title, description, mediaType ('audio'|'video'), file (type: file) }
-// Returns list with: _id, title, description, mediaType, fileUrl
+// Schema: session { title, description, mediaType ('audio'|'video'), file (type: file), thumbnail (type: image) }
+// Returns list with: _id, title, description, mediaType, fileUrl, thumbnail
 export function useSessions() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,9 @@ export function useSessions() {
           description,
           mediaType,
           // dereference file asset url
-          "fileUrl": file.asset->url
+          "fileUrl": file.asset->url,
+          // dereference thumbnail asset url
+          "thumbnail": thumbnail.asset->url
         }`;
         const data = await client.fetch(query);
         if (!cancelled) {

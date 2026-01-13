@@ -1,13 +1,15 @@
 import { useSanityData } from '../hooks/useSanityData';
 
 export default function BlogPosts() {
-  // Example GROQ query to fetch blog posts with author information
+  // Example GROQ query to fetch blog posts with author information and thumbnail
   const query = `*[_type == "blogPost"] {
     _id,
     title,
     slug,
     excerpt,
-    publishedAt
+    publishedAt,
+    thumbnail,
+    mainImage
   } | order(publishedAt desc)`;
 
   const { data: posts, loading, error } = useSanityData(query);
@@ -53,11 +55,12 @@ export default function BlogPosts() {
     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
         <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-          {post.mainImage && (
+          {(post.thumbnail || post.mainImage) && (
             <img 
-              src={post.mainImage.asset?.url} 
+              src={post.thumbnail?.asset?.url || post.mainImage?.asset?.url} 
               alt={post.title}
               className="w-full h-48 object-cover"
+              loading="lazy"
             />
           )}
           <div className="p-6">

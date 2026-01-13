@@ -209,7 +209,6 @@ export default function Categories() {
           {/* Categories Section */}
           <section aria-labelledby="categories-heading" className="w-full py-8 sm:py-12">
             <div className="mb-8 text-center">
-              <h2 id="categories-heading" className="text-4xl md:text-5xl font-bold text-white mb-4">Our Categories</h2>
               <p className="text-white/70 text-lg max-w-2xl mx-auto">Explore our transformative wellness programs designed to nurture your mind, body, and soul</p>
             </div>
             

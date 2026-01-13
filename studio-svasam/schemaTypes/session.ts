@@ -36,5 +36,14 @@ export default defineType({
         accept: "audio/*,video/*",
       },
     },
+    {
+      name: "thumbnail",
+      title: "Thumbnail",
+      type: "image",
+      options: {
+        hotspot: true,
+      },
+      description: "Thumbnail image for session cards (recommended: 400x300px)",
+    },
   ],
 });

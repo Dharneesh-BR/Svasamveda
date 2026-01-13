@@ -52,8 +52,8 @@ export default function Soul() {
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#8e6192] mb-4">Soul Wellness Programs</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold text-white mb-4">Soul Wellness Programs</h1>
+          <p className="text-lg text-white/70 max-w-3xl mx-auto">
             Discover our transformative programs designed to nurture your spiritual growth and inner peace.
           </p>
         </div>
@@ -72,12 +72,12 @@ export default function Soul() {
                 return (
               <div
                 key={program._id || program.title}
-                className="relative bg-white rounded-xl shadow-lg p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+                className="relative bg-gradient-to-br from-purple-900 to-purple-700 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               >
                 <button
                   type="button"
                   aria-label={isFavourite ? 'Remove from favourites' : 'Add to favourites'}
-                  className="absolute top-4 right-4 z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-accent"
+                  className="absolute top-4 right-4 z-10 inline-flex items-center justify-center w-8 h-8 rounded-full bg-white/90 shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-accent"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -91,16 +91,24 @@ export default function Soul() {
                   )}
                 </button>
                 {program.imageUrl && (
-                  <img 
-                    src={program.imageUrl} 
-                    alt={program.title}
-                    className="w-full h-48 object-cover rounded-t-lg mb-4"
-                    loading="lazy"
-                  />
+                  <div className="relative h-48">
+                    <img 
+                      src={program.imageUrl} 
+                      alt={program.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-white text-lg font-bold leading-tight line-clamp-2">
+                        {program.title}
+                      </h3>
+                    </div>
+                  </div>
                 )}
-                <div className="p-2">
-                  <h2 className="text-xl font-bold text-[#8e6192] mb-3">{program.title}</h2>
-                  <p className="text-gray-600 mb-4 line-clamp-3">
+                <div className="bg-white p-6">
+                  <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
+                  <p className="text-gray-500 mb-4 line-clamp-3">
                     {program.description}
                   </p>
                   <div className="flex justify-between items-center mt-4">
@@ -119,7 +127,7 @@ export default function Soul() {
                       }
 
                       return (
-                        <span className="text-lg font-semibold text-purple-700">
+                        <span className="text-lg font-bold text-purple-900">
                           ₹{displayPrice.toLocaleString('en-IN')}
                           {showDiscount ? (
                             <span className="ml-2 text-sm text-gray-500 line-through font-semibold">
@@ -130,7 +138,7 @@ export default function Soul() {
                       );
                     })()}
                     <button
-                      className="px-4 py-2 bg-main text-white rounded-lg font-semibold shadow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-main focus:ring-offset-2 transition"
+                      className="px-6 py-2 bg-purple-600 text-white rounded-lg font-semibold shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 transition"
                       onClick={() => program.slug ? navigate(`/programs/${program.slug.current || program.slug}`) : '#'}
                     >
                       Read More

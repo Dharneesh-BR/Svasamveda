@@ -36,6 +36,15 @@ const blogPost: SchemaTypeDefinition = {
         }
       },
       {
+        name: 'thumbnail',
+        type: 'image',
+        title: 'Thumbnail',
+        options: {
+          hotspot: true
+        },
+        description: 'Thumbnail image for blog post cards (recommended: 400x300px)'
+      },
+      {
         name: 'body',
         type: 'array',
         title: 'Body',

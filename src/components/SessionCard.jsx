@@ -25,7 +25,7 @@ const SessionCard = ({ session }) => {
   return (
     <div className="rounded-2xl overflow-hidden bg-[#F7EEF5] shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5">
       {/* Header image */}
-      <div className="relative h-52">
+      <div className="relative h-40">
         <img
           src={session?.image || session?.imageUrl || '/placeholder-session.jpg'}
           alt={title}
@@ -53,27 +53,6 @@ const SessionCard = ({ session }) => {
             ) : null}
           </div>
         </div>
-      </div>
-
-      {/* Lives transformed strip */}
-      <div className="relative bg-gradient-to-r from-[#2B0B3C] via-[#6B1E70] to-[#B42A6B] text-white px-4 py-3">
-        <div className="text-sm font-semibold">
-          {lives ? (
-            <>
-              <span className="font-extrabold">{String(lives).includes('+') ? lives : `${lives}+`}</span> Lives Transformed
-            </>
-          ) : (
-            <>
-              <span className="font-extrabold">700+</span> Lives Transformed
-            </>
-          )}
-        </div>
-
-        {isLive ? (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 inline-flex items-center rounded-full bg-red-600 text-white text-xs font-extrabold px-4 py-1.5 shadow">
-            LIVE SESSION
-          </span>
-        ) : null}
       </div>
 
       {/* Tags */}
