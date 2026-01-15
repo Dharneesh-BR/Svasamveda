@@ -12,6 +12,7 @@ import DashboardRouter from './pages/dashboard/index';
 // Import TestPrograms component for development
 import TestPrograms from './components/TestPrograms';
 
+import Store from './pages/Store';
 import Footer from './components/Footer';
 import Categories from './pages/Categories';
 import Mind from './pages/Mind';
@@ -47,7 +48,7 @@ import Breathwork from './pages/soul/Breathwork';
 import SelfSessionsSoul from './pages/soul/SelfSessions';
 // Cart, Favorites, Coaching History
 import Cart from './pages/Cart';
-import Favorites from './pages/Favorites';
+import FavoritesPage from './pages/dashboard/FavoritesPage';
 import CoachingHistory from './pages/CoachingHistory';
 import CartIcon from './components/CartIcon';
 import CartDrawer from './components/Cart';
@@ -79,7 +80,7 @@ function App() {
               <Route path="/soul/sound-therapy" element={<SoundTherapy />} />
               <Route path="/soul/breathwork" element={<Breathwork />} />
               <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} />
-              <Route path="/store" element={<Navigate to="/" replace />} />
+              <Route path="/store" element={<Store />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/refund-and-cancellation" element={<CancellationPolicy />} />
@@ -89,14 +90,14 @@ function App() {
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/all-articles" element={<AllArticles />} />
-              <Route path="/store/*" element={<Navigate to="/" replace />} />
+              <Route path="/store/*" element={<Store />} />
               <Route path="/test-programs" element={<TestPrograms />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/about" element={<About />} />
               <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
-              <Route path="/favorites" element={<RequireAuth><Favorites /></RequireAuth>} />
+              <Route path="/favorites" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />

@@ -109,6 +109,7 @@ export default function Navbar() {
         </li>
         <li><Link to="/sessions" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
         <li><Link to="/blog" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Svasam Journal</Link></li>
+        <li><Link to="/store" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Store</Link></li>
       </ul>
 
       <div className="flex items-center gap-2 lg:gap-4">
@@ -296,6 +297,16 @@ export default function Navbar() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
               </svg>
               Svasam Journal
+            </Link>
+            <Link 
+              to="/store" 
+              className="flex items-center px-3 py-3 rounded-lg text-gray-900 hover:bg-gray-50 transition-colors font-medium"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+              Store
             </Link>
             
             {/* User Section - Only show user info and logout */}

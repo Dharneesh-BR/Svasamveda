@@ -193,7 +193,7 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-main hover:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8e6192] hover:bg-[#704091] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8e6192]"
               >
                 {isSubmitting ? 'Signing in...' : 'Sign in'}
               </button>

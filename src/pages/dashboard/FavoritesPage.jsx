@@ -53,7 +53,7 @@ const FavoriteItem = ({ item, onRemove }) => {
               </button>
               <Link 
                 to={`/programs/${item.slug || item.id}`}
-                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-main hover:bg-main/90"
+                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full shadow-sm text-white bg-[#8e6192] hover:bg-[#704091]"
               >
                 View Details
                 <FiArrowRight className="ml-1 h-3 w-3" />
@@ -222,7 +222,7 @@ const FavoritesPage = () => {
           </p>
           <Link 
             to="/sessions" 
-            className="inline-flex items-center px-4 py-2 bg-main text-white rounded-md hover:bg-main/90 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-[#8e6192] text-white rounded-md hover:bg-[#704091] transition-colors"
           >
             Browse Programs
             <FiArrowRight className="ml-2 h-4 w-4" />

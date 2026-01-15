@@ -317,7 +317,7 @@ export default function Store() {
                         )}
                       </div>
                       <button
-                        className="px-3 py-1.5 bg-main text-white rounded-lg font-medium text-sm hover:bg-opacity-90 transition"
+                        className="px-3 py-1.5 bg-[#8e6192] text-white rounded-lg font-medium text-sm hover:bg-[#704091] transition"
                         onClick={() => handleAddToCart(item)}
                       >
                         Add to Cart

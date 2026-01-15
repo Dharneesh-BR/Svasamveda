@@ -139,7 +139,7 @@ const Cart = () => {
                   <div className="space-y-3">
                     <Link
                       to="/checkout"
-                      className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-main hover:bg-opacity-90"
+                      className="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-[#8e6192] hover:bg-[#704091]"
                       onClick={() => setIsOpen(false)}
                     >
                       Checkout
