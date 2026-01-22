@@ -50,8 +50,8 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
         </div>
 
         {/* Desktop View - Elegant Card */}
-        <div className="hidden md:flex bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl hover:scale-105 transition-all duration-300 w-full h-[420px] flex flex-col border border-purple-100 mx-auto max-w-md">
-          <div className="h-32 w-32 mx-auto mb-6 flex-shrink-0 relative">
+        <div className="hidden md:flex bg-white rounded-3xl shadow-xl p-4 hover:shadow-2xl hover:scale-105 transition-all duration-300 w-full h-[320px] flex flex-col border border-purple-100 mx-auto max-w-md">
+          <div className="h-28 w-28 mx-auto mb-3 flex-shrink-0 relative">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl"></div>
             <img 
               src={image} 
@@ -63,16 +63,12 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
           </div>
           
           <div className="flex-1 flex flex-col justify-center text-center">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 line-clamp-2 px-2">
+            <h2 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 px-2">
               {title}
             </h2>
-            
-            <p className="text-gray-600 text-sm leading-relaxed text-center line-clamp-3 px-4">
-              {description}
-            </p>
           </div>
           
-          <div className="mt-6 pt-4 border-t border-purple-100">
+          <div className="mt-2 pt-2 border-t border-purple-100">
             <div className="flex items-center justify-center text-sm font-semibold text-purple-600 group-hover:text-purple-700 transition-colors">
               <span className="mr-2">{t('categories.explore')}</span>
               <svg 
@@ -214,7 +210,25 @@ export default function Categories() {
             
             {/* Categories Grid */}
             <div className="relative">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-8 px-4 sm:px-6 lg:px-8">
+              {/* Mobile View - Horizontal Scroll */}
+              <div className="md:hidden px-4 sm:px-6 mt-8">
+                <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4">
+                  {categories.map((category) => (
+                    <div key={category.id} className="flex-shrink-0 w-72">
+                      <CategoryCard
+                        to={`/${category.id}`}
+                        title={category.title}
+                        description={category.description}
+                        image={category.image}
+                        alt={category.alt}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop View - Grid */}
+              <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-8 px-4 sm:px-6 lg:px-8">
                 {categories.map((category) => (
                   <div key={category.id} className="w-full">
                     <CategoryCard

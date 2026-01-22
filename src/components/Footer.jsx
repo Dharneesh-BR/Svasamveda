@@ -63,10 +63,6 @@ export default function Footer() {
               </div>
               <div className="flex gap-8 md:gap-12 justify-center">
                 <div className="flex flex-col items-center sm:items-start text-center">
-                  <Link className="text-base font-semibold text-gray-800 mb-4 hover:text-purple-600 transition-colors" to="/blog">Svasam Journal</Link>
-                  <Link className="text-sm text-gray-600 hover:text-purple-600 transition-colors" to="/all-articles">All Articles</Link>
-                </div>
-                <div className="flex flex-col items-center sm:items-start text-center">
                   <Link className="text-base font-semibold text-gray-800 mb-4 hover:text-purple-600 transition-colors" to="/">Company</Link>
                   <Link className="text-sm text-gray-600 mb-2 hover:text-purple-600 transition-colors" to="/about">About Us</Link>
                   <Link className="text-sm text-gray-600 mb-2 hover:text-purple-600 transition-colors" to="/contact">Contact Us</Link>
