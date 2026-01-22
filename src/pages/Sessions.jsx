@@ -36,7 +36,7 @@ function Sessions() {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-main mb-4">Sessions</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-white max-w-3xl mx-auto">
             Listen or watch guided content designed to nurture your mind, body, and soul.
           </p>
         </div>

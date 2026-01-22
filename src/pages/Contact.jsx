@@ -4,7 +4,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen w-full bg-background">
       <div className="max-w-4xl mx-auto py-12 sm:py-16 px-4 md:px-6 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-800 text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
         
         <div className="space-y-8">
           {/* Contact Form */}
@@ -62,7 +62,7 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-main text-white py-3 px-6 rounded-lg hover:brightness-105 transition flex items-center justify-center"
+                className="w-full bg-purple-700 text-white py-3 px-6 rounded-lg hover:bg-purple-800 transition flex items-center justify-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -107,7 +107,7 @@ export default function Contact() {
 
           {/* FAQ */}
           <section className="my-16 max-w-4xl mx-auto">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-indigo-800 text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white text-center mb-8 sm:mb-12">{t('contact.title')}</h1>
             <div className="space-y-4">
               <details className="bg-white rounded-xl shadow p-4">
                 <summary className="font-semibold text-indigo-700 cursor-pointer">{t('contact.faqQuestion1')}</summary>

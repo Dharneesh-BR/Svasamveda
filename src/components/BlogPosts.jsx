@@ -1,4 +1,6 @@
 import { useSanityData } from '../hooks/useSanityData';
+import { Link } from 'react-router-dom';
+import { urlFor } from '../sanityClient';
 
 export default function BlogPosts() {
   // Example GROQ query to fetch blog posts with author information and thumbnail
@@ -52,33 +54,61 @@ export default function BlogPosts() {
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div className="space-y-6">
       {posts.map((post) => (
-        <article key={post._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-          {(post.thumbnail || post.mainImage) && (
-            <img 
-              src={post.thumbnail?.asset?.url || post.mainImage?.asset?.url} 
-              alt={post.title}
-              className="w-full h-48 object-cover"
-              loading="lazy"
-            />
-          )}
-          <div className="p-6">
-            <h2 className="text-xl font-bold mb-2 text-gray-900">{post.title}</h2>
-            {post.excerpt && <p className="text-gray-600 mb-4">{post.excerpt}</p>}
-            <div className="flex items-center mt-4">
-              <div>
-                <p className="text-sm text-gray-500">
+        <Link 
+          key={post._id} 
+          to={`/blog/${post.slug?.current}`}
+          className="block group"
+        >
+          <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col md:flex-row">
+            {/* Content on the left */}
+            <div className="flex-1 p-6 md:p-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors">
+                {post.title}
+              </h2>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-3">
                   {new Date(post.publishedAt).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   })}
                 </p>
+                {post.excerpt && (
+                  <p className="text-gray-600 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                )}
               </div>
+              
+              <button className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:scale-105">
+                Read Our Blog
+                <svg 
+                  className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
-          </div>
-        </article>
+            
+            {/* Image on the right */}
+            {(post.thumbnail || post.mainImage) && (
+              <div className="md:w-1/3 lg:w-2/5">
+                <img 
+                  src={post.thumbnail ? urlFor(post.thumbnail).url() : urlFor(post.mainImage).url()} 
+                  alt={post.title}
+                  className="w-full h-48 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+            )}
+          </article>
+        </Link>
       ))}
     </div>
   );

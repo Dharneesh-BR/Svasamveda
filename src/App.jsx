@@ -29,6 +29,7 @@ import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Sessions from './pages/Sessions';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import AllArticles from './pages/AllArticles';
 import ProgramDetail from './pages/ProgramDetail';
 // Mind subpages
@@ -89,6 +90,7 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/all-articles" element={<AllArticles />} />
               <Route path="/store/*" element={<Store />} />
               <Route path="/test-programs" element={<TestPrograms />} />

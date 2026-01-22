@@ -9,7 +9,7 @@ export default function Footer() {
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-purple-100">
-            <div className="flex flex-col items-center space-y-6">
+            <div className="flex flex-col items-center space-y-6 text-center sm:text-left">
               <h3 className="text-2xl font-bold text-gray-800">Follow Us</h3>
               <div className="flex space-x-8">
                 <a 
@@ -55,18 +55,18 @@ export default function Footer() {
       <section className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 border border-purple-100">
-            <div className="flex flex-col md:flex-row gap-8 md:gap-12 justify-between items-start">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12 justify-center items-center md:justify-between md:items-start">
               <div className="flex flex-col items-center md:items-start">
                 <Link className="flex items-center mb-4" to="/">
                   <img src={SvasamLogo} alt="Svasam" className="h-12 w-auto" />
                 </Link>
               </div>
               <div className="flex gap-8 md:gap-12 justify-center">
-                <div className="flex flex-col items-center md:items-start">
+                <div className="flex flex-col items-center sm:items-start text-center">
                   <Link className="text-base font-semibold text-gray-800 mb-4 hover:text-purple-600 transition-colors" to="/blog">Svasam Journal</Link>
                   <Link className="text-sm text-gray-600 hover:text-purple-600 transition-colors" to="/all-articles">All Articles</Link>
                 </div>
-                <div className="flex flex-col items-center md:items-start">
+                <div className="flex flex-col items-center sm:items-start text-center">
                   <Link className="text-base font-semibold text-gray-800 mb-4 hover:text-purple-600 transition-colors" to="/">Company</Link>
                   <Link className="text-sm text-gray-600 mb-2 hover:text-purple-600 transition-colors" to="/about">About Us</Link>
                   <Link className="text-sm text-gray-600 mb-2 hover:text-purple-600 transition-colors" to="/contact">Contact Us</Link>

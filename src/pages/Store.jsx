@@ -160,8 +160,8 @@ export default function Store() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="pt-16 pb-8 text-center">
-          <h1 className="text-4xl font-bold text-[#8e6192] mb-4">Svasam Store</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <h1 className="text-4xl font-bold text-white mb-4">Svasam Store</h1>
+          <p className="text-lg text-white max-w-3xl mx-auto">
             Discover our collection of spiritual and wellness products to support your journey
           </p>
         </div>
@@ -237,7 +237,7 @@ export default function Store() {
                           />
                         )}
                       </div>
-                      <span className={`mt-1.5 text-xs font-medium text-center ${isActive ? 'text-accent font-semibold' : 'text-gray-700'}`}>
+                      <span className={`mt-1.5 text-xs font-medium text-center ${isActive ? 'text-accent font-semibold' : 'text-white'}`}>
                         {cat.title}
                       </span>
                     </button>
@@ -273,7 +273,7 @@ export default function Store() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {filteredItems.map((item) => (
                 <div
                   key={item._id || item.slug}

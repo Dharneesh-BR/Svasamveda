@@ -53,7 +53,7 @@ export default function Soul() {
         <div className="max-w-6xl mx-auto py-16 px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-white mb-4">Soul Wellness Programs</h1>
-          <p className="text-lg text-white/70 max-w-3xl mx-auto">
+          <p className="text-lg text-white max-w-3xl mx-auto">
             Discover our transformative programs designed to nurture your spiritual growth and inner peace.
           </p>
         </div>

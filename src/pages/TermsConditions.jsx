@@ -8,7 +8,7 @@ export default function TermsConditions() {
         <Link to="/" className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6">
           <FiArrowLeft className="mr-2" /> Back to Home
         </Link>
-        <h1 className="text-4xl font-bold text-indigo-800 text-center mb-8">Terms and Conditions</h1>
+        <h1 className="text-4xl font-bold text-white text-center mb-8">Terms and Conditions</h1>
         
         <div className="space-y-8">
           {/* Introduction */}
