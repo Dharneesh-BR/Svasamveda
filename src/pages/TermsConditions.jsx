@@ -342,7 +342,7 @@ export default function TermsConditions() {
               <span className="font-medium">Company:</span> Svasamveda Life Sciences Pvt Ltd
             </p>
             <p className="text-gray-700">
-              <span className="font-medium">Email:</span> <a href="mailto:svasamveda@gmail.com" className="text-indigo-600 hover:underline">svasamveda@gmail.com</a>
+              <span className="font-medium">Email:</span> <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a>
             </p>
           </div>
         </div>

@@ -218,7 +218,7 @@ export default function PrivacyPolicy() {
               <span className="font-medium">Company:</span> Svasamveda Life Sciences (OPC) Private Limited
             </p>
             <p className="text-gray-700">
-              <span className="font-medium">Email:</span> <a href="mailto:svasamveda@gmail.com" className="text-indigo-600 hover:underline">svasamveda@gmail.com</a>
+              <span className="font-medium">Email:</span> <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a>
             </p>
             <p className="text-gray-700 mt-4">
               We aim to acknowledge concerns within 24 hours and resolve them within 15 days.

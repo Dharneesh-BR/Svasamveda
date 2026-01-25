@@ -39,7 +39,7 @@ export default function CancellationPolicy() {
                   Users may cancel their booked sessions by notifying Svasam at least 24 hours before the session start time. Eligible cancellations will receive a full refund, processed as per Section 2.
                 </p>
                 <p className="mb-4">
-                  To request a cancellation, Users must email: <a href="mailto:support@svasam.in" className="text-indigo-600 hover:underline">support@svasam.in</a> with their booking details.
+                  To request a cancellation, Users must email: <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a> with their booking details.
                 </p>
                 <p className="mb-6">
                   Failure to provide the 24-hour notice will make the User ineligible for an automatic refund. Any such refunds may be granted only at the sole discretion of Svasam.
@@ -73,7 +73,7 @@ export default function CancellationPolicy() {
                   If a session is affected by technical issues, Users must report the problem immediately through:
                 </p>
                 <p className="mb-6">
-                  Email: <a href="mailto:Svasamveda@gmail.com" className="text-indigo-600 hover:underline">Svasamveda@gmail.com</a>
+                  Email: <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a>
                 </p>
                 <p className="mb-6">
                   Svasam will review each case individually and may, at its discretion, offer a refund or a rescheduled session.
@@ -127,7 +127,7 @@ export default function CancellationPolicy() {
               By booking any Offering—including Courses, Individual Sessions, or Live Group Sessions—Users confirm that they have read, understood, and agreed to this Refund & Cancellation Policy, along with Svasam's Terms of Use and Privacy Policy.
             </p>
             <p className="text-gray-700">
-              For any further queries, please contact: <a href="mailto:svasamveda@gmail.com" className="text-indigo-600 hover:underline">svasamveda@gmail.com</a>
+              For any further queries, please contact: <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a>
             </p>
           </div>
         </div>

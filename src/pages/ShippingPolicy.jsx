@@ -89,7 +89,7 @@ export default function ShippingPolicy() {
               <li>Shipping within India: Free for all prepaid orders.</li>
               <li>For multiple or heavy items, shipping charges may vary based on weight, size, and destination.</li>
               <li>GST is included in our product prices, and Svasam is fully GST-compliant.</li>
-              <li>For international shipping, kindly email us at <a href="mailto:support@svasam.in" className="text-indigo-600 hover:underline">support@svasam.in</a> for assistance.</li>
+              <li>For international shipping, kindly email us at <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a> for assistance.</li>
             </ul>
           </div>
 
@@ -114,7 +114,7 @@ export default function ShippingPolicy() {
             </p>
             <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
               <li>Refuse the package</li>
-              <li>Email us immediately at <a href="mailto:svasamveda@gmail.com" className="text-indigo-600 hover:underline">svasamveda@gmail.com</a> with your Order ID and photos</li>
+              <li>Email us immediately at <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a> with your Order ID and photos</li>
             </ul>
             <p className="text-gray-700">
               We will arrange a reverse pickup and send you a replacement at no extra cost, provided the original packaging and tags remain intact.
@@ -125,7 +125,7 @@ export default function ShippingPolicy() {
           <div className="bg-white rounded-xl shadow-lg p-8">
             <h2 className="text-2xl font-bold text-indigo-800 mb-6">Order Cancellation</h2>
             <p className="text-gray-700 mb-4">
-              If you need to cancel an order, please email us at <a href="mailto:support@svasam.in" className="text-indigo-600 hover:underline">support@svasam.in</a> within 30 minutes of placing it.
+              If you need to cancel an order, please email us at <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a> within 30 minutes of placing it.
             </p>
             <p className="text-gray-700 mb-4">
               Orders that have already been packed or dispatched cannot be cancelled.
@@ -184,7 +184,7 @@ export default function ShippingPolicy() {
           <div className="bg-indigo-50 rounded-xl border border-indigo-100 p-8">
             <h2 className="text-2xl font-bold text-indigo-800 mb-6">Need Assistance?</h2>
             <p className="text-gray-700 mb-6">
-              For any delivery-related queries, support, or clarification, please contact us: <a href="mailto:svasamveda@gmail.com" className="text-indigo-600 hover:underline">svasamveda@gmail.com</a>
+              For any delivery-related queries, support, or clarification, please contact us: <a href="mailto:connect@svasam.com" className="text-indigo-600 hover:underline">connect@svasam.com</a>
             </p>
             <p className="text-gray-700">
               We're here to help ensure your shopping experience with Svasam is smooth, safe, and satisfying.

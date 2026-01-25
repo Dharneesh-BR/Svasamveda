@@ -60,7 +60,7 @@ export default function FAQSection() {
     },
     {
       question: 'How can I contact Svasam support?',
-      answer: 'We\'re here to help! You can reach our support team by emailing support@svasam.com or by using the contact form on our website. Our team typically responds within 24-48 hours.'
+      answer: 'We\'re here to help! You can reach our support team by emailing connect@svasam.com or by using the contact form on our website. Our team typically responds within 24-48 hours.'
     }
   ];
 

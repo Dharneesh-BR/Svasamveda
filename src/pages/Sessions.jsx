@@ -44,8 +44,9 @@ function Sessions() {
         {/* Sessions Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {sessions.map((session) => (
-            <div 
+            <Link
               key={session._id}
+              to={`/sessions/${session._id}`}
               className="group block h-full"
             >
               <div className="bg-white rounded-xl shadow-md overflow-hidden h-full flex flex-col hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
@@ -54,25 +55,36 @@ function Sessions() {
                     <img 
                       src={session.thumbnail} 
                       alt={session.title || 'Session thumbnail'}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
                     />
-                  ) : session.mediaType === 'audio' && session.fileUrl ? (
-                    <div className="p-4">
-                      <audio controls className="w-full" src={session.fileUrl} preload="none" />
+                  ) : session.mediaType === 'audio' ? (
+                    <div className="w-full h-48 bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">🎧</div>
+                        <span className="text-gray-600">Audio Session</span>
+                      </div>
                     </div>
-                  ) : session.mediaType === 'video' && session.fileUrl ? (
-                    <div className="aspect-video bg-black">
-                      <video controls className="w-full h-full" src={session.fileUrl} preload="none" />
+                  ) : session.mediaType === 'video' ? (
+                    <div className="w-full h-48 bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">🎥</div>
+                        <span className="text-gray-600">Video Session</span>
+                      </div>
                     </div>
                   ) : (
                     <div className="w-full h-48 bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
                       <span className="text-gray-400">No media available</span>
                     </div>
                   )}
+                  {session.mediaType && (
+                    <span className="absolute top-3 right-3 px-2 py-1 bg-purple-600 text-white text-xs font-medium rounded-full capitalize">
+                      {session.mediaType}
+                    </span>
+                  )}
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-main transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
                     {session.title || 'Untitled session'}
                   </h3>
                   <p className="text-gray-600 mb-4 flex-grow line-clamp-3">
@@ -80,34 +92,19 @@ function Sessions() {
                   </p>
                   <div className="mt-auto pt-4 border-t border-gray-100">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-main capitalize">
+                      <span className="text-sm font-medium text-purple-600 capitalize">
                         {session.mediaType || 'unknown'}
                       </span>
-                      {session.fileUrl ? (
-                        <a 
-                          href={session.fileUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center text-sm text-gray-500 hover:text-main"
-                        >
-                          Open file
-                          <svg 
-                            className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform"
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                          </svg>
-                        </a>
-                      ) : (
-                        <span className="text-sm text-gray-400">No file</span>
+                      {session.duration && (
+                        <span className="text-sm text-gray-500">
+                          {session.duration}
+                        </span>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

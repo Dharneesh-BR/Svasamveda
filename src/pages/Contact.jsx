@@ -88,7 +88,7 @@ export default function Contact() {
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('contact.contactDetails')}</h3>
                 <div className="space-y-2">
-                  <p className="text-gray-600">Email: support@svasam.com</p>
+                  <p className="text-gray-600">Email: connect@svasam.com</p>
                   <p className="text-gray-600">Phone: +91 1234567890</p>
                   <p className="text-gray-600">Customer Support: Mon-Sat, 10 AM - 7 PM</p>
                 </div>

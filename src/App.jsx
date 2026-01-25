@@ -29,6 +29,7 @@ import ShippingPolicy from './pages/ShippingPolicy';
 import TermsConditions from './pages/TermsConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Sessions from './pages/Sessions';
+import SessionDetail from './pages/SessionDetail';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import AllArticles from './pages/AllArticles';
@@ -95,9 +96,7 @@ function App() {
               <Route path="/terms-and-conditions" element={<TermsConditions />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/sessions" element={<Sessions />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/all-articles" element={<AllArticles />} />
+              <Route path="/sessions/:slug" element={<SessionDetail />} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/test-programs" element={<TestPrograms />} />
               <Route path="/login" element={<Login />} />

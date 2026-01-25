@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { PortableText } from '@portabletext/react';
+import { client } from '../sanityClient';
 import { urlFor } from '../sanityClient';
 
 export default function ProductDetail() {
@@ -39,19 +40,10 @@ export default function ProductDetail() {
           sku
         }`;
 
-        const response = await fetch(`${import.meta.env.VITE_SANITY_PROJECT_ID}.api.sanity.io/v2021-06-07/data/query/${import.meta.env.VITE_SANITY_DATASET}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SANITY_TOKEN}`
-          },
-          body: JSON.stringify({ query, params: { slug } })
-        });
-
-        const data = await response.json();
+        const result = await client.fetch(query, { slug });
         
-        if (data.result && data.result.length > 0) {
-          setProduct(data.result[0]);
+        if (result) {
+          setProduct(result);
         } else {
           setError('Product not found');
         }
