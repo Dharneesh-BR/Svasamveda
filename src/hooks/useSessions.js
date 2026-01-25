@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { client } from '@/lib/sanity';
+import { client } from '../sanityClient';
 
 // Fetches sessions from Sanity
 // Schema: session { title, description, mediaType ('audio'|'video'), file (type: file), thumbnail (type: image) }
