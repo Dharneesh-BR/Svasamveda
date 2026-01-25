@@ -54,7 +54,7 @@ export default function BlogPosts() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {posts.map((post) => (
         <Link 
           key={post._id} 
@@ -63,13 +63,13 @@ export default function BlogPosts() {
         >
           <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col md:flex-row">
             {/* Content on the left */}
-            <div className="flex-1 p-6 md:p-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors">
+            <div className="flex-1 p-3">
+              <h2 className="text-2xl md:text-3xl font-bold mb-1 text-gray-800 group-hover:text-purple-600 transition-colors">
                 {post.title}
               </h2>
               
-              <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-3">
+              <div className="mb-2">
+                <p className="text-xs text-gray-600 mb-1">
                   {new Date(post.publishedAt).toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -77,16 +77,16 @@ export default function BlogPosts() {
                   })}
                 </p>
                 {post.excerpt && (
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-xs text-gray-600 leading-tight line-clamp-2">
                     {post.excerpt}
                   </p>
                 )}
               </div>
               
-              <button className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:scale-105">
+              <button className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 group-hover:scale-105">
                 Read Our Blog
                 <svg 
-                  className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" 
+                  className="w-3 h-3 ml-2 group-hover:translate-x-1 transition-transform" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -98,11 +98,11 @@ export default function BlogPosts() {
             
             {/* Image on the right */}
             {(post.thumbnail || post.mainImage) && (
-              <div className="md:w-1/3 lg:w-2/5">
+              <div className="md:w-1/4 lg:w-1/3">
                 <img 
                   src={post.thumbnail ? urlFor(post.thumbnail).url() : urlFor(post.mainImage).url()} 
                   alt={post.title}
-                  className="w-full h-48 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-20 md:h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
               </div>
