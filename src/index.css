@@ -15,6 +15,12 @@
     @apply rounded-lg border border-gray-200/70 bg-gradient-to-br from-white via-white to-gray-50 shadow-[0_8px_20px_-14px_rgba(17,24,39,0.3)] transition-all duration-300;
   }
 }
+
+/* Force white color for Manifest Abundance heading */
+.manifest-heading h1 {
+  color: white !important;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #1a0b2e 0%, #2d1b69 25%, #6b21a8 50%, #c026d3 75%, #e879f9 100%);

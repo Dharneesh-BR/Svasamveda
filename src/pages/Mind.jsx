@@ -99,7 +99,7 @@ function Mind() {
                   />
                 )}
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
+                  <h2 className="text-xl font-bold text-white mb-3">{program.title}</h2>
                   <p className="text-gray-600 mb-4 line-clamp-3">
                     {program.description}
                   </p>

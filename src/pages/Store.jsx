@@ -275,56 +275,65 @@ export default function Store() {
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {filteredItems.map((item) => (
-                <div
+                <Link
                   key={item._id || item.slug}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
+                  to={`/store/${item.slug?.current || item.slug}`}
+                  className="block group"
                 >
-                  <div className="relative pt-[100%] bg-gray-50">
-                    {item.imageUrl ? (
-                      <img 
-                        src={item.imageUrl} 
-                        alt={item.title}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <span className="text-sm">No Image</span>
-                      </div>
-                    )}
-                    {item.compareAtPrice > item.price && (
-                      <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                        SALE
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-4 flex flex-col flex-grow">
-                    <h2 className="text-lg font-bold text-[#8e6192] mb-2 line-clamp-2" title={item.title}>
-                      {item.title}
-                    </h2>
-                    <p className="text-gray-600 text-sm mb-3 flex-grow line-clamp-2">
-                      {item.shortDescription || item.description || ''}
-                    </p>
-                    <div className="mt-2 flex items-center justify-between">
-                      <div className="flex flex-col">
-                        <span className="text-lg font-bold text-main">
-                          ₹{item.price?.toLocaleString('en-IN')}
+                  <div
+                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
+                  >
+                    <div className="relative pt-[100%] bg-gray-50">
+                      {item.imageUrl ? (
+                        <img 
+                          src={item.imageUrl} 
+                          alt={item.title}
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                          <span className="text-sm">No Image</span>
+                        </div>
+                      )}
+                      {item.compareAtPrice > item.price && (
+                        <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                          SALE
                         </span>
-                        {item.compareAtPrice > item.price && (
-                          <span className="text-xs text-gray-400 line-through">
-                            ₹{item.compareAtPrice?.toLocaleString('en-IN')}
+                      )}
+                    </div>
+                    <div className="p-4 flex flex-col flex-grow">
+                      <h2 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-purple-600 transition-colors" title={item.title}>
+                        {item.title}
+                      </h2>
+                      <p className="text-gray-600 text-sm mb-3 flex-grow line-clamp-2">
+                        {item.shortDescription || item.description || ''}
+                      </p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-lg font-bold text-gray-900">
+                            ₹{item.price?.toLocaleString('en-IN')}
                           </span>
-                        )}
+                          {item.compareAtPrice > item.price && (
+                            <span className="text-xs text-gray-400 line-through">
+                              ₹{item.compareAtPrice?.toLocaleString('en-IN')}
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          className="px-3 py-1.5 bg-purple-600 text-white rounded-lg font-medium text-sm hover:bg-purple-700 transition"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleAddToCart(item);
+                          }}
+                        >
+                          Add to Cart
+                        </button>
                       </div>
-                      <button
-                        className="px-3 py-1.5 bg-[#8e6192] text-white rounded-lg font-medium text-sm hover:bg-[#704091] transition"
-                        onClick={() => handleAddToCart(item)}
-                      >
-                        Add to Cart
-                      </button>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

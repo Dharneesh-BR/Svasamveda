@@ -173,9 +173,9 @@ function ProgramDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Program Header */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{program.title}</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">{program.title}</h1>
           <div className="flex items-center text-gray-600">
-            <span className="px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 text-main mr-3">
+            <span className="px-3 py-1 text-sm font-medium rounded-full bg-purple-100 text-purple-800 mr-3">
               {program.category}
             </span>
             <span className="text-gray-500">{program.duration}</span>
@@ -193,7 +193,7 @@ function ProgramDetail() {
         </div>
 
         {/* Program Description */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-12">
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">About This Program</h2>
           
           {program.body && program.body.length > 0 ? (
@@ -202,20 +202,20 @@ function ProgramDetail() {
                 value={program.body}
                 components={{
                   block: {
-                    normal: ({ children }) => <p className="mb-4">{children}</p>,
-                    h1: ({ children }) => <h1 className="text-2xl font-bold my-4">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-xl font-bold mt-6 mb-3">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-lg font-semibold mt-5 mb-2">{children}</h3>,
-                    h4: ({ children }) => <h4 className="text-base font-medium mt-4 mb-2">{children}</h4>,
-                    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4">{children}</blockquote>,
+                    normal: ({ children }) => <p className="mb-4 text-gray-700">{children}</p>,
+                    h1: ({ children }) => <h1 className="text-2xl font-bold my-4 text-gray-900">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-900">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-900">{children}</h3>,
+                    h4: ({ children }) => <h4 className="text-base font-medium mt-4 mb-2 text-gray-900">{children}</h4>,
+                    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4 text-gray-700">{children}</blockquote>,
                   },
                   list: {
-                    bullet: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2">{children}</ul>,
-                    number: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2">{children}</ol>,
+                    bullet: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-gray-700">{children}</ul>,
+                    number: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-gray-700">{children}</ol>,
                   },
                   listItem: {
-                    bullet: ({ children }) => <li className="mb-1">{children}</li>,
-                    number: ({ children }) => <li className="mb-1">{children}</li>,
+                    bullet: ({ children }) => <li className="mb-2 text-gray-700">{children}</li>,
+                    number: ({ children }) => <li className="mb-2 text-gray-700">{children}</li>,
                   },
                   marks: {
                     link: ({ value, children }) => {
@@ -271,7 +271,7 @@ function ProgramDetail() {
         </div>
 
         {/* Instructor Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 mb-12">
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mb-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Instructor</h2>
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
@@ -310,7 +310,7 @@ function ProgramDetail() {
         </div>
 
         {/* Enrollment Section */}
-        <div className="bg-white rounded-xl shadow-md p-8 mt-12 border-t-4 border-main">
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mt-12 border-t-4 border-main">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Ready to get started?</h2>
@@ -329,11 +329,11 @@ function ProgramDetail() {
 
                   return (
                     <>
-                      <span className="text-3xl font-bold text-main">
+                      <span className="text-3xl font-bold text-gray-900">
                         ₹{displayPrice.toLocaleString('en-IN')}
                       </span>
                       {showDiscount ? (
-                        <span className="ml-2 text-lg text-gray-500 line-through">
+                        <span className="ml-2 text-lg text-gray-600 line-through">
                           ₹{program.price.toLocaleString('en-IN')}
                         </span>
                       ) : null}
@@ -346,7 +346,7 @@ function ProgramDetail() {
             
             <button
               onClick={handleAddToCart}
-              className="w-full md:w-auto bg-main hover:bg-main-dark text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main"
+              className="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600"
             >
               Add to Cart
             </button>
@@ -356,7 +356,7 @@ function ProgramDetail() {
         {/* Related Programs */}
         {program.category && program._id && (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">You might also like</h2>
+            <h2 className="text-2xl font-bold text-white mb-8">You might also like</h2>
             <RelatedPrograms 
               category={program.category} 
               currentProgramId={program._id} 
@@ -477,11 +477,11 @@ function RelatedPrograms({ currentProgramId, category }) {
                 const displayPrice = showDiscount ? program.discountPrice : program.price;
 
                 if (!hasPrice || program.price === 0) {
-                  return <p className="text-lg font-bold text-main">Free</p>;
+                  return <p className="text-lg font-bold text-gray-900">Free</p>;
                 }
 
                 return (
-                  <p className="text-lg font-bold text-main">
+                  <p className="text-lg font-bold text-gray-900">
                     ₹{displayPrice.toLocaleString('en-IN')}
                     {showDiscount ? (
                       <span className="ml-2 text-sm text-gray-500 line-through font-semibold">

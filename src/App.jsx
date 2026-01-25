@@ -13,6 +13,7 @@ import DashboardRouter from './pages/dashboard/index';
 import TestPrograms from './components/TestPrograms';
 
 import Store from './pages/Store';
+import ProductDetail from './pages/ProductDetail';
 import Footer from './components/Footer';
 import Categories from './pages/Categories';
 import Mind from './pages/Mind';
@@ -32,21 +33,21 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import AllArticles from './pages/AllArticles';
 import ProgramDetail from './pages/ProgramDetail';
-// Mind subpages
-import ManifestAbundance from './pages/mind/ManifestAbundance';
-import ReduceStress from './pages/mind/ReduceStress';
-import SuperBrain from './pages/mind/SuperBrain';
-import SelfSessionsMind from './pages/mind/SelfSessions';
-// Body subpages
-import Yoga from './pages/body/Yoga';
-import Nutrition from './pages/body/Nutrition';
-import Naturopathy from './pages/body/Naturopathy';
-import SelfSessionsBody from './pages/body/SelfSessions';
-// Soul subpages
-import TraumaHealing from './pages/soul/TraumaHealing';
-import SoundTherapy from './pages/soul/SoundTherapy';
-import Breathwork from './pages/soul/Breathwork';
-import SelfSessionsSoul from './pages/soul/SelfSessions';
+// Mind subpages - now handled dynamically by ProgramDetail
+// import ManifestAbundance from './pages/mind/ManifestAbundance';
+// import ReduceStress from './pages/mind/ReduceStress';
+// import SuperBrain from './pages/mind/SuperBrain';
+// import SelfSessionsMind from './pages/mind/SelfSessions';
+// Body subpages - now handled dynamically by ProgramDetail
+// import Yoga from './pages/body/Yoga';
+// import Nutrition from './pages/body/Nutrition';
+// import Naturopathy from './pages/body/Naturopathy';
+// import SelfSessionsBody from './pages/body/SelfSessions';
+// Soul subpages - now handled dynamically by ProgramDetail
+// import TraumaHealing from './pages/soul/TraumaHealing';
+// import SoundTherapy from './pages/soul/SoundTherapy';
+// import Breathwork from './pages/soul/Breathwork';
+// import SelfSessionsSoul from './pages/soul/SelfSessions';
 // Cart, Favorites, Coaching History
 import Cart from './pages/Cart';
 import FavoritesPage from './pages/dashboard/FavoritesPage';
@@ -67,21 +68,26 @@ function App() {
             <Routes>
               <Route path="/" element={<Categories />} />
               <Route path="/mind" element={<Mind />} />
-              <Route path="/mind/manifest-abundance" element={<ManifestAbundance />} />
+              {/* Mind subpages now handled dynamically by ProgramDetail */}
+              {/* <Route path="/mind/manifest-abundance" element={<ManifestAbundance />} />
               <Route path="/mind/reduce-stress" element={<ReduceStress />} />
               <Route path="/mind/super-brain" element={<SuperBrain />} />
-              <Route path="/mind/self-sessions" element={<SelfSessionsMind />} />
+              <Route path="/mind/self-sessions" element={<SelfSessionsMind />} /> */}
               <Route path="/body" element={<Body />} />
-              <Route path="/body/yoga" element={<Yoga />} />
+              {/* Body subpages now handled dynamically by ProgramDetail */}
+              {/* <Route path="/body/yoga" element={<Yoga />} />
               <Route path="/body/nutrition" element={<Nutrition />} />
               <Route path="/body/naturopathy" element={<Naturopathy />} />
-              <Route path="/body/self-sessions" element={<SelfSessionsBody />} />
+              <Route path="/body/self-sessions" element={<SelfSessionsBody />} /> */}
               <Route path="/soul" element={<Soul />} />
-              <Route path="/soul/trauma-healing" element={<TraumaHealing />} />
+              {/* Soul subpages now handled dynamically by ProgramDetail */}
+              {/* <Route path="/soul/trauma-healing" element={<TraumaHealing />} />
               <Route path="/soul/sound-therapy" element={<SoundTherapy />} />
               <Route path="/soul/breathwork" element={<Breathwork />} />
-              <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} />
+              <Route path="/soul/self-sessions" element={<SelfSessionsSoul />} /> */}
               <Route path="/store" element={<Store />} />
+              <Route path="/store/:slug" element={<ProductDetail />} />
+              <Route path="/store/*" element={<Store />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/refund-and-cancellation" element={<CancellationPolicy />} />
@@ -92,7 +98,7 @@ function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/all-articles" element={<AllArticles />} />
-              <Route path="/store/*" element={<Store />} />
+              <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/test-programs" element={<TestPrograms />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
@@ -101,7 +107,6 @@ function App() {
               <Route path="/cart" element={<RequireAuth><Cart /></RequireAuth>} />
               <Route path="/favorites" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
-              <Route path="/programs/:slug" element={<ProgramDetail />} />
               <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
               <Route path="/dashboard/*" element={<RequireAuth><DashboardRouter /></RequireAuth>} />
               <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
