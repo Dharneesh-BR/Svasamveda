@@ -1,9 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useStoreItems } from '../hooks/useStoreItems';
 import { useCart } from '../contexts/CartContext';
 import { t } from '../i18n';
-const BannerImg = '/assets/Main page.png';
+
+// Carousel banner images
+const bannerImages = [
+  '/assets/banner.jpg',
+  '/assets/MainPageBanner.jpg'
+];
 const MindImg = '/assets/Mind.png';
 const SoulImg = '/assets/New soul.png';
 const BodyImg = '/assets/Body.png';
@@ -91,6 +96,31 @@ export default function Categories() {
   const navigate = useNavigate();
   const { items } = useStoreItems(null);
   const { addToCart } = useCart();
+
+  // Carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Carousel functions
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % bannerImages.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + bannerImages.length) % bannerImages.length);
+  }, []);
+
+  const goToSlide = useCallback((index) => {
+    setCurrentSlide(index);
+  }, []);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, nextSlide]);
 
   // Store categories (reuse mapping from Store page)
   const STORE_CATEGORIES = useMemo(() => [
@@ -188,20 +218,95 @@ export default function Categories() {
 
   return (
     <main className="relative min-h-screen w-full">
+      {/* Full Screen Carousel Banner */}
+      <section className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
+        {/* Carousel Slides */}
+        <div className="relative w-full h-full">
+          {bannerImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={image}
+                alt={`Banner ${index + 1}`}
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'center' }}
+                onError={(e) => {
+                  console.error(`Banner image ${index + 1} failed to load:`, image);
+                }}
+              />
+              {/* Dark overlay for text visibility */}
+              <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60" />
+            </div>
+          ))}
+        </div>
+
+        {/* Carousel Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center z-10">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl animate-fade-in">
+            Reconnect. Realign. Transform.
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-white/95 max-w-4xl mb-8 md:mb-12 drop-shadow-lg animate-fade-in-delay">
+            Curated programs for inner clarity and conscious performance
+          </p>
+        </div>
+
+        {/* Carousel Controls */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition transform hover:scale-110"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6 text-white" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition transform hover:scale-110"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6 text-white" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+          {bannerImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === currentSlide 
+                  ? 'bg-white w-8' 
+                  : 'bg-white/50 hover:bg-white/70'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Auto-play Toggle */}
+        <button
+          onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+          className="absolute bottom-8 right-8 z-20 p-2 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition"
+          aria-label={isAutoPlaying ? 'Pause autoplay' : 'Start autoplay'}
+        >
+          {isAutoPlaying ? (
+            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          ) : (
+            <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
+        </button>
+      </section>
+
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Banner */}
-          <header className="relative mt-8 md:mt-12 mb-12 md:mb-16 rounded-2xl overflow-hidden h-64 md:h-96 bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
-            <div className="relative z-10 h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg">{t('categories.title')}</h1>
-              <p className="text-lg md:text-xl text-white/95 max-w-3xl drop-shadow-md">
-                {t('categories.description')}
-              </p>
-            </div>
-            {/* Subtle gradient overlay for depth */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-transparent to-purple-800/20 pointer-events-none" />
-          </header>
-
           {/* Categories Section */}
           <section aria-labelledby="categories-heading" className="w-full py-8 sm:py-12">
             <div className="mb-8 text-center">

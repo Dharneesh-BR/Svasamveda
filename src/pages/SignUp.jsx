@@ -211,7 +211,7 @@ export default function SignUp() {
                 name="mobile"
                 value={formData.mobile}
                 onChange={handleChange}
-                placeholder="9876543210"
+                placeholder="7019557979"
                 maxLength="10"
                 className={`flex-1 min-w-0 block w-full px-4 py-2 rounded-r-lg border border-l-0 focus:ring-2 focus:ring-main focus:border-transparent ${
                   errors.mobile ? 'border-red-500' : 'border-gray-300'

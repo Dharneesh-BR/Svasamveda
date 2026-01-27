@@ -176,21 +176,24 @@ export default function Contact() {
           {/* Contact Information */}
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
             <h2 className="text-2xl font-bold text-indigo-800 mb-8">{t('contact.contactInfo')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('contact.officeLocation')}</h3>
-                <div className="space-y-2">
-                  <p className="text-gray-600">Svasam Wellness Pvt. Ltd.</p>
-                  <p className="text-gray-600">Office 2, 22 Paradise Villa Compound</p>
-                  <p className="text-gray-600">Bhulabhai Desai Road, Mahalaxmi Mandir</p>
-                  <p className="text-gray-600">Cumbala Hill, Mumbai 400026</p>
-                </div>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <h3 className="text-xl font-semibold text-indigo-700 mb-4">{t('contact.contactDetails')}</h3>
                 <div className="space-y-2">
                   <p className="text-gray-600">Email: connect@svasam.com</p>
-                  <p className="text-gray-600">Phone: +91 1234567890</p>
+                  <p className="text-gray-600">Phone: +91 70195 57979</p>
+                  <a 
+                    href="https://wa.me/917019557979?text=Hi%20Svasam%20Wellness!%20I%20would%20like%20to%20know%20more%20about%20your%20wellness%20programs."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.048-.673.076-.197.124-.38.345-.449.637-.069.291-.099.617-.099.967 0 .345.03.693.099 1.037.069.344.03.693-.099 1.037-.069.292-.252.513-.449.637-.202.124-.4.174-.673.076-.272-.099-1.733-.818-2.03-.967-.297-.149-.568-.223-.818-.223-.25 0-.521.074-.818.223-.297.149-1.733.818-2.03.967-.272.099-.471.048-.673-.076-.197-.124-.38-.345-.449-.637-.069-.291-.099-.617-.099-.967 0-.345.03-.693.099-1.037.069-.344.03-.693.099-1.037.069-.292.252-.513.449-.637.202-.124.4-.174.673-.076z"/>
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    </svg>
+                    Chat on WhatsApp
+                  </a>
                   <p className="text-gray-600">Customer Support: Mon-Sat, 10 AM - 7 PM</p>
                 </div>
               </div>
@@ -202,7 +205,6 @@ export default function Contact() {
                   <p className="text-gray-600">Sunday: Closed</p>
                 </div>
               </div>
-
             </div>
           </div>
 

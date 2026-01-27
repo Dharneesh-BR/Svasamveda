@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
+import WhatsAppButton from './components/WhatsAppButton';
 import Logo from '/icons/Logo icon.png';
 import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
@@ -98,6 +99,9 @@ function App() {
               <Route path="/sessions" element={<Sessions />} />
               <Route path="/sessions/:slug" element={<SessionDetail />} />
               <Route path="/programs/:slug" element={<ProgramDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/all-articles" element={<AllArticles />} />
               <Route path="/test-programs" element={<TestPrograms />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
@@ -112,6 +116,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <WhatsAppButton />
         </div>
       </Router>
       </CartProvider>

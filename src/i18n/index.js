@@ -59,7 +59,7 @@ export const translations = {
       limitationOfDamages: 'Limitation of Damages',
       contactUs: 'Contact Us',
       supportHours: 'Customer Support Hours: Mon-Sat, 10 AM - 7 PM',
-      phone: 'Phone: +91 1234567890',
+      phone: 'Phone: +91 70195 57979',
       email: 'Email: connect@svasam.com',
       contactMessage: 'For any questions regarding these Terms and Conditions, please contact us:'
     },
@@ -79,7 +79,7 @@ export const translations = {
       contactUs: 'Contact Us',
       contactMessage: 'For any questions regarding our cancellation and refund policy, please contact our customer support team:',
       email: 'Email: connect@svasam.com',
-      phone: 'Phone: +91 1234567890',
+      phone: 'Phone: +91 70195 57979',
       supportHours: 'Customer Support Hours: Mon-Sat, 10 AM - 7 PM'
     },
     privacy: {
@@ -129,7 +129,7 @@ export const translations = {
       emailPlaceholder: 'Your email address',
       subscribe: 'Subscribe',
       email: 'Email: connect@svasam.com',
-      phone: 'Phone: +91 1234567890',
+      phone: 'Phone: +91 70195 57979',
       supportHours: 'Customer Support Hours: Mon-Sat, 10 AM - 7 PM'
     },
     shipping: {
