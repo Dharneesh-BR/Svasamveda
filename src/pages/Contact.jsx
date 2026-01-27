@@ -1,6 +1,66 @@
 import { t } from '../i18n';
+import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'general',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('');
+
+    try {
+      // EmailJS configuration
+      const serviceId = 'service-ouvge5f'; // Replace with your EmailJS service ID
+      const templateId = 'template_8xflp9m'; // Replace with your EmailJS template ID
+      const userId = 'bcnO04d0XUUy8dm7E'; // Replace with your EmailJS public key
+
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: 'svasamveda@gmail.com'
+      };
+
+      const result = await emailjs.send(serviceId, templateId, templateParams, userId);
+      
+      if (result.status === 200) {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: 'general',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="min-h-screen w-full bg-background">
       <div className="max-w-4xl mx-auto py-12 sm:py-16 px-4 md:px-6 lg:px-8">
@@ -10,12 +70,26 @@ export default function Contact() {
           {/* Contact Form */}
           <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 md:p-10">
             <h2 className="text-xl sm:text-2xl font-bold text-indigo-800 mb-6 sm:mb-8">{t('contact.getInTouch')}</h2>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {submitStatus === 'success' && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                  Thank you for your message! We'll get back to you soon.
+                </div>
+              )}
+              {submitStatus === 'error' && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                  Sorry, there was an error sending your message. Please try again later.
+                </div>
+              )}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.fullName')}</label>
                 <input
                   type="text"
                   id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder={t('contact.fullNamePlaceholder')}
                 />
@@ -25,6 +99,10 @@ export default function Contact() {
                 <input
                   type="email"
                   id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder={t('contact.emailPlaceholder')}
                 />
@@ -34,6 +112,9 @@ export default function Contact() {
                 <input
                   type="tel"
                   id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder={t('contact.phonePlaceholder')}
                 />
@@ -42,6 +123,9 @@ export default function Contact() {
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.subject')}</label>
                 <select
                   id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="general">{t('contact.generalInquiry')}</option>
@@ -55,6 +139,10 @@ export default function Contact() {
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">{t('contact.message')}</label>
                 <textarea
                   id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
                   rows="4"
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   placeholder={t('contact.messagePlaceholder')}
@@ -62,12 +150,25 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-purple-700 text-white py-3 px-6 rounded-lg hover:bg-purple-800 transition flex items-center justify-center"
+                disabled={isSubmitting}
+                className="w-full bg-purple-700 text-white py-3 px-6 rounded-lg hover:bg-purple-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
               >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                {t('contact.sendMessage')}
+                {isSubmitting ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    {t('contact.sendMessage')}
+                  </>
+                )}
               </button>
             </form>
           </div>

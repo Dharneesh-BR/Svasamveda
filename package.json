@@ -17,6 +17,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@heroicons/react": "^2.2.0",
     "@portabletext/react": "^4.0.2",
     "@react-firebase/auth": "^0.2.10",
@@ -24,6 +25,7 @@
     "@sanity/image-url": "^1.2.0",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.21",
+    "emailjs-com": "^3.2.0",
     "esbuild": "^0.25.9",
     "firebase": "^12.2.1",
     "i18next": "^25.6.2",
