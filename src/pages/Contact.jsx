@@ -27,7 +27,7 @@ export default function Contact() {
 
     try {
       // EmailJS configuration
-      const serviceId = 'service-ouvge5f'; // Replace with your EmailJS service ID
+      const serviceId = 'service_ouvge5f'; // Replace with your EmailJS service ID
       const templateId = 'template_8xflp9m'; // Replace with your EmailJS template ID
       const userId = 'bcnO04d0XUUy8dm7E'; // Replace with your EmailJS public key
 
