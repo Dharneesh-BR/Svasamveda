@@ -5,6 +5,23 @@ import { FaArrowLeft, FaCalendar } from 'react-icons/fa';
 import { PortableText } from '@portabletext/react';
 import { urlFor } from '../sanityClient';
 
+// Query to fetch all blog posts for "You Might Also Like" section
+const allBlogPostsQuery = `*[_type == "blogPost"] | order(publishedAt desc) {
+  _id,
+  title,
+  slug,
+  excerpt,
+  publishedAt,
+  mainImage,
+  author->{
+    name,
+    image
+  },
+  categories[]->{
+    title
+  }
+}`;
+
 export default function BlogPost() {
   const { slug } = useParams();
   
@@ -28,6 +45,7 @@ export default function BlogPost() {
   }`;
 
   const { data: post, loading, error } = useSanityData(query, { slug });
+  const { data: allPosts } = useSanityData(allBlogPostsQuery);
 
   // Debug logging
   React.useEffect(() => {
@@ -185,6 +203,81 @@ export default function BlogPost() {
             </div>
           </div>
         </article>
+
+        {/* You Might Also Like Section */}
+        {allPosts && allPosts.length > 1 && (
+          <div className="mt-16">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">You Might Also Like</h2>
+              <p className="text-lg text-white/90 max-w-3xl mx-auto">
+                Explore more articles and insights to nurture your wellness journey.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {allPosts
+                .filter(p => p._id !== post?._id)
+                .slice(0, 6)
+                .map((relatedPost) => (
+                  <Link
+                    key={relatedPost._id}
+                    to={`/blog/${relatedPost.slug.current}`}
+                    className="group block h-full"
+                  >
+                    <div className="bg-gradient-to-t from-[#E9D5FF]/70 via-[#F7EEF5] to-white rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 w-full h-full min-h-[360px] flex flex-col border border-purple-100 overflow-hidden">
+                      <div className="relative h-56 sm:h-64">
+                        {relatedPost.mainImage ? (
+                          <img 
+                            src={urlFor(relatedPost.mainImage).url()} 
+                            alt={relatedPost.title}
+                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+                            <svg className="w-16 h-16 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                            </svg>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                        <div className="absolute left-4 bottom-4 text-white">
+                          <div className="text-2xl font-extrabold drop-shadow-sm line-clamp-2">
+                            {relatedPost.title}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex-1 p-4 flex flex-col">
+                        {relatedPost.categories && relatedPost.categories.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {relatedPost.categories.slice(0, 3).map((category, idx) => (
+                              <span
+                                key={`${category.title}-${idx}`}
+                                className="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 border border-purple-200"
+                              >
+                                {category.title}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        
+                        <p className="text-sm text-gray-600 line-clamp-3">
+                          {relatedPost.excerpt || relatedPost.shortDescription || 'Unlock mindful growth with curated guidance and practical steps you can start today.'}
+                        </p>
+                        
+                        <div className="mt-auto pt-4">
+                          <span className="inline-flex items-center justify-center w-full rounded-full border-2 border-purple-400 text-purple-700 font-semibold text-sm py-2 transition-colors group-hover:bg-purple-600 group-hover:text-white">
+                            Read more
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

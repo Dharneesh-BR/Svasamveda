@@ -124,15 +124,13 @@ export default function BlogPosts() {
 
   return (
     <div className="relative">
-      {/* Mobile View - Horizontal Scroll */}
-      <div className="md:hidden px-4 sm:px-6 mt-8">
-        <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4">
-          {posts.map((post) => (
-            <div key={post._id} className="flex-shrink-0 w-72">
-              <BlogCard post={post} />
-            </div>
-          ))}
-        </div>
+      {/* Mobile View - Vertical Stack */}
+      <div className="md:hidden px-4 sm:px-6 mt-8 space-y-6">
+        {posts.map((post) => (
+          <div key={post._id} className="w-full">
+            <BlogCard post={post} />
+          </div>
+        ))}
       </div>
 
       {/* Desktop View - Grid */}
