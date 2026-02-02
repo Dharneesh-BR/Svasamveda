@@ -30,7 +30,7 @@ const ChevronRight = ({ className }) => (
   </svg>
 );
 
-const CategoryCard = ({ to, title, description, image, alt }) => {
+const CategoryCard = ({ to, title, description, image, alt, subtitle }) => {
   return (
     <div className="h-full w-full">
       <Link 
@@ -39,8 +39,8 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
         aria-label={t('categories.exploreAriaLabel', { title })}
       >
         {/* Mobile View - Compact Card */}
-        <div className="md:hidden bg-white rounded-2xl shadow-xl p-6 w-full flex flex-col items-center hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-purple-100 mx-auto max-w-sm">
-          <div className="h-20 w-20 mb-4 relative">
+        <div className="md:hidden bg-white rounded-2xl shadow-xl p-4 w-full flex flex-col items-center hover:shadow-2xl hover:scale-105 transition-all duration-300 border border-purple-100 mx-auto max-w-36">
+          <div className="h-16 w-16 mb-3 relative">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full"></div>
             <img 
               src={image} 
@@ -49,14 +49,14 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
               loading="lazy"
             />
           </div>
-          <h2 className="text-base font-semibold text-gray-800 text-center line-clamp-2">
+          <h2 className="text-sm font-semibold text-gray-800 text-center line-clamp-2">
             {title}
           </h2>
         </div>
 
         {/* Desktop View - Elegant Card */}
         <div className="hidden md:flex bg-white rounded-3xl shadow-xl p-4 hover:shadow-2xl hover:scale-105 transition-all duration-300 w-full h-[320px] flex flex-col border border-purple-100 mx-auto max-w-md">
-          <div className="h-28 w-28 mx-auto mb-3 flex-shrink-0 relative">
+          <div className="h-36 w-36 mx-auto mb-3 flex-shrink-0 relative">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl"></div>
             <img 
               src={image} 
@@ -71,6 +71,11 @@ const CategoryCard = ({ to, title, description, image, alt }) => {
             <h2 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 px-2">
               {title}
             </h2>
+            {subtitle && (
+              <p className="text-base text-gray-600 font-medium px-2 line-clamp-2">
+                {subtitle}
+              </p>
+            )}
           </div>
           
           <div className="mt-2 pt-2 border-t border-purple-100">
@@ -104,25 +109,19 @@ export default function Categories() {
   const STORE_CATEGORIES = useMemo(() => [
     { slug: 'bracelets', title: 'Bracelets' },
     { slug: 'rudraksha', title: 'Rudraksha' },
-    { slug: 'murti', title: 'Murti' },
     { slug: 'anklet', title: 'Anklet' },
-    { slug: 'frames', title: 'Frames' },
-    { slug: 'karungali', title: 'Karungali' },
-    { slug: 'zodiac', title: 'Zodiac' },
     { slug: 'pyrite', title: 'Pyrite' },
-    { slug: 'gemstones', title: 'Gemstones' },
-    { slug: 'pendant', title: 'Pendant' },
   ], []);
 
   const imageFor = useCallback((slug) => {
     const special = {
       bracelets: '/assets/Bracelet.jpg',
       rudraksha: '/assets/Rudraksha.jpg',
-      murti: '/assets/Murti.jpg',
       anklet: '/assets/Anklet.jpg',
+      pyrite: '/assets/Pyrite.jpg',
+      murti: '/assets/Murti.jpg',
       frames: '/assets/Frames.jpg',
       karungali: '/assets/karungali.jpg',
-      pyrite: '/assets/Pyrite.jpg',
       gemstones: '/assets/Gemstones.jpg',
       pendant: '/assets/Pendant.jpg',
       zodiac: '/assets/Zodiac.jpg',
@@ -175,6 +174,7 @@ export default function Categories() {
       id: 'mind',
       title: t('categories.mind.title'),
       description: t('categories.mind.description'),
+      subtitle: 'Master your Mind. Elevate your Life',
       image: MindImg,
       alt: t('categories.mind.alt')
     },
@@ -182,6 +182,7 @@ export default function Categories() {
       id: 'body',
       title: t('categories.body.title'),
       description: t('categories.body.description'),
+      subtitle: 'Train the Body. Extend Life',
       image: BodyImg,
       alt: t('categories.body.alt')
     },
@@ -189,6 +190,7 @@ export default function Categories() {
       id: 'soul',
       title: t('categories.soul.title'),
       description: t('categories.soul.description'),
+      subtitle: 'Awaken the Soul. Live Fully',
       image: SoulImg,
       alt: t('categories.soul.alt')
     }
@@ -234,15 +236,16 @@ export default function Categories() {
             
             {/* Categories Grid */}
             <div className="relative">
-              {/* Mobile View - Horizontal Scroll */}
+              {/* Mobile View - Single Line */}
               <div className="md:hidden px-4 sm:px-6 mt-8">
-                <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-4">
+                <div className="flex justify-between gap-2 pb-4">
                   {categories.map((category) => (
-                    <div key={category.id} className="flex-shrink-0 w-72">
+                    <div key={category.id} className="flex-1">
                       <CategoryCard
                         to={`/${category.id}`}
                         title={category.title}
                         description={category.description}
+                        subtitle={category.subtitle}
                         image={category.image}
                         alt={category.alt}
                       />
@@ -259,6 +262,7 @@ export default function Categories() {
                       to={`/${category.id}`}
                       title={category.title}
                       description={category.description}
+                      subtitle={category.subtitle}
                       image={category.image}
                       alt={category.alt}
                     />
@@ -295,14 +299,12 @@ export default function Categories() {
                 aria-label="Store categories"
               >
                 {STORE_CATEGORIES.map(cat => (
-                  <button
+                  <div
                     key={cat.slug}
-                    role="tab"
-                    onClick={() => goToCategory(cat.slug)}
                     className="flex-shrink-0 snap-start group w-20 sm:w-28 md:w-36 focus:outline-none"
                     title={cat.title}
                   >
-                    <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all">
+                    <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all cursor-default">
                       <div className="aspect-square w-full bg-gray-50 overflow-hidden">
                         <img
                           src={imageFor(cat.slug)}
@@ -318,7 +320,7 @@ export default function Categories() {
                       </div>
                     </div>
                     <div className="mt-2 text-center text-sm font-semibold text-white">{cat.title}</div>
-                  </button>
+                  </div>
                 ))}
               </div>
 

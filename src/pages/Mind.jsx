@@ -49,14 +49,30 @@ function Mind() {
 
   return (
     <main className="relative min-h-screen w-full bg-background/80">
+      {/* Banner Section */}
+      <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
+        <img 
+          src="/assets/Mind Banner.jpg"
+          alt="Mind Wellness Programs Banner"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60"></div>
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <div className="text-center px-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-2xl">Master Your Mind</h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-white/95 max-w-4xl drop-shadow-lg">Elevate Your Life</p>
+          </div>
+        </div>
+      </div>
+
       <div className="relative z-10">
         <div className="max-w-6xl mx-auto py-16 px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Mind Wellness Programs</h1>
-          <p className="text-lg text-white max-w-3xl mx-auto">
-            Discover our transformative programs designed to enhance your mental well-being and unlock your full potential.
-          </p>
-        </div>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Mind Wellness Programs</h2>
+            <p className="text-base md:text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
+              Discover our transformative programs designed to enhance your mental well-being and unlock your full potential.
+            </p>
+          </div>
         
         {(!programs || programs.length === 0) ? (
           <div className="text-center py-12">

@@ -19,8 +19,9 @@ export function useSessions() {
         const query = `*[_type == "session"] | order(_createdAt desc) {
           _id,
           title,
-          description,
+          shortDescription,
           mediaType,
+          tags,
           // dereference file asset url
           "fileUrl": file.asset->url,
           // dereference thumbnail asset url

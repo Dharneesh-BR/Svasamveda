@@ -206,8 +206,8 @@ const TestPrograms = () => {
             {allPrograms.map((program) => (
               <SwiperSlide key={program._id} className="h-full">
                 <Link to={`/programs/${program.slug}`} className="block h-full">
-                  <div className="rounded-2xl overflow-hidden bg-[#F7EEF5] shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[380px] mx-2 group flex flex-col">
-                    <div className="relative h-40 flex-shrink-0">
+                  <div className="rounded-2xl overflow-hidden bg-gradient-to-t from-[#E9D5FF]/70 via-[#F7EEF5] to-white shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[420px] mx-2 group flex flex-col">
+                    <div className="relative h-44 flex-shrink-0">
                       <img
                         src={program.imageUrl || '/placeholder-program.jpg'}
                         alt={program.title}
@@ -217,7 +217,7 @@ const TestPrograms = () => {
                       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
 
                       <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                        <div>
+                        <div className="min-h-[76px]">
                           <h3 className="text-white text-2xl font-extrabold leading-tight line-clamp-2">
                             {program.title}
                           </h3>
@@ -240,7 +240,17 @@ const TestPrograms = () => {
                       </div>
                     </div>
 
-                    <div className="px-4 pt-4 flex flex-wrap gap-3 min-h-[52px] max-h-[72px] overflow-hidden">
+                    {/* Experience Strip */}
+                    <div
+                      className="text-white px-4 py-2 text-center"
+                      style={{
+                        background: 'linear-gradient(135deg, #1a0b2e 0%, #2d1b69 25%, #6b21a8 50%, #c026d3 75%, #e879f9 100%)'
+                      }}
+                    >
+                      <span className="text-sm font-semibold">13+ years of experience</span>
+                    </div>
+
+                    <div className="px-4 pt-4 flex flex-wrap gap-3 min-h-[60px] max-h-[72px] overflow-hidden">
                       {(Array.isArray(program.tags) ? program.tags : [program.category]).filter(Boolean).slice(0, 3).map((tag, idx) => (
                         <span
                           key={`${tag}-${idx}`}
@@ -251,7 +261,7 @@ const TestPrograms = () => {
                       ))}
                     </div>
 
-                    <div className="px-4 pb-5 pt-4 mt-auto">
+                    <div className="px-4 pb-5 pt-4 mt-auto min-h-[120px]">
                       <div className="grid grid-cols-2 gap-4 items-start">
                         <div>
                           <div className="text-xl font-extrabold text-gray-900">{program.duration || 'Self paced'}</div>

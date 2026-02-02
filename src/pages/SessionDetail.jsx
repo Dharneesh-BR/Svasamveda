@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { client } from '../sanityClient';
+import { PortableText } from '@portabletext/react';
 
 export default function SessionDetail() {
   const { slug } = useParams();
@@ -21,7 +22,8 @@ export default function SessionDetail() {
         const query = `*[_type == "session" && _id == $sessionId][0]{
           _id,
           title,
-          description,
+          shortDescription,
+          body,
           mediaType,
           // dereference file asset url
           "fileUrl": file.asset->url,
@@ -116,53 +118,92 @@ export default function SessionDetail() {
           </div>
         </div>
 
-        {/* Media Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md overflow-hidden mb-8">
-          <div className="relative bg-gray-100">
-            {session.mediaType === 'video' && session.fileUrl ? (
-              <div className="aspect-video bg-black">
-                <video 
-                  controls 
-                  className="w-full h-full" 
-                  src={session.fileUrl} 
-                  preload="metadata"
-                  poster={session.thumbnail}
-                />
-              </div>
-            ) : session.mediaType === 'audio' && session.fileUrl ? (
-              <div className="p-3">
-                <div className="mb-3">
-                  {session.thumbnail && (
-                    <img 
-                      src={session.thumbnail} 
-                      alt={session.title}
-                      className="w-full max-w-xs mx-auto rounded-lg shadow-md mb-3"
+        {/* Media and Content Section */}
+        <div className="bg-gradient-to-br from-white/95 to-purple-50/90 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+            {/* Media Section - Left */}
+            <div className="p-6 bg-gray-100">
+              <div className="relative rounded-2xl overflow-hidden">
+                {session.mediaType === 'video' && session.fileUrl ? (
+                  <div className="aspect-video bg-black">
+                    <video 
+                      controls 
+                      className="w-full h-full" 
+                      src={session.fileUrl} 
+                      preload="metadata"
+                      poster={session.thumbnail}
                     />
-                  )}
-                </div>
-                <audio controls className="w-full max-w-xs mx-auto" src={session.fileUrl} preload="metadata">
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-            ) : (
-              <div className="aspect-video bg-gradient-to-r from-purple-50 to-blue-50 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">
-                    {session.mediaType === 'audio' ? '🎧' : session.mediaType === 'video' ? '🎥' : '📄'}
                   </div>
-                  <p className="text-gray-600">No media available</p>
-                </div>
+                ) : session.mediaType === 'audio' && session.fileUrl ? (
+                  <div className="p-6 flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
+                    {session.thumbnail && (
+                      <div className="relative mb-6 group">
+                        <img 
+                          src={session.thumbnail} 
+                          alt={session.title}
+                          className="w-full max-w-lg rounded-2xl shadow-xl transform transition-all duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                      </div>
+                    )}
+                    <div className="w-full max-w-lg">
+                      <audio controls className="w-full" src={session.fileUrl} preload="metadata">
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="aspect-video bg-gradient-to-br from-purple-100 via-blue-100 to-purple-100 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="text-8xl mb-6 animate-pulse">
+                        {session.mediaType === 'audio' ? '🎧' : session.mediaType === 'video' ? '🎥' : '📄'}
+                      </div>
+                      <p className="text-gray-600 text-lg font-medium">No media available</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </div>
+            </div>
 
-        {/* Description Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">About This Session</h2>
-          <p className="text-gray-700">
-            {session.description || 'No description available.'}
-          </p>
+            {/* Content Section - Right */}
+            <div className="p-10 flex flex-col bg-gradient-to-br from-white to-purple-50/30">
+              <div className="mb-6">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  About This Session
+                </h2>
+                <div className="h-1 w-20 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full"></div>
+              </div>
+              <div className="prose prose-lg max-w-none overflow-y-auto max-h-[500px]">
+                {session.body ? (
+                  <PortableText 
+                    value={session.body}
+                    components={{
+                      block: {
+                        normal: ({children}) => <p className="mb-6 text-gray-700 leading-relaxed text-lg">{children}</p>,
+                        h1: ({children}) => <h1 className="text-4xl font-bold mb-6 text-gray-900 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">{children}</h1>,
+                        h2: ({children}) => <h2 className="text-3xl font-bold mb-4 text-gray-900">{children}</h2>,
+                        h3: ({children}) => <h3 className="text-2xl font-bold mb-3 text-gray-900">{children}</h3>,
+                      },
+                      list: {
+                        bullet: ({children}) => <ul className="list-disc pl-6 mb-6 text-gray-700 space-y-2">{children}</ul>,
+                        number: ({children}) => <ol className="list-decimal pl-6 mb-6 text-gray-700 space-y-2">{children}</ol>,
+                      },
+                      listItem: {
+                        bullet: ({children}) => <li className="mb-3 text-lg">{children}</li>,
+                        number: ({children}) => <li className="mb-3 text-lg">{children}</li>,
+                      }
+                    }}
+                  />
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500 text-lg italic">
+                      {session.shortDescription || 'No description available.'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

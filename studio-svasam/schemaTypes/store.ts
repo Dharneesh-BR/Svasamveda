@@ -49,6 +49,13 @@ export default defineType({
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
+      name: 'discountedPrice',
+      title: 'Discounted Price (₹)',
+      type: 'number',
+      description: 'Optional: Enter discounted price if the product is on sale',
+      validation: (Rule) => Rule.min(0),
+    }),
+    defineField({
       name: 'images',
       title: 'Product Images',
       type: 'array',

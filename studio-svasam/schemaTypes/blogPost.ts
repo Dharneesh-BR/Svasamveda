@@ -52,6 +52,20 @@ const blogPost: SchemaTypeDefinition = {
           {type: 'block'},
           {type: 'image'}
         ]
+      },
+      {
+        name: 'shortDescription',
+        type: 'text',
+        title: 'Short Description',
+        description: 'Brief description for blog cards (recommended: 100-150 characters)',
+        rows: 3
+      },
+      {
+        name: 'tags',
+        type: 'array',
+        title: 'Tags',
+        of: [{type: 'string'}],
+        description: 'Tags for categorizing and filtering blog posts'
       }
     ]
 }

@@ -2,10 +2,13 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 
 export const client = createClient({
-  projectId: 'n5smwbzi',
-  dataset: 'production1',
-  apiVersion: '2023-05-03',
-  useCdn: true,
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || 'n5smwbzi',
+  dataset: import.meta.env.VITE_SANITY_DATASET || 'production1',
+  apiVersion: import.meta.env.VITE_SANITY_API_VERSION || '2023-07-21',
+  useCdn: false, // Disable CDN for development to avoid CORS issues
+  perspective: 'published', // Use published content
+  // Add CORS headers configuration
+  withCredentials: false,
   // token is removed since it's not needed for read operations
 });
 

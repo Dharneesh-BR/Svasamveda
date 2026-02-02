@@ -12,11 +12,6 @@ export default defineType({
       type: "string",
     },
     {
-      name: "description",
-      title: "Description",
-      type: "text",
-    },
-    {
       name: "mediaType",
       title: "Media Type",
       type: "string",
@@ -44,6 +39,30 @@ export default defineType({
         hotspot: true,
       },
       description: "Thumbnail image for session cards (recommended: 400x300px)",
+    },
+    {
+      name: "tags",
+      title: "Tags",
+      type: "array",
+      of: [{type: "string"}],
+      description: "Tags for categorizing and filtering sessions",
+    },
+    {
+      name: "shortDescription",
+      title: "Short Description",
+      type: "text",
+      description: "Brief description for session cards (recommended: 100-150 characters)",
+      rows: 3,
+    },
+    {
+      name: "body",
+      title: "Body",
+      type: "array",
+      of: [
+        {type: "block"},
+        {type: "image"}
+      ],
+      description: "Full session content with rich text formatting"
     },
   ],
 });
