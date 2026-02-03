@@ -1,63 +1,90 @@
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 export async function handler(event) {
+  // Razorpay sends POST only
+  if (event.httpMethod !== "POST") {
+    return {
+      statusCode: 200,
+      body: "Method ignored",
+    };
+  }
+
   try {
-    // 1️⃣ Get Razorpay signature
+    // 1️⃣ Verify Razorpay Signature
     const razorpaySignature = event.headers["x-razorpay-signature"];
+    const body = event.body;
 
-    if (!razorpaySignature) {
-      return { statusCode: 400, body: "Missing signature" };
-    }
-
-    // 2️⃣ Verify signature
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
-      .update(event.body)
+      .update(body)
       .digest("hex");
 
     if (expectedSignature !== razorpaySignature) {
-      return { statusCode: 400, body: "Invalid signature" };
+      console.error("❌ Invalid Razorpay signature");
+      return {
+        statusCode: 200, // still 200 to stop retries
+        body: "Invalid signature",
+      };
     }
 
-    // 3️⃣ Parse payload
-    const payload = JSON.parse(event.body);
+    // 2️⃣ Parse event
+    const payload = JSON.parse(body);
+    const eventType = payload.event;
 
-    // Only handle payment.captured
-    if (payload.event !== "payment.captured") {
-      return { statusCode: 200, body: "Event ignored" };
+    // 3️⃣ Handle only payment.captured
+    if (eventType !== "payment.captured") {
+      return {
+        statusCode: 200,
+        body: "Event ignored",
+      };
     }
 
+    // 4️⃣ Extract payment details
     const payment = payload.payload.payment.entity;
 
-    // 4️⃣ Prepare email
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const email = payment.email;
+    const orderId = payment.order_id;
+    const paymentId = payment.id;
+    const amount = (payment.amount / 100).toFixed(2);
+    const method = payment.method;
+    const currency = payment.currency.toUpperCase();
 
+    // 5️⃣ Send email via SendGrid Dynamic Template
     const msg = {
-      to: payment.email || "svasamveda@gmail.com", // fallback
-      from: "no-reply@svasam.com",
+      to: email,
+      from: {
+        email: "no-reply@svasam.com",
+        name: "SVASAM VEDA LIFE SCIENCES",
+      },
       templateId: process.env.SENDGRID_TEMPLATE_ID,
       dynamicTemplateData: {
-        order_id: payment.order_id,
-        payment_id: payment.id,
-        amount: payment.amount / 100,
-        currency: payment.currency,
+        order_id: orderId,
+        payment_id: paymentId,
+        amount: amount,
+        currency: currency,
+        payment_method: method,
       },
     };
 
     await sgMail.send(msg);
 
-    // 5️⃣ MUST return 200
+    console.log("✅ Payment email sent:", paymentId);
+
+    // 6️⃣ ALWAYS return 200 (IMPORTANT)
     return {
       statusCode: 200,
-      body: "Webhook processed successfully",
+      body: JSON.stringify({ received: true }),
     };
   } catch (error) {
-    console.error("Webhook error:", error);
+    console.error("🔥 Webhook error:", error);
 
+    // Razorpay must still receive 200
     return {
-      statusCode: 500,
-      body: "Internal Server Error",
+      statusCode: 200,
+      body: JSON.stringify({ errorHandled: true }),
     };
   }
 }
