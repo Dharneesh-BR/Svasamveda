@@ -1,42 +1,63 @@
 import crypto from "crypto";
 import sgMail from "@sendgrid/mail";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
 export async function handler(event) {
   try {
-    const signature = event.headers["x-razorpay-signature"];
-    const body = event.body;
+    // 1️⃣ Get Razorpay signature
+    const razorpaySignature = event.headers["x-razorpay-signature"];
 
+    if (!razorpaySignature) {
+      return { statusCode: 400, body: "Missing signature" };
+    }
+
+    // 2️⃣ Verify signature
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
-      .update(body)
+      .update(event.body)
       .digest("hex");
 
-    if (signature !== expectedSignature) {
-      return { statusCode: 401, body: "Invalid signature" };
+    if (expectedSignature !== razorpaySignature) {
+      return { statusCode: 400, body: "Invalid signature" };
     }
 
-    const payload = JSON.parse(body);
+    // 3️⃣ Parse payload
+    const payload = JSON.parse(event.body);
 
-    if (payload.event === "payment.captured") {
-      const payment = payload.payload.payment.entity;
-
-      await sgMail.send({
-        to: payment.email,
-        from: process.env.SENDGRID_FROM_EMAIL,
-        templateId: process.env.SENDGRID_PAYMENT_TEMPLATE_ID,
-        dynamicTemplateData: {
-          order_id: payment.order_id,
-          payment_id: payment.id,
-          amount: payment.amount / 100,
-        },
-      });
+    // Only handle payment.captured
+    if (payload.event !== "payment.captured") {
+      return { statusCode: 200, body: "Event ignored" };
     }
 
-    return { statusCode: 200, body: "Webhook processed" };
-  } catch (err) {
-    console.error("Webhook error:", err);
-    return { statusCode: 500, body: "Webhook error" };
+    const payment = payload.payload.payment.entity;
+
+    // 4️⃣ Prepare email
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+    const msg = {
+      to: payment.email || "svasamveda@gmail.com", // fallback
+      from: "no-reply@svasam.com",
+      templateId: process.env.SENDGRID_TEMPLATE_ID,
+      dynamicTemplateData: {
+        order_id: payment.order_id,
+        payment_id: payment.id,
+        amount: payment.amount / 100,
+        currency: payment.currency,
+      },
+    };
+
+    await sgMail.send(msg);
+
+    // 5️⃣ MUST return 200
+    return {
+      statusCode: 200,
+      body: "Webhook processed successfully",
+    };
+  } catch (error) {
+    console.error("Webhook error:", error);
+
+    return {
+      statusCode: 500,
+      body: "Internal Server Error",
+    };
   }
 }
