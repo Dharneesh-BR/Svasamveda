@@ -219,7 +219,7 @@ export default function Store() {
   // Loading
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 flex items-center justify-center">
+      <div className="min-h-screen w-full bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-300" aria-label={t('common.loading')}></div>
       </div>
     );
@@ -228,7 +228,7 @@ export default function Store() {
   // Error
   if (error && !error.isSampleData) {
     return (
-      <div className="min-h-screen w-full bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 flex items-center justify-center">
+      <div className="min-h-screen w-full bg-background flex items-center justify-center">
         <div className="text-red-500 text-center p-4 max-w-md">
           <h2 className="text-xl font-bold mb-2">Error Loading Store Items</h2>
           <p className="mb-4">{error.message}</p>
@@ -250,7 +250,7 @@ export default function Store() {
 
   // Main content
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900">
+    <div className="min-h-screen w-full bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Sample Data Warning */}
         {error && error.isSampleData && (
@@ -376,7 +376,7 @@ export default function Store() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {filteredItems.map((item) => (
                 <Link
                   key={item._id || item.slug}

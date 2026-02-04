@@ -123,6 +123,23 @@ export default defineType({
       title: 'Featured Program',
       description: 'Show this program in featured sections',
       initialValue: false
+    }),
+    defineField({
+      name: 'strip',
+      type: 'string',
+      title: 'Strip Text',
+      description: 'Text displayed on the program card strip for design purposes',
+      validation: (rule: any) => rule.required().error('Strip text is required')
+    }),
+    defineField({
+      name: 'video',
+      type: 'file',
+      title: 'Program Video',
+      description: 'Video file to be displayed in the program detail page',
+      options: {
+        accept: 'video/*'
+      },
+      validation: (rule: any) => rule.required().error('Program video is required')
     })
   ],
   preview: {

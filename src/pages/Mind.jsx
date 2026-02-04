@@ -107,15 +107,23 @@ function Mind() {
                   )}
                 </button>
                 {program.imageUrl && (
-                  <img 
-                    src={program.imageUrl} 
-                    alt={program.title}
-                    className="w-full h-48 object-cover"
-                    loading="lazy"
-                  />
+                  <div className="relative">
+                    <img 
+                      src={program.imageUrl} 
+                      alt={program.title}
+                      className="w-full h-48 object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                {/* Strip Field - Between Image and Description */}
+                {program.strip && (
+                  <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white px-3 py-2 text-sm font-semibold">
+                    {program.strip}
+                  </div>
                 )}
                 <div className="p-6">
-                  <h2 className="text-xl font-bold text-white mb-3">{program.title}</h2>
+                  <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
                   <p className="text-gray-600 mb-4 line-clamp-3">
                     {program.description}
                   </p>

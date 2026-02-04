@@ -40,6 +40,7 @@ export function useProgramsByCategory(category) {
         title,
         description,
         category,
+        strip,
         "imageUrl": image.asset->url,
         price,
         discountPrice,

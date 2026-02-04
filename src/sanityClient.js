@@ -28,6 +28,11 @@ export const getAllPrograms = async () => {
     discountPrice,
     duration,
     category,
+    strip,
+    "video": video.asset->{
+      url,
+      originalFilename
+    },
     "imageUrl": image.asset->url,
     "slug": slug.current,
     includes,
@@ -56,6 +61,11 @@ export const getProgramBySlug = async (slug) => {
       discountPrice,
       duration,
       category,
+      strip,
+      "video": {
+        url,
+        originalFilename
+      },
       "image": image.asset->{
         url,
         alt
@@ -94,14 +104,20 @@ export const getProgramBySlug = async (slug) => {
     }`;
     
     console.log('Executing Sanity query with slug:', slug);
-    const result = await client.fetch(query, { slug });
-    console.log('Sanity query result for slug:', slug, result);
+    console.log('Query being executed:', query); // Debug the actual query
+    const result = await client.fetch(query, { slug, cache: 'no-store' });
+    console.log('Raw Sanity query result:', result); // Raw result from Sanity
     
     if (!result) {
       console.log('No program found for slug:', slug);
       // Try to find all programs to see what slugs exist
       const allPrograms = await client.fetch(`*[_type == "program"]{ "slug": slug.current }`);
       console.log('All available program slugs:', allPrograms.map(p => p.slug));
+    } else {
+      console.log('Program found. Checking for strip and video fields...');
+      console.log('Strip field in result:', 'strip' in result);
+      console.log('Video field in result:', 'video' in result);
+      console.log('All keys in result:', Object.keys(result));
     }
     
     return result;
@@ -132,6 +148,11 @@ export const getProgramById = async (id) => {
       discountPrice,
       duration,
       category,
+      strip,
+      "video": video.asset->{
+        url,
+        originalFilename
+      },
       "image": image.asset->{
         url,
         alt
@@ -191,6 +212,11 @@ export const getProgramsByCategory = async (category) => {
     description,
     price,
     duration,
+    strip,
+    "video": video.asset->{
+      url,
+      originalFilename
+    },
     "imageUrl": image.asset->url,
     "slug": slug.current,
   }`;

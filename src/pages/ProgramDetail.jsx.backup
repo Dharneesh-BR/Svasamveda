@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StarIcon, CheckIcon, XMarkIcon, ArrowLeftIcon } from '@heroicons/react/24/solid';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { client, getProgramBySlug } from '../sanityClient';
 import { useCart } from '../contexts/CartContext';
 import { PortableText } from '@portabletext/react';
@@ -49,19 +49,17 @@ function ProgramDetail() {
         if (result.body) {
           if (Array.isArray(result.body)) {
             processedBody = result.body;
-          } else if (typeof result.body === 'string') {
-            processedBody = [{ _type: 'block', children: [{ _type: 'span', text: result.body }] }];
-          } else {
-            processedBody = [];
+          } else if (typeof result.body === 'object' && result.body !== null) {
+            processedBody = [result.body];
           }
         }
 
         const programData = {
           id: result._id,
-          _id: result._id,
+          _id: result._id, // Keep original _id for consistency
           title: result.title || 'Untitled Program',
-          description: result.description,
-          body: processedBody,
+          description: result.description, // Make sure description is included
+          body: processedBody, // Use processed body
           hasImage: !!(result.image || result.imageUrl),
           imageUrl: result.image?.url || result.imageUrl,
           price: result.price,
@@ -69,12 +67,13 @@ function ProgramDetail() {
           includes: Array.isArray(result.includes) ? result.includes : [],
           benefits: Array.isArray(result.benefits) ? result.benefits : [],
           requirements: Array.isArray(result.requirements) ? result.requirements : [],
-          slug: result.slug || result._id,
+          slug: result.slug || result._id, // Fallback to _id if no slug
           category: result.category || 'uncategorized',
-          instructor: result.instructor,
-          strip: result.strip,
-          video: result.video
+          instructor: result.instructor, // Include instructor if available
+          strip: result.strip, // Include strip field
+          video: result.video // Include video field
         };
+
         
         if (!programData.id) {
           throw new Error('Invalid program data: missing _id');
@@ -85,7 +84,11 @@ function ProgramDetail() {
           window.history.replaceState({}, '', `/programs/${result._id}`);
         }
         
-        console.log('Full program data:', result);
+        console.log('Full program data:', result); // Debug log
+        console.log('Video field:', result.video); // Debug video field
+        console.log('Video field type:', typeof result.video); // Debug video type
+        console.log('Video field keys:', result.video ? Object.keys(result.video) : 'undefined'); // Debug video keys
+        console.log('Strip field:', result.strip); // Debug strip field
         setProgram(programData);
       } catch (err) {
         const errorMsg = `Failed to load program: ${err.message}`;
@@ -102,48 +105,52 @@ function ProgramDetail() {
     };
 
     fetchProgram().catch(err => {
-      console.error('Error in fetchProgram:', err);
-      setError('Failed to load program. Please try again later.');
+      console.error('Unhandled error in fetchProgram:', err);
+      setError('An unexpected error occurred while loading the program');
       setLoading(false);
     });
   }, [slug]);
 
   const handleAddToCart = () => {
-    if (!program) return;
-    
-    const cartItem = {
+    const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+    const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+    const effectivePrice = hasDiscount && hasPrice && program.discountPrice < program.price ? program.discountPrice : program.price;
+
+    addToCart({
       id: program._id,
-      title: program.title,
-      price: program.price,
-      discountPrice: program.discountPrice,
-      imageUrl: program.imageUrl,
-      slug: program.slug || program._id,
-      category: program.category,
-      quantity: quantity
-    };
-    
-    addToCart(cartItem);
+      name: program.title,
+      price: effectivePrice,
+      image: program.imageUrl,
+      quantity,
+      slug: program.slug
+    });
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      <div className="min-h-screen bg-background/80 pb-32 md:pb-24 pt-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+          </div>
+        </div>
       </div>
     );
   }
-
+  
   if (error) {
     return (
-      <div className="min-h-screen w-full bg-background flex items-center justify-center">
-        <div className="text-red-500 text-center p-4 max-w-md">
-          <h2 className="text-xl font-bold mb-2">Error Loading Program</h2>
-          <p>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center p-6 max-w-md mx-auto bg-white rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button
+            onClick={() => window.history.back()}
+            className="px-4 py-2 bg-main text-white rounded-md hover:bg-opacity-90 transition-colors"
           >
-            Try Again
+            Go Back
           </button>
         </div>
       </div>
@@ -158,7 +165,7 @@ function ProgramDetail() {
           <p className="text-gray-600 mb-4">The program you're looking for doesn't exist or has been removed.</p>
           <a
             href="/programs"
-            className="inline-block px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+            className="inline-block px-6 py-2 bg-main text-white rounded-md hover:bg-opacity-90 transition-colors"
           >
             Browse Programs
           </a>
@@ -169,6 +176,7 @@ function ProgramDetail() {
 
   return (
     <div className="min-h-screen bg-background/80">
+
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Program Header */}
@@ -221,44 +229,6 @@ function ProgramDetail() {
                     link: ({ value, children }) => {
                       const href = value?.href || '';
                       const isExternal = href.startsWith('http');
-                      return (
-                        <a 
-                          href={href}
-                          target={isExternal ? '_blank' : undefined}
-                          rel={isExternal ? 'noopener noreferrer' : undefined}
-                          className="text-purple-600 hover:underline"
-                        >
-                          {children}
-                        </a>
-                      );
-                    },
-                    strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
-                    em: ({ children }) => <em className="italic">{children}</em>,
-                    underline: ({ children }) => <u>{children}</u>,
-                    code: ({ children }) => <code className="bg-gray-100 px-1 rounded">{children}</code>,
-                  },
-                  types: {
-                    image: ({ value }) => (
-                      <div className="my-4">
-                        <img 
-                          src={value.asset?.url} 
-                          alt={value.alt || 'Image'} 
-                          className="max-w-full h-auto rounded-lg"
-                        />
-                        {value.caption && (
-                          <p className="text-sm text-gray-500 mt-2 text-center">{value.caption}</p>
-                        )}
-                      </div>
-                    ),
-                  },
-                }}
-              />
-            </div>
-          ) : program.description ? (
-            <div className="prose max-w-none">
-              <p className="text-gray-700">{program.description}</p>
-            </div>
-          ) : (
             <div className="prose max-w-none">
               <p className="text-gray-500">No description available for this program.</p>
             </div>
@@ -277,16 +247,28 @@ function ProgramDetail() {
               />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-gray-900">
                 {program.instructor?.name || 'Expert Instructor'}
               </h3>
-              <p className="text-gray-600 mb-2">
-                {program.instructor?.title || 'Certified Professional'}
+              <p className="text-main font-medium mb-3">
+                {program.instructor?.title || 'Certified Instructor'}
               </p>
-              {program.instructor?.bio && (
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {program.instructor.bio}
-                </p>
+              <p className="text-gray-600">
+                {program.instructor?.bio || 'Our instructor has years of experience in this field and is dedicated to helping you achieve your goals.'}
+              </p>
+              
+              {program.requirements?.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Requirements</h3>
+                  <ul className="space-y-3">
+                    {program.requirements.map((requirement, index) => (
+                      <li key={index} className="flex items-start">
+                        <XMarkIcon className="h-5 w-5 text-gray-400 mr-2 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{requirement}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           </div>
@@ -308,7 +290,8 @@ function ProgramDetail() {
                   console.log('Video error details:', {
                     error: e.target.error,
                     networkState: e.target.networkState,
-                    currentSrc: e.target.currentSrc
+                    currentSrc: e.target.currentSrc,
+                    canPlay: e.target.canPlayType('video/mp4')
                   });
                 }}
                 onLoadStart={() => console.log('Video started loading')}
@@ -316,6 +299,7 @@ function ProgramDetail() {
                 onLoadedData={(e) => console.log('Video loaded data:', e)}
                 onLoadedMetadata={(e) => console.log('Video metadata loaded:', e)}
               >
+                {/* Use the direct URL since asset doesn't exist */}
                 <source src={program.video.url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
@@ -324,7 +308,7 @@ function ProgramDetail() {
         )}
 
         {/* Enrollment Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mt-12 border-t-4 border-purple-600">
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mt-12 border-t-4 border-main">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Ready to get started?</h2>
@@ -337,7 +321,7 @@ function ProgramDetail() {
 
                   if (!hasPrice || program.price === 0) {
                     return (
-                      <span className="text-3xl font-bold text-purple-600">Free</span>
+                      <span className="text-3xl font-bold text-main">Free</span>
                     );
                   }
 
@@ -490,80 +474,6 @@ function RelatedPrograms({ currentProgramId, category }) {
       ))}
     </div>
   );
-}
-
-// Helper function to get program by ID
-async function getProgramById(id) {
-  console.log('getProgramById called with id:', id);
-  
-  if (!id) {
-    console.error('No ID provided to getProgramById');
-    return null;
-  }
-  
-  try {
-    const query = `*[_type == "program" && _id == $id][0]{
-      _id,
-      title,
-      description,
-      price,
-      discountPrice,
-      duration,
-      category,
-      strip,
-      "video": {
-        url,
-        originalFilename
-      },
-      "image": image.asset->{
-        url,
-        alt
-      },
-      "slug": slug.current,
-      includes,
-      benefits,
-      requirements,
-      body[]{
-        ...select(
-          _type == 'block' => @{
-            ...@,
-            children[]{
-              ...@,
-              marks[]
-            },
-            markDefs[]{
-              ...@,
-              _type == 'link' => @{
-                _key,
-                _type,
-                href,
-                blank
-              }
-            }
-          },
-          @
-        )
-      },
-      "instructor": instructor->{
-        name,
-        title,
-        bio,
-        "image": image.asset->url
-      }
-    }`;
-    
-    console.log('Executing Sanity query with ID:', id);
-    const result = await client.fetch(query, { id });
-    console.log('Sanity query result for ID:', id, result);
-    
-    return result;
-  } catch (error) {
-    console.error('Error in getProgramById for ID:', id, {
-      error: error.message,
-      stack: error.stack
-    });
-    throw error;
-  }
 }
 
 export default ProgramDetail;

@@ -104,29 +104,29 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-main">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-white">
           Sign in to your account
         </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
+        <p className="mt-2 text-center text-sm text-purple-200">
           Or{' '}
-          <Link to="/signup" className="font-medium text-accent hover:text-main">
+          <Link to="/signup" className="font-medium text-purple-300 hover:text-purple-100 transition-colors duration-200">
             create a new account
           </Link>
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-white/10 backdrop-blur-md py-8 px-4 shadow-2xl sm:rounded-lg sm:px-10 border border-white/20">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {errors.submit && (
-              <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg text-sm">
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-400/30 text-red-100 rounded-lg text-sm">
                 {errors.submit}
               </div>
             )}
             
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address <span className="text-red-500">*</span>
+              <label htmlFor="email" className="block text-sm font-medium text-purple-100">
+                Email address <span className="text-red-400">*</span>
               </label>
               <div className="mt-1">
                 <input
@@ -138,16 +138,16 @@ export default function Login() {
                   value={formData.email}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 border ${
-                    errors.email ? 'border-red-500' : 'border-gray-300'
-                  } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-main focus:border-main sm:text-sm`}
+                    errors.email ? 'border-red-400' : 'border-purple-300/30'
+                  } rounded-md shadow-sm placeholder-purple-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 sm:text-sm backdrop-blur-sm`}
                 />
-                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                {errors.email && <p className="mt-1 text-sm text-red-300">{errors.email}</p>}
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password <span className="text-red-500">*</span>
+              <label htmlFor="password" className="block text-sm font-medium text-purple-100">
+                Password <span className="text-red-400">*</span>
               </label>
               <div className="mt-1">
                 <input
@@ -159,10 +159,10 @@ export default function Login() {
                   value={formData.password}
                   onChange={handleChange}
                   className={`appearance-none block w-full px-3 py-2 border ${
-                    errors.password ? 'border-red-500' : 'border-gray-300'
-                  } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-main focus:border-main sm:text-sm`}
+                    errors.password ? 'border-red-400' : 'border-purple-300/30'
+                  } rounded-md shadow-sm placeholder-purple-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 sm:text-sm backdrop-blur-sm`}
                 />
-                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+                {errors.password && <p className="mt-1 text-sm text-red-300">{errors.password}</p>}
               </div>
             </div>
 
@@ -172,18 +172,15 @@ export default function Login() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-main focus:ring-main border-gray-300 rounded"
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-purple-300/30 rounded bg-white/10"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="ml-2 block text-sm text-purple-200">
                   Remember me
                 </label>
               </div>
 
-              <div className="flex justify-between text-sm">
-                <Link to="/signup" className="font-medium text-main hover:text-main-dark">
-                  Don't have an account? Sign up
-                </Link>
-                <Link to="/reset-password" className="font-medium text-gray-600 hover:text-gray-500">
+              <div className="text-sm">
+                <Link to="/reset-password" className="font-medium text-purple-300 hover:text-purple-100 transition-colors duration-200">
                   Forgot password?
                 </Link>
               </div>
@@ -193,28 +190,19 @@ export default function Login() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8e6192] hover:bg-[#704091] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8e6192]"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
               >
                 {isSubmitting ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
 
-            <div className="flex justify-between text-sm">
-              <Link to="/signup" className="font-medium text-main hover:text-main-dark">
-                Don't have an account? Sign up
-              </Link>
-              <Link to="/reset-password" className="font-medium text-gray-600 hover:text-gray-500">
-                Forgot password?
-              </Link>
-            </div>
-
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-purple-300/30"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                  <span className="px-2 bg-transparent text-purple-200">Or continue with</span>
                 </div>
               </div>
 
@@ -223,7 +211,7 @@ export default function Login() {
                   type="button"
                   onClick={() => handleSocial('google')}
                   disabled={isSubmitting}
-                  className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50"
+                  className="w-full inline-flex justify-center py-2 px-4 border border-purple-300/30 rounded-md shadow-sm bg-white/10 text-sm font-medium text-purple-200 hover:bg-white/20 disabled:opacity-50 transition-all duration-200 backdrop-blur-sm"
                 >
                   <span className="sr-only">Sign in with Google</span>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -231,6 +219,15 @@ export default function Login() {
                   </svg>
                   <span className="ml-2">Sign in with Google</span>
                 </button>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
+              <div className="text-sm text-purple-200">
+                Don't have an account?{' '}
+                <Link to="/signup" className="font-medium text-purple-300 hover:text-purple-100 transition-colors duration-200">
+                  Sign up
+                </Link>
               </div>
             </div>
           </form>

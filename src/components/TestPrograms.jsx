@@ -206,99 +206,82 @@ const TestPrograms = () => {
             {allPrograms.map((program) => (
               <SwiperSlide key={program._id} className="h-full">
                 <Link to={`/programs/${program.slug}`} className="block h-full">
-                  <div className="rounded-2xl overflow-hidden bg-gradient-to-t from-[#E9D5FF]/70 via-[#F7EEF5] to-white shadow-[0_18px_45px_-25px_rgba(0,0,0,0.55)] border border-black/5 h-full min-h-[420px] mx-2 group flex flex-col">
-                    <div className="relative h-44 flex-shrink-0">
-                      <img
-                        src={program.imageUrl || '/placeholder-program.jpg'}
-                        alt={program.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/35 to-transparent" />
-
-                      <div className="absolute inset-0 p-4 flex flex-col justify-between">
-                        <div className="min-h-[76px]">
-                          <h3 className="text-white text-2xl font-extrabold leading-tight line-clamp-2">
-                            {program.title}
-                          </h3>
-                          {program.category ? (
-                            <div className="mt-2 text-white/95 text-base font-extrabold uppercase tracking-wide line-clamp-1">
-                              {String(program.category)}
-                            </div>
-                          ) : null}
-                        </div>
-
-                        <button
-                          onClick={(e) => toggleFavorite(program._id, e)}
-                          className={`absolute top-3 right-3 p-2 rounded-full ${
-                            program.isFavorite ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-600 hover:bg-white'
-                          } transition-colors duration-200 shadow-md`}
-                          aria-label={program.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                        >
-                          {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Experience Strip */}
-                    <div
-                      className="text-white px-4 py-2 text-center"
-                      style={{
-                        background: 'linear-gradient(135deg, #1a0b2e 0%, #2d1b69 25%, #6b21a8 50%, #c026d3 75%, #e879f9 100%)'
-                      }}
+                  <div className="relative bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 h-full min-h-[420px] mx-2 group">
+                    {/* Favorite Button */}
+                    <button
+                      onClick={(e) => toggleFavorite(program._id, e)}
+                      className={`absolute top-4 right-4 z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/90 shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-accent`}
+                      aria-label={program.isFavorite ? 'Remove from favourites' : 'Add to favourites'}
                     >
-                      <span className="text-sm font-semibold">13+ years of experience</span>
-                    </div>
-
-                    <div className="px-4 pt-4 flex flex-wrap gap-3 min-h-[60px] max-h-[72px] overflow-hidden">
-                      {(Array.isArray(program.tags) ? program.tags : [program.category]).filter(Boolean).slice(0, 3).map((tag, idx) => (
-                        <span
-                          key={`${tag}-${idx}`}
-                          className="px-4 py-2 rounded-full text-xs font-extrabold tracking-wide border border-[#D6B0CF] text-gray-800 bg-white/75"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="px-4 pb-5 pt-4 mt-auto min-h-[120px]">
-                      <div className="grid grid-cols-2 gap-4 items-start">
-                        <div>
-                          <div className="text-xl font-extrabold text-gray-900">{program.duration || 'Self paced'}</div>
-                          <div className="text-base text-gray-700">Sessions & Recording</div>
+                      {program.isFavorite ? <FiCheck size={18} /> : <FiHeart size={18} />}
+                    </button>
+                    
+                    {/* Program Image */}
+                    {program.imageUrl && (
+                      <div className="relative">
+                        <img 
+                          src={program.imageUrl} 
+                          alt={program.title}
+                          className="w-full h-48 object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    
+                    {/* Strip Field - Between Image and Description */}
+                    {program.strip && (
+                      <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white px-3 py-2 text-sm font-semibold">
+                        {program.strip}
+                      </div>
+                    )}
+                    
+                    {/* Program Content */}
+                    <div className="p-6">
+                      {/* Program Tag */}
+                      {program.category && (
+                        <div className="mb-3">
+                          <span className="inline-block px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded-full bg-purple-100 text-purple-800">
+                            {program.category}
+                          </span>
                         </div>
+                      )}
+                      
+                      <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {program.description}
+                      </p>
+                      
+                      <div className="flex justify-between items-center mt-4">
+                        {(() => {
+                          const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
+                          const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
+                          const showDiscount = hasPrice && hasDiscount && program.discountPrice < program.price;
+                          const displayPrice = showDiscount ? program.discountPrice : program.price;
 
-                        <div className="border-l border-black/10 pl-4">
-                          {(() => {
-                            const price = program.price;
-                            const discountPrice = program.discountPrice;
-                            const hasPrice = typeof price === 'number' && !Number.isNaN(price);
-                            const hasDiscount = typeof discountPrice === 'number' && !Number.isNaN(discountPrice);
-                            const showDiscount = hasPrice && hasDiscount && discountPrice < price;
-                            const displayPrice = showDiscount ? discountPrice : price;
-
-                            if (!hasPrice || price === 0) {
-                              return (
-                                <div className="text-2xl font-extrabold text-gray-900">Free</div>
-                              );
-                            }
-
+                          if (!hasPrice || program.price === 0) {
                             return (
-                              <div className="flex items-baseline gap-2 flex-wrap">
-                                <div className="text-2xl font-extrabold text-gray-900">
-                                  ₹{displayPrice.toLocaleString('en-IN')}
-                                </div>
-                                <div className="text-xs text-gray-600">per session</div>
-                                {showDiscount ? (
-                                  <div className="w-full text-sm text-gray-600 line-through">
-                                    ₹{price.toLocaleString('en-IN')}
-                                  </div>
-                                ) : null}
-                              </div>
+                              <span className="text-lg font-semibold text-purple-700">
+                                Free
+                              </span>
                             );
-                          })()}
-                          <div className="text-base text-gray-700 mt-1">Recording Available</div>
-                        </div>
+                          }
+
+                          return (
+                            <span className="text-lg font-semibold text-purple-600">
+                              ₹{displayPrice.toLocaleString('en-IN')}
+                              {showDiscount ? (
+                                <span className="ml-2 text-sm text-gray-500 line-through font-semibold">
+                                  ₹{program.price.toLocaleString('en-IN')}
+                                </span>
+                              ) : null}
+                            </span>
+                          );
+                        })()}
+                        <button
+                          className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold shadow hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 transition"
+                        >
+                          View Details
+                        </button>
                       </div>
                     </div>
                   </div>

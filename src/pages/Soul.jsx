@@ -122,6 +122,12 @@ export default function Soul() {
                     </div>
                   </div>
                 )}
+                {/* Strip Field - Between Image and Description */}
+                {program.strip && (
+                  <div className="bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white px-3 py-2 text-sm font-semibold">
+                    {program.strip}
+                  </div>
+                )}
                 <div className="bg-white p-6">
                   <h2 className="text-xl font-bold text-gray-800 mb-3">{program.title}</h2>
                   <p className="text-gray-500 mb-4 line-clamp-3">
