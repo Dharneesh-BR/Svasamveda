@@ -1,10 +1,13 @@
 const crypto = require("crypto");
 const admin = require("firebase-admin");
 
-// Initialize Firebase Admin once
 if (!admin.apps.length) {
+  const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT
+  );
+
   admin.initializeApp({
-    credential: admin.credential.applicationDefault()
+    credential: admin.credential.cert(serviceAccount)
   });
 }
 
@@ -36,7 +39,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Razorpay signature verification
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
 
     const expectedSignature = crypto
@@ -51,7 +53,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // ✅ Save order in Firestore
     const orderRef = db
       .collection("users")
       .doc(userId)
