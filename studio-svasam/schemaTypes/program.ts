@@ -143,11 +143,10 @@ export default defineType({
       name: 'video',
       type: 'file',
       title: 'Program Video',
-      description: 'Video file to be displayed in the program detail page',
+      description: 'Video file to be displayed in program detail page (optional)',
       options: {
         accept: 'video/*'
-      },
-      validation: (rule: any) => rule.required().error('Program video is required')
+      }
     })
   ],
   preview: {

@@ -74,7 +74,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const cartTotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => {
+      const price = item.discountPrice && item.discountPrice < item.price ? item.discountPrice : item.price;
+      return total + (price * item.quantity);
+    },
     0
   );
 
