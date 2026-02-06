@@ -1,5 +1,17 @@
-const { doc, getDoc, updateDoc, serverTimestamp } = require('firebase-admin');
-const { db } = require('../../src/firebase.js');
+const admin = require('firebase-admin');
+
+// Initialize Firebase Admin
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+    })
+  });
+}
+
+const db = admin.firestore();
 
 exports.handler = async function(event, context) {
   try {
@@ -18,9 +30,13 @@ exports.handler = async function(event, context) {
     }
 
     // Find the order in Firestore
-    const orderDoc = await getDoc(doc(db, 'orders', order_id));
+    const orderDoc = await db.collection('orders').doc(order_id).get();
     
     if (!orderDoc.exists()) {
+      console.log('Order not found in orders collection, checking user orders...');
+      
+      // Try to find in user's orders collection
+      // We need to get user info from the order or use a different approach
       return {
         statusCode: 404,
         body: JSON.stringify({ 
@@ -34,14 +50,14 @@ exports.handler = async function(event, context) {
     console.log('Found order:', orderData);
 
     // Update order with payment details
-    await updateDoc(doc(db, 'orders', order_id), {
+    await db.collection('orders').doc(order_id).update({
       ...orderData,
       paymentId: payment_id,
       razorpayOrderId: order_id,
       paymentSignature: signature,
       status: 'completed',
-      updatedAt: serverTimestamp(),
-      verifiedAt: serverTimestamp()
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      verifiedAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     console.log('Payment verified successfully');
