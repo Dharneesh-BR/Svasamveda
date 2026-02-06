@@ -110,61 +110,100 @@ const Checkout = () => {
         return;
       }
 
-      // Check if this is individual course purchase or cart checkout
-      if (course) {
-        // Individual course purchase
-        const { data } = await axios.post(
-          "/.netlify/functions/create-order",
-          {
-            amount: course.price * 100,
-            currency: "INR",
-          }
-        );
+      // Cart-based checkout (existing logic)
+      if (cart.length === 0) {
+        setError('Your cart is empty');
+        return;
+      }
+      
+      try {
+        if (!window.Razorpay) {
+          throw new Error('Razorpay SDK not loaded. Please try again.');
+        }
+        
+        // Create order from cart data
+        const { data } = await axios.post('/.netlify/functions/create-razorpay-order', {
+          amount: Math.round(total * 100),
+          currency: 'INR',
+          receipt: `order_rcpt_${Date.now()}`,
+          items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          }))
+        });
+        
+        if (!data?.order) {
+          throw new Error('Failed to create order: Invalid response from server');
+        }
 
-        const order = data.order;
+        const { order } = data;
 
+        // Razorpay checkout options
         const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
           amount: order.amount,
-          currency: order.currency,
+          currency: order.currency || 'INR',
           order_id: order.id,
-          name: "Svasam",
-          description: course.title,
-
+          name: 'Svasam',
+          description: `Payment for order ${order.id}`,
+          prefill: {
+            name: user.displayName || address?.fullName || '',
+            email: user.email || '',
+            contact: address?.phone || ''
+          },
+          theme: {
+            color: '#8B1F7A'
+          },
+          modal: {
+            ondismiss: function() {
+              console.log('Razorpay modal closed');
+            },
+            escape: false,
+            backdropclose: false
+          },
+          
           handler: async function (response) {
             console.log('Payment successful, verifying...', response);
             try {
-              const user = auth.currentUser;
-              if (user) {
-                const verifyResponse = await axios.post("/.netlify/functions/verify-payment", {
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_signature: response.razorpay_signature,
-                  userId: user.uid,
-                  orderData: {
-                    courseId: course.id,
-                    courseTitle: course.title,
-                  },
-                });
+              // Verify payment and save cart items
+              const verifyResponse = await axios.post("/.netlify/functions/verify-payment", {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                userId: user.uid,
+                orderData: {
+                  items: cart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    type: 'course'
+                  })),
+                  total: total,
+                  currency: 'INR'
+                },
+              });
 
-                if (verifyResponse.data.success) {
-                  console.log('Payment verified successfully');
-                  navigate("/order-success", { 
-                    state: { 
-                      orderId: response.razorpay_order_id,
-                      paymentId: response.razorpay_payment_id
-                    },
-                    replace: true
-                  });
-                } else {
-                  throw new Error(verifyResponse.data.message || 'Payment verification failed');
-                }
+              if (verifyResponse.data.success) {
+                console.log('Payment verified successfully');
+                // Clear cart and navigate to success
+                clearCart();
+                navigate('/order-success', { 
+                  state: { 
+                    orderId: response.razorpay_order_id,
+                    paymentId: response.razorpay_payment_id
+                  },
+                  replace: true
+                });
               } else {
-                throw new Error('User not authenticated');
+                throw new Error(verifyResponse.data.message || 'Payment verification failed');
               }
             } catch (error) {
               console.error('Payment verification error:', error);
-              navigate("/order-success", { 
+              // Still navigate to success page even if verification fails
+              navigate('/order-success', { 
                 state: { 
                   orderId: response.razorpay_order_id,
                   paymentId: response.razorpay_payment_id
@@ -177,25 +216,9 @@ const Checkout = () => {
 
         const rzp = new window.Razorpay(options);
         rzp.open();
-        
-      } else {
-        // Cart-based checkout (existing logic)
-        if (cart.length === 0) {
-          setError('Your cart is empty');
-          return;
-        }
-        
-        try {
-          if (!window.Razorpay) {
-            throw new Error('Razorpay SDK not loaded. Please try again.');
-          }
-          
-          const rzp = new window.Razorpay(options);
-          rzp.open();
-        } catch (error) {
-          console.error('Error initializing Razorpay:', error);
-          setError(`Failed to initialize payment: ${error.message}`);
-        }
+      } catch (error) {
+        console.error('Error initializing Razorpay:', error);
+        setError(`Failed to initialize payment: ${error.message}`);
       }
     } catch (error) {
       console.error('Checkout error:', error);
