@@ -110,107 +110,118 @@ const Checkout = () => {
         return;
       }
 
-      // Create order first
-      const { data } = await axios.post(
-        "/.netlify/functions/create-order",
-        {
-          amount: course.price * 100,
-          currency: "INR",
-        }
-      );
-
-      const order = data.order;
-
-      // Define options outside any conditional blocks
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: order.amount,
-        currency: order.currency,
-        order_id: order.id,
-        name: "Svasam",
-        description: course.title,
-
-        handler: async function (response) {
-          console.log('Payment successful, verifying...', response);
-          try {
-            const user = auth.currentUser;
-            if (user) {
-              const verifyResponse = await axios.post("/.netlify/functions/verify-payment", {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                userId: user.uid,
-                orderData: {
-                  courseId: course.id,
-                  courseTitle: course.title,
-                },
-              });
-
-              if (verifyResponse.data.success) {
-                console.log('Payment verified successfully');
-                navigate("/order-success", { 
-                  state: { 
-                    orderId: response.razorpay_order_id,
-                    paymentId: response.razorpay_payment_id
-                  },
-                  replace: true
-                });
-              } else {
-                throw new Error(verifyResponse.data.message || 'Payment verification failed');
-              }
-            } else {
-              throw new Error('User not authenticated');
-            }
-          } catch (error) {
-            console.error('Payment verification error:', error);
-            navigate("/order-success", { 
-              state: { 
-                orderId: response.razorpay_order_id,
-                paymentId: response.razorpay_payment_id
-              },
-              replace: true
-            });
+      // Check if this is individual course purchase or cart checkout
+      if (course) {
+        // Individual course purchase
+        const { data } = await axios.post(
+          "/.netlify/functions/create-order",
+          {
+            amount: course.price * 100,
+            currency: "INR",
           }
-        },
-      };
+        );
 
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-      
-    } else {
-      // Cart-based checkout (existing logic)
-      if (cart.length === 0) {
-        setError('Your cart is empty');
-        return;
-      }
-      
-      try {
-        if (!window.Razorpay) {
-          throw new Error('Razorpay SDK not loaded. Please try again.');
-        }
-        
+        const order = data.order;
+
+        const options = {
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          amount: order.amount,
+          currency: order.currency,
+          order_id: order.id,
+          name: "Svasam",
+          description: course.title,
+
+          handler: async function (response) {
+            console.log('Payment successful, verifying...', response);
+            try {
+              const user = auth.currentUser;
+              if (user) {
+                const verifyResponse = await axios.post("/.netlify/functions/verify-payment", {
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                  userId: user.uid,
+                  orderData: {
+                    courseId: course.id,
+                    courseTitle: course.title,
+                  },
+                });
+
+                if (verifyResponse.data.success) {
+                  console.log('Payment verified successfully');
+                  navigate("/order-success", { 
+                    state: { 
+                      orderId: response.razorpay_order_id,
+                      paymentId: response.razorpay_payment_id
+                    },
+                    replace: true
+                  });
+                } else {
+                  throw new Error(verifyResponse.data.message || 'Payment verification failed');
+                }
+              } else {
+                throw new Error('User not authenticated');
+              }
+            } catch (error) {
+              console.error('Payment verification error:', error);
+              navigate("/order-success", { 
+                state: { 
+                  orderId: response.razorpay_order_id,
+                  paymentId: response.razorpay_payment_id
+                },
+                replace: true
+              });
+            }
+          },
+        };
+
         const rzp = new window.Razorpay(options);
         rzp.open();
-      } catch (error) {
-        console.error('Error initializing Razorpay:', error);
-        setError(`Failed to initialize payment: ${error.message}`);
+        
+      } else {
+        // Cart-based checkout (existing logic)
+        if (cart.length === 0) {
+          setError('Your cart is empty');
+          return;
+        }
+        
+        try {
+          if (!window.Razorpay) {
+            throw new Error('Razorpay SDK not loaded. Please try again.');
+          }
+          
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        } catch (error) {
+          console.error('Error initializing Razorpay:', error);
+          setError(`Failed to initialize payment: ${error.message}`);
+        }
       }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      let errorMessage = 'Something went wrong. Please try again.';
+      if (error.response?.status === 429) {
+        errorMessage = 'Too many requests. Please wait a moment and try again.';
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again later.';
+        console.error('Error headers:', error.response.headers);
+        errorMessage = error.response.data?.message || error.message;
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        errorMessage = 'No response from server. Please check your internet connection.';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMessage = 'Request timed out. Please try again.';
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    console.error('Checkout error:', error);
-    let errorMessage = 'Something went wrong. Please try again.';
-    if (error.response?.status === 429) {
-      errorMessage = 'Too many requests. Please wait a moment and try again.';
-    } else if (error.response?.status >= 500) {
-      errorMessage = 'Server error. Please try again later.';
-      console.error('Error headers:', error.response.headers);
-      errorMessage = error.response.data?.message || error.message;
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error('No response received:', error.request);
-      errorMessage = 'No response from server. Please check your internet connection.';
-    } else if (error.code === 'ECONNABORTED') {
-  }
+  };
 
   if (isLoading) {
     return (
