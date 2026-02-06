@@ -9,8 +9,29 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# ✅ Handle static assets with proper MIME types (Fixes JS module loading)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "application/javascript"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css"
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # ✅ Catch-all redirect for React Router (Fixes 404 on /mind and others)
+# But exclude static assets and API routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Role = ["admin"], {query = {env = "!dev"}}

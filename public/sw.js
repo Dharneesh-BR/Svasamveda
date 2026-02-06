@@ -44,7 +44,6 @@ self.addEventListener('fetch', (event) => {
         const cached = await caches.match(event.request);
         if (cached) return cached;
       }
-    }
       
       // For all other requests, just fetch without caching
       return fetch(event.request);
