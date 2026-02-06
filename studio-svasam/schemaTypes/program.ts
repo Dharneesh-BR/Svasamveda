@@ -132,6 +132,14 @@ export default defineType({
       validation: (rule: any) => rule.required().error('Strip text is required')
     }),
     defineField({
+      name: 'instructor',
+      title: 'Instructor',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      description: 'Select instructor for this program',
+      validation: (rule: any) => rule.required().error('Instructor is required')
+    }),
+    defineField({
       name: 'video',
       type: 'file',
       title: 'Program Video',
@@ -146,13 +154,15 @@ export default defineType({
     select: {
       title: 'title',
       category: 'category',
-      media: 'image'
+      media: 'image',
+      instructor: 'instructor.name'
     },
-    prepare(selection: { title?: string; category?: string; media?: PreviewValue['media'] }): PreviewValue {
-      const { category } = selection
+    prepare(selection: { title?: string; category?: string; media?: PreviewValue['media']; instructor?: any }): PreviewValue {
+      const { category, instructor } = selection
       return {
         ...selection,
-        subtitle: category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Program` : 'No category'
+        subtitle: category ? `${category.charAt(0).toUpperCase() + category.slice(1)} Program` : 'No category',
+        description: instructor ? `Instructor: ${instructor}` : 'No instructor assigned'
       }
     }
   }

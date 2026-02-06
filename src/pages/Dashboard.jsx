@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 import AddressForm from '../components/AddressForm';
-import { collection, doc, getDoc, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, orderBy, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { FiShoppingBag, FiBookOpen, FiHeart, FiArrowRight } from 'react-icons/fi';
+import { FiShoppingBag, FiBookOpen, FiHeart, FiArrowRight, FiTrash2, FiPlus } from 'react-icons/fi';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -34,6 +34,94 @@ export default function Dashboard() {
     return lines.filter(Boolean).join('\n');
   };
 
+  // Remove test order function
+  const handleRemoveTestOrder = async () => {
+    if (!user?.uid) {
+      alert('Please log in first');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to remove all test orders?')) {
+      return;
+    }
+
+    try {
+      const ordersRef = collection(db, 'users', user.uid, 'orders');
+      const ordersSnap = await getDocs(query(ordersRef, orderBy('createdAt', 'desc')));
+      
+      // Find test orders
+      const testOrders = [];
+      ordersSnap.docs.forEach((doc) => {
+        const data = doc.data();
+        if (data.orderId && data.orderId.startsWith('TEST_')) {
+          testOrders.push({ id: doc.id, orderId: data.orderId });
+        }
+        if (data.paymentId && data.paymentId.startsWith('TEST_PAYMENT_')) {
+          testOrders.push({ id: doc.id, paymentId: data.paymentId });
+        }
+        if (data.razorpayOrderId && data.razorpayOrderId.startsWith('TEST_RAZOR_')) {
+          testOrders.push({ id: doc.id, razorpayOrderId: data.razorpayOrderId });
+        }
+      });
+
+      if (testOrders.length > 0) {
+        for (const testOrder of testOrders) {
+          await deleteDoc(doc(db, 'users', user.uid, 'orders', testOrder.id));
+        }
+        
+        // Refresh orders data
+        const refreshedOrdersSnap = await getDocs(query(ordersRef, orderBy('createdAt', 'desc')));
+        const ordersData = refreshedOrdersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setOrders(ordersData);
+        
+        alert(`Successfully removed ${testOrders.length} test order(s)!`);
+      } else {
+        alert('No test orders found to remove.');
+      }
+      
+    } catch (error) {
+      console.error('Error removing test orders:', error);
+      alert('Error removing test orders: ' + error.message);
+    }
+  };
+
+  // Create test enrollment function
+  const handleCreateTestEnrollment = async () => {
+    if (!user?.uid) {
+      alert('Please log in first');
+      return;
+    }
+
+    try {
+      const enrollmentData = {
+        programId: 'test-program-1',
+        programTitle: 'Test Wellness Program',
+        programSlug: 'test-wellness-program',
+        category: 'mind', // This makes it a course
+        imageUrl: '/placeholder-program.jpg',
+        enrolledAt: serverTimestamp(),
+        progress: 25,
+        totalLessons: 10,
+        status: 'active'
+      };
+
+      const enrollmentDoc = await addDoc(collection(db, 'users', user.uid, 'enrollments'), enrollmentData);
+      console.log('Test enrollment created with ID:', enrollmentDoc.id);
+      
+      // Refresh enrollments data
+      const enrollmentsRef = collection(db, 'users', user.uid, 'enrollments');
+      const enrollmentsSnap = await getDocs(query(enrollmentsRef, orderBy('createdAt', 'desc')));
+      const enrollmentsData = enrollmentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setEnrollments(enrollmentsData);
+      
+      alert('Test course enrollment created successfully! Check your courses page.');
+      
+    } catch (error) {
+      console.error('Error creating test enrollment:', error);
+      alert('Error creating test enrollment: ' + error.message);
+    }
+  };
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -56,7 +144,9 @@ export default function Dashboard() {
           getDoc(doc(db, 'users', uid)),
         ]);
         if (cancelled) return;
-        setOrders(ordersSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+        
+        const ordersData = ordersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        setOrders(ordersData);
         setFavorites(favSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setEnrollments(enrollSnap.docs.map(d => ({ id: d.id, ...d.data() })));
         setAddress(addressSnap.exists() ? addressSnap.data() : null);
@@ -107,6 +197,42 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Show remove test order button if test orders exist */}
+            {orders.some(order => 
+              (order.orderId && order.orderId.startsWith('TEST_')) ||
+              (order.paymentId && order.paymentId.startsWith('TEST_PAYMENT_')) ||
+              (order.razorpayOrderId && order.razorpayOrderId.startsWith('TEST_RAZOR_'))
+            ) && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <button
+                  onClick={handleRemoveTestOrder}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  <FiTrash2 className="h-4 w-4" />
+                  Remove Test Orders
+                </button>
+                <p className="text-sm text-red-800 mt-2">
+                  Test wellness program detected. Click to remove test orders.
+                </p>
+              </div>
+            )}
+
+            {/* Show create test enrollment button if no enrollments exist */}
+            {enrollments.length === 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <button
+                  onClick={handleCreateTestEnrollment}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <FiPlus className="h-4 w-4" />
+                  Create Test Course
+                </button>
+                <p className="text-sm text-blue-800 mt-2">
+                  No courses found. Create a test course to test courses functionality.
+                </p>
+              </div>
+            )}
+
             <div className="svasam-card p-6">
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">

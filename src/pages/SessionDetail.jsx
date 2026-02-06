@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { client } from '../sanityClient';
 import { PortableText } from '@portabletext/react';
 import { useSessions } from '../hooks/useSessions';
+import { PlayIcon, PauseIcon, SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 
 export default function SessionDetail() {
   const { slug } = useParams();
@@ -10,6 +11,164 @@ export default function SessionDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { sessions: allSessions } = useSessions();
+
+  // Custom Audio Player Component
+  const CustomAudioPlayer = ({ src }) => {
+    const audioRef = useRef(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [isMuted, setIsMuted] = useState(false);
+
+    useEffect(() => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      const updateTime = () => setCurrentTime(audio.currentTime);
+      const updateDuration = () => setDuration(audio.duration);
+      const handleEnded = () => setIsPlaying(false);
+
+      audio.addEventListener('timeupdate', updateTime);
+      audio.addEventListener('loadedmetadata', updateDuration);
+      audio.addEventListener('ended', handleEnded);
+
+      return () => {
+        audio.removeEventListener('timeupdate', updateTime);
+        audio.removeEventListener('loadedmetadata', updateDuration);
+        audio.removeEventListener('ended', handleEnded);
+      };
+    }, [src]);
+
+    const togglePlayPause = () => {
+      const audio = audioRef.current;
+      if (isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      setIsPlaying(!isPlaying);
+    };
+
+    const handleSeek = (e) => {
+      const audio = audioRef.current;
+      const newTime = (e.target.value / 100) * duration;
+      audio.currentTime = newTime;
+      setCurrentTime(newTime);
+    };
+
+    const handleVolumeChange = (e) => {
+      const audio = audioRef.current;
+      const newVolume = e.target.value / 100;
+      audio.volume = newVolume;
+      setVolume(newVolume);
+      setIsMuted(newVolume === 0);
+    };
+
+    const toggleMute = () => {
+      const audio = audioRef.current;
+      if (isMuted) {
+        audio.volume = volume;
+        setIsMuted(false);
+      } else {
+        audio.volume = 0;
+        setIsMuted(true);
+      }
+    };
+
+    const formatTime = (time) => {
+      if (isNaN(time)) return '0:00';
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
+
+    const progressPercentage = duration ? (currentTime / duration) * 100 : 0;
+
+    return (
+      <div className="w-full">
+        <audio ref={audioRef} src={src} preload="metadata" />
+        
+        {/* Custom Audio Player */}
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 shadow-2xl">
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="relative w-full h-2 bg-white/30 rounded-full overflow-hidden">
+              <div 
+                className="absolute top-0 left-0 h-full bg-white rounded-full transition-all duration-150"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-2 text-white text-sm">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center justify-between">
+            {/* Play/Pause Button */}
+            <button
+              onClick={togglePlayPause}
+              className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 transform hover:scale-105"
+            >
+              {isPlaying ? (
+                <PauseIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              ) : (
+                <PlayIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white ml-1" />
+              )}
+            </button>
+
+            {/* Volume Control */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleMute}
+                className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
+              >
+                {isMuted ? (
+                  <SpeakerXMarkIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                ) : (
+                  <SpeakerWaveIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                )}
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={isMuted ? 0 : volume * 100}
+                onChange={handleVolumeChange}
+                className="w-20 sm:w-24 h-2 bg-white/30 rounded-full appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, white ${isMuted ? 0 : volume * 100}%, rgba(255,255,255,0.3) ${isMuted ? 0 : volume * 100}%)`
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <style jsx>{`
+          .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          }
+          .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: none;
+          }
+        `}</style>
+      </div>
+    );
+  };
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -139,9 +298,9 @@ export default function SessionDetail() {
                     />
                   </div>
                 ) : session.mediaType === 'audio' && session.fileUrl ? (
-                  <div className="p-6 flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
+                  <div className="p-6 sm:p-8 flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50">
                     {session.thumbnail && (
-                      <div className="relative mb-6 group">
+                      <div className="relative mb-6 sm:mb-8 group">
                         <img 
                           src={session.thumbnail} 
                           alt={session.title}
@@ -151,9 +310,7 @@ export default function SessionDetail() {
                       </div>
                     )}
                     <div className="w-full max-w-lg">
-                      <audio controls className="w-full" src={session.fileUrl} preload="metadata" controlsList="nodownload">
-                        Your browser does not support the audio element.
-                      </audio>
+                      <CustomAudioPlayer src={session.fileUrl} />
                     </div>
                   </div>
                 ) : (

@@ -2,7 +2,7 @@ const events = [
   {
     id: "daily-ritual",
     title: "Your Daily 30-Min Ritual",
-    coach: "SoulSensei",
+    coach: "Svasam",
     date: "Fri, 4th Jul · 2:30 AM",
     duration: "60 Minutes",
     price: "₹300 per session",

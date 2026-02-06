@@ -1,33 +1,15 @@
 import { useEffect, useState } from 'react';
-import { FiPackage, FiClock, FiCheckCircle } from 'react-icons/fi';
+import { FiPackage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../contexts/AuthContext';
 
 const OrderCard = ({ order }) => {
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'delivered':
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            <FiCheckCircle className="mr-1" /> Delivered
-          </span>
-        );
-      default:
-        return (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-            <FiClock className="mr-1" /> Processing
-          </span>
-        );
-    }
-  };
-
   return (
     <div className="svasam-card svasam-card-hover p-4">
       <div className="flex justify-between items-start mb-3">
         <h3 className="font-medium text-gray-900">Order #{order.id}</h3>
-        {getStatusBadge(order.status)}
       </div>
       <div className="space-y-2">
         {(order.items || []).map((item, index) => (
@@ -82,10 +64,12 @@ const OrdersPage = () => {
       try {
         const ordersRef = collection(db, 'users', user.uid, 'orders');
         const ordersSnap = await getDocs(query(ordersRef, orderBy('createdAt', 'desc')));
+        
         if (cancelled) return;
 
         const mapped = ordersSnap.docs.map((d) => {
           const data = d.data() || {};
+          
           const createdAt = data.createdAt;
           const createdDate = createdAt?.toDate ? createdAt.toDate() : createdAt ? new Date(createdAt) : null;
           const dateStr = createdDate ? createdDate.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '-';

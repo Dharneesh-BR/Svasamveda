@@ -48,19 +48,70 @@ function ProgramDetail() {
         let processedBody = [];
         if (result.body) {
           if (Array.isArray(result.body)) {
-            processedBody = result.body;
+            // Filter out unwanted content from body array
+            processedBody = result.body.filter(item => {
+              if (item._type === 'block' && item.children) {
+                const text = item.children.map(child => child.text || '').join('');
+                return !text.includes('1000+') && !text.includes('transformed') && !text.includes('thousands') && !text.includes('people') && !text.includes('body');
+              }
+              return true;
+            });
           } else if (typeof result.body === 'string') {
-            processedBody = [{ _type: 'block', children: [{ _type: 'span', text: result.body }] }];
+            // Filter string body content
+            if (!result.body.includes('1000+') && !result.body.includes('transformed') && !result.body.includes('thousands') && !result.body.includes('people') && !result.body.includes('body')) {
+              processedBody = [{ _type: 'block', children: [{ _type: 'span', text: result.body }] }];
+            } else {
+              processedBody = [];
+            }
           } else {
             processedBody = [];
           }
         }
 
+        // Filter description as well
+        let filteredDescription = result.description;
+        if (result.description) {
+          filteredDescription = result.description
+            .replace(/1000\+[^.!?]*/g, '')
+            .replace(/thousands[^.!?]*/g, '')
+            .replace(/transformed[^.!?]*/g, '')
+            .replace(/people[^.!?]*/g, '')
+            .replace(/body[^.!?]*/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+
+        // Filter strip field as well
+        let filteredStrip = result.strip;
+        if (result.strip) {
+          filteredStrip = result.strip
+            .replace(/1000\+[^.!?]*/g, '')
+            .replace(/thousands[^.!?]*/g, '')
+            .replace(/transformed[^.!?]*/g, '')
+            .replace(/people[^.!?]*/g, '')
+            .replace(/body[^.!?]*/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+
+        // Filter title as well (in case it contains unwanted terms)
+        let filteredTitle = result.title;
+        if (result.title) {
+          filteredTitle = result.title
+            .replace(/1000\+[^.!?]*/g, '')
+            .replace(/thousands[^.!?]*/g, '')
+            .replace(/transformed[^.!?]*/g, '')
+            .replace(/people[^.!?]*/g, '')
+            .replace(/body[^.!?]*/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        }
+
         const programData = {
           id: result._id,
           _id: result._id,
-          title: result.title || 'Untitled Program',
-          description: result.description,
+          title: filteredTitle || 'Untitled Program',
+          description: filteredDescription,
           body: processedBody,
           hasImage: !!(result.image || result.imageUrl),
           imageUrl: result.image?.url || result.imageUrl,
@@ -72,7 +123,7 @@ function ProgramDetail() {
           slug: result.slug || result._id,
           category: result.category || 'uncategorized',
           instructor: result.instructor,
-          strip: result.strip,
+          strip: filteredStrip,
           video: result.video
         };
         
@@ -108,17 +159,44 @@ function ProgramDetail() {
     });
   }, [slug]);
 
+  // Additional safety check - filter any remaining unwanted content
+  const safeProgram = program ? {
+    ...program,
+    title: program.title?.replace(/1000\+|thousands|transformed|people|body/gi, '').replace(/\s+/g, ' ').trim() || program.title,
+    description: program.description?.replace(/1000\+|thousands|transformed|people|body/gi, '').replace(/\s+/g, ' ').trim() || program.description,
+    strip: program.strip?.replace(/1000\+|thousands|transformed|people|body/gi, '').replace(/\s+/g, ' ').trim() || program.strip,
+    // Also filter any nested properties that might contain unwanted text
+    instructor: program.instructor ? {
+      ...program.instructor,
+      name: program.instructor.name?.replace(/1000\+|thousands|transformed|people|body/gi, '').replace(/\s+/g, ' ').trim() || program.instructor.name,
+      bio: program.instructor.bio?.replace(/1000\+|thousands|transformed|people|body/gi, '').replace(/\s+/g, ' ').trim() || program.instructor.bio
+    } : program.instructor
+  } : null;
+
+  // Final aggressive filter - remove any remaining unwanted content
+  const finalFilter = (text) => {
+    if (!text || typeof text !== 'string') return text;
+    return text
+      .replace(/1000\+[^\w]*]*/gi, '')
+      .replace(/thousands[^\w]*]*/gi, '')
+      .replace(/transformed[^\w]*]*/gi, '')
+      .replace(/people[^\w]*]*/gi, '')
+      .replace(/body[^\w]*]*/gi, '')
+      .replace(/\s\s+/g, ' ')
+      .trim();
+  };
+
   const handleAddToCart = () => {
-    if (!program) return;
+    if (!safeProgram) return;
     
     const cartItem = {
-      id: program._id,
-      title: program.title,
-      price: program.price,
-      discountPrice: program.discountPrice,
-      imageUrl: program.imageUrl,
-      slug: program.slug || program._id,
-      category: program.category,
+      id: safeProgram._id,
+      title: safeProgram.title,
+      price: safeProgram.price,
+      discountPrice: safeProgram.discountPrice,
+      imageUrl: safeProgram.imageUrl,
+      slug: safeProgram.slug || safeProgram._id,
+      category: safeProgram.category,
       quantity: quantity
     };
     
@@ -168,54 +246,110 @@ function ProgramDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background/80">
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Program Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">{program.title}</h1>
-          <div className="flex items-center text-gray-600">
-            <span className="px-3 py-1 text-sm font-medium rounded-full bg-purple-100 text-purple-800 mr-3">
-              {program.category}
-            </span>
-            <span className="text-gray-500">{program.duration}</span>
+    <div className="min-h-screen bg-background">
+      {/* Global content filter - catch any remaining unwanted text */}
+      <div style={{ display: 'none' }}>
+        {(() => {
+          // This is a hidden div that catches any remaining unwanted text
+          const allText = [
+            safeProgram?.title,
+            safeProgram?.description,
+            safeProgram?.strip,
+            safeProgram?.instructor?.name,
+            safeProgram?.instructor?.bio
+          ].join(' ').toLowerCase();
+          
+          if (allText.includes('1000+') || allText.includes('thousands') || 
+              allText.includes('transformed') || allText.includes('people') || 
+              allText.includes('body')) {
+            console.warn('Still contains unwanted text:', allText);
+          }
+          return null;
+        })()}
+      </div>
+      {/* Hero Section */}
+      <div className="bg-white/10 backdrop-blur-sm shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Back Button */}
+          <Link
+            to="/programs"
+            className="inline-flex items-center text-white/80 hover:text-white mb-8 transition-colors group"
+          >
+            <ArrowLeftIcon className="h-5 w-5 mr-2 transform group-hover:-translate-x-1 transition-transform" />
+            Back to Programs
+          </Link>
+          
+          {/* Program Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+              {finalFilter(safeProgram.title)}
+            </h1>
           </div>
         </div>
+      </div>
 
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         {/* Program Image */}
-        <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
+        <div className="mb-16 rounded-2xl overflow-hidden shadow-2xl border border-white/10">
           <img
-            src={program.imageUrl || '/placeholder-program.jpg'}
-            alt={program.title}
-            className="w-full h-auto max-h-[500px] object-cover"
+            src={safeProgram.imageUrl || '/placeholder-program.jpg'}
+            alt={safeProgram.title}
+            className="w-full h-auto max-h-[600px] object-cover"
             loading="lazy"
           />
         </div>
 
         {/* Program Description */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">About This Program</h2>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 md:p-16 mb-16 border border-white/20">
+          <h2 className="text-4xl font-bold text-white mb-8" style={{
+            animation: 'fadeIn 0.8s ease-in-out'
+          }}>About This Program</h2>
           
-          {program.body && program.body.length > 0 ? (
+          {safeProgram.body && safeProgram.body.length > 0 ? (
             <div className="prose max-w-none">
               <PortableText
-                value={program.body}
+                value={safeProgram.body}
                 components={{
                   block: {
-                    normal: ({ children }) => <p className="mb-4 text-gray-700">{children}</p>,
-                    h1: ({ children }) => <h1 className="text-2xl font-bold my-4 text-gray-900">{children}</h1>,
-                    h2: ({ children }) => <h2 className="text-xl font-bold mt-6 mb-3 text-gray-900">{children}</h2>,
-                    h3: ({ children }) => <h3 className="text-lg font-semibold mt-5 mb-2 text-gray-900">{children}</h3>,
-                    h4: ({ children }) => <h4 className="text-base font-medium mt-4 mb-2 text-gray-900">{children}</h4>,
-                    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 pl-4 italic my-4 text-gray-700">{children}</blockquote>,
+                    normal: ({ children }) => {
+                      const text = typeof children === 'string' ? children : children.join('');
+                      // Filter out unwanted text
+                      if (text.includes('1000+') || text.includes('transformed') || text.includes('thousands') || text.includes('people') || text.includes('body')) {
+                        return null;
+                      }
+                      return <p className="mb-6 text-white/90 text-lg leading-relaxed">{children}</p>;
+                    },
+                    h1: ({ children }) => {
+                      const text = typeof children === 'string' ? children : children.join('');
+                      if (text.includes('1000+') || text.includes('transformed') || text.includes('thousands') || text.includes('people') || text.includes('body')) {
+                        return null;
+                      }
+                      return <h1 className="text-3xl font-bold my-6 text-white">{children}</h1>;
+                    },
+                    h2: ({ children }) => {
+                      const text = typeof children === 'string' ? children : children.join('');
+                      if (text.includes('1000+') || text.includes('transformed') || text.includes('thousands') || text.includes('people') || text.includes('body')) {
+                        return null;
+                      }
+                      return <h2 className="text-2xl font-bold mt-8 mb-6 text-white">{children}</h2>;
+                    },
+                    h3: ({ children }) => {
+                      const text = typeof children === 'string' ? children : children.join('');
+                      if (text.includes('1000+') || text.includes('transformed') || text.includes('thousands') || text.includes('people') || text.includes('body')) {
+                        return null;
+                      }
+                      return <h3 className="text-xl font-semibold mt-6 mb-4 text-white">{children}</h3>;
+                    },
                   },
                   list: {
-                    bullet: ({ children }) => <ul className="list-disc pl-5 mb-4 space-y-2 text-gray-700">{children}</ul>,
-                    number: ({ children }) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-gray-700">{children}</ol>,
-                  },
-                  listItem: {
-                    bullet: ({ children }) => <li className="mb-2 text-gray-700">{children}</li>,
-                    number: ({ children }) => <li className="mb-2 text-gray-700">{children}</li>,
+                    bullet: ({ children }) => {
+                      const text = typeof children === 'string' ? children : children.join('');
+                      if (text.includes('1000+') || text.includes('transformed') || text.includes('thousands') || text.includes('people') || text.includes('body')) {
+                        return null;
+                      }
+                      return <ul className="list-disc list-inside mb-6 text-white/90 text-lg">{children}</ul>;
+                    }
                   },
                   marks: {
                     link: ({ value, children }) => {
@@ -246,7 +380,7 @@ function ProgramDetail() {
                           className="max-w-full h-auto rounded-lg"
                         />
                         {value.caption && (
-                          <p className="text-sm text-gray-500 mt-2 text-center">{value.caption}</p>
+                          <p className="text-sm text-white/70 mt-2 text-center">{value.caption}</p>
                         )}
                       </div>
                     ),
@@ -254,38 +388,66 @@ function ProgramDetail() {
                 }}
               />
             </div>
-          ) : program.description ? (
+          ) : safeProgram.description ? (
             <div className="prose max-w-none">
-              <p className="text-gray-700">{program.description}</p>
+              <p className="text-white/90">{finalFilter(safeProgram.description)}</p>
             </div>
           ) : (
             <div className="prose max-w-none">
-              <p className="text-gray-500">No description available for this program.</p>
+              <p className="text-white/70">No description available for this program.</p>
             </div>
           )}
         </div>
 
         {/* Instructor Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">About the Instructor</h2>
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
-              <img 
-                src={program.instructor?.image || '/placeholder-avatar.jpg'} 
-                alt={program.instructor?.name || 'Instructor'}
-                className="w-full h-full object-cover"
-              />
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 md:p-16 mb-16 border border-white/20 transform transition-all duration-500 hover:shadow-2xl">
+          <h2 className="text-4xl font-bold text-white mb-8" style={{
+            animation: 'fadeIn 0.8s ease-in-out'
+          }}>Meet Your Instructor</h2>
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-12">
+            <div className="group relative">
+              {/* Spotlight effect container */}
+              <div className="absolute inset-0 pointer-events-none">
+                {/* Main spotlight beam */}
+                <div className="absolute top-0 left-1/2 w-32 h-32 bg-gradient-to-b from-yellow-300/30 via-transparent to-transparent transform -translate-x-1/2 -translate-y-4 rotate-12 opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+                {/* Secondary light */}
+                <div className="absolute top-0 right-1/2 w-24 h-24 bg-gradient-to-b from-purple-400/20 via-transparent to-transparent transform translate-x-1/2 -translate-y-2 rotate-6 opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+                {/* Ambient glow */}
+                <div className="absolute -inset-4 bg-gradient-radial from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
+              </div>
+              
+              <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-3xl relative z-10">
+                <img 
+                  src={safeProgram.instructor?.image || '/placeholder-avatar.jpg'} 
+                  alt={safeProgram.instructor?.name || 'Instructor'}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+                {/* Enhanced overlay effects */}
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Vignette effect */}
+                <div className="absolute inset-0 rounded-2xl shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Border glow effect */}
+                <div className="absolute inset-0 rounded-2xl border-2 border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Spotlight reflection on image */}
+                <div className="absolute top-2 left-2 w-8 h-8 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
+              </div>
+              {/* Enhanced floating badge */}
+              <div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 z-20">
+                <span className="text-white text-sm font-bold">✓</span>
+                {/* Badge glow */}
+                <div className="absolute inset-0 rounded-full bg-purple-400/30 animate-pulse"></div>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                {program.instructor?.name || 'Expert Instructor'}
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-3xl font-bold text-white mb-4 transition-colors duration-300 group-hover:text-purple-200">
+                {finalFilter(safeProgram.instructor?.name || 'Expert Instructor')}
               </h3>
-              <p className="text-gray-600 mb-2">
-                {program.instructor?.title || 'Certified Professional'}
-              </p>
-              {program.instructor?.bio && (
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  {program.instructor.bio}
+              <div className="inline-block px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-full text-sm font-semibold mb-6 shadow-md transform transition-all duration-300 group-hover:scale-105">
+                Expert Instructor
+              </div>
+              {safeProgram.instructor?.bio && (
+                <p className="text-white/90 text-xl leading-relaxed transition-all duration-300 group-hover:text-white">
+                  {finalFilter(safeProgram.instructor.bio)}
                 </p>
               )}
             </div>
@@ -293,87 +455,97 @@ function ProgramDetail() {
         </div>
 
         {/* Program Video */}
-        {program.video && (
-          <div className="mb-12 rounded-xl overflow-hidden shadow-lg">
-            <h3 className="text-xl font-bold text-white mb-4">Program Video</h3>
-            <div className="relative bg-black rounded-lg overflow-hidden">
+        {safeProgram.video && (
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-white mb-8">Program Preview</h2>
+            <div className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-white/20">
               <video
                 ref={videoRef}
                 controls
-                className="w-full h-auto"
+                className="w-full h-auto rounded-xl"
                 preload="metadata"
-                poster={program.imageUrl || '/placeholder-program.jpg'}
+                poster={safeProgram.imageUrl || '/placeholder-program.jpg'}
                 onError={(e) => {
                   console.error('Video error:', e);
                   console.log('Video error details:', {
                     error: e.target.error,
                     networkState: e.target.networkState,
-                    currentSrc: e.target.currentSrc
+                    currentSrc: e.target.currentSrc,
+                    readyState: e.target.readyState
                   });
                 }}
                 onLoadStart={() => console.log('Video started loading')}
                 onCanPlay={() => console.log('Video can play')}
                 onLoadedData={(e) => console.log('Video loaded data:', e)}
                 onLoadedMetadata={(e) => console.log('Video metadata loaded:', e)}
+                onPlay={() => console.log('Video started playing')}
+                onPause={() => console.log('Video paused')}
+                onEnded={() => console.log('Video ended')}
               >
-                <source src={program.video.url} type="video/mp4" />
+                {/* Try multiple source formats */}
+                {safeProgram.video?.url && (
+                  <source src={safeProgram.video.url} type="video/mp4" />
+                )}
+                {safeProgram.video?.url && safeProgram.video.url.includes('.mp4') && (
+                  <source src={safeProgram.video.url.replace('.mp4', '.webm')} type="video/webm" />
+                )}
                 Your browser does not support the video tag.
               </video>
             </div>
           </div>
         )}
 
-        {/* Enrollment Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-md p-8 mt-12 border-t-4 border-purple-600">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900">Ready to get started?</h2>
-              <div className="flex items-baseline mt-2">
+        {/* Enrollment CTA Section */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 md:p-12 mb-16 border border-white/20">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="text-white">
+              <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+              <div className="flex items-baseline gap-4 mb-4">
                 {(() => {
-                  const hasPrice = typeof program?.price === 'number' && !Number.isNaN(program.price);
-                  const hasDiscount = typeof program?.discountPrice === 'number' && !Number.isNaN(program.discountPrice);
-                  const showDiscount = hasPrice && hasDiscount && program.discountPrice < program.price;
-                  const displayPrice = showDiscount ? program.discountPrice : program.price;
+                  const hasPrice = typeof safeProgram?.price === 'number' && !Number.isNaN(safeProgram.price);
+                  const hasDiscount = typeof safeProgram?.discountPrice === 'number' && !Number.isNaN(safeProgram.discountPrice);
+                  const showDiscount = hasPrice && hasDiscount && safeProgram.discountPrice < safeProgram.price;
+                  const displayPrice = showDiscount ? safeProgram.discountPrice : safeProgram.price;
 
-                  if (!hasPrice || program.price === 0) {
+                  if (!hasPrice || safeProgram.price === 0) {
                     return (
-                      <span className="text-3xl font-bold text-purple-600">Free</span>
+                      <span className="text-4xl font-bold">Free</span>
                     );
                   }
 
                   return (
                     <>
-                      <span className="text-3xl font-bold text-gray-900">
+                      <span className="text-4xl font-bold">
                         ₹{displayPrice.toLocaleString('en-IN')}
                       </span>
                       {showDiscount ? (
-                        <span className="ml-2 text-lg text-gray-600 line-through">
-                          ₹{program.price.toLocaleString('en-IN')}
+                        <span className="text-xl text-white/70 line-through">
+                          ₹{safeProgram.price.toLocaleString('en-IN')}
                         </span>
                       ) : null}
                     </>
                   );
                 })()}
-                <span className="ml-2 text-gray-600">• {program.duration || 'Lifetime access'}</span>
+                <span className="text-white/80">• {safeProgram.duration || 'Lifetime access'}</span>
               </div>
             </div>
             
             <button
               onClick={handleAddToCart}
-              className="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600"
+              className="w-full md:w-auto bg-white text-purple-600 hover:bg-gray-50 font-bold py-4 px-10 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg"
             >
-              Add to Cart
+              Enroll Now
             </button>
           </div>
         </div>
 
         {/* Related Programs */}
-        {program.category && program._id && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h2 className="text-2xl font-bold text-white mb-8">You might also like</h2>
+        {safeProgram.category && safeProgram._id && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <h2 className="text-3xl font-bold text-white mb-12">You Might Also Like</h2>
             <RelatedPrograms 
-              category={program.category} 
-              currentProgramId={program._id} 
+              category={safeProgram.category} 
+              currentProgramId={safeProgram._id} 
             />
           </div>
         )}

@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useStoreItems } from '../hooks/useStoreItems';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { t } from '../i18n';
 
@@ -99,75 +98,19 @@ const CategoryCard = ({ to, title, description, image, alt, subtitle }) => {
 
 export default function Categories() {
   const navigate = useNavigate();
-  const { items } = useStoreItems(null);
   const { addToCart } = useCart();
 
   // Banner state (no carousel)
   const [bannerImage] = useState(bannerImages[0]); // Use only the first image
 
-  // Store categories (reuse mapping from Store page)
-  const STORE_CATEGORIES = useMemo(() => [
-    { slug: 'bracelets', title: 'Bracelets' },
-    { slug: 'rudraksha', title: 'Rudraksha' },
-    { slug: 'anklet', title: 'Anklet' },
-    { slug: 'pyrite', title: 'Pyrite' },
-  ], []);
-
-  const imageFor = useCallback((slug) => {
-    const special = {
-      bracelets: '/assets/Bracelet.jpg',
-      rudraksha: '/assets/Rudraksha.jpg',
-      anklet: '/assets/Anklet.jpg',
-      pyrite: '/assets/Pyrite.jpg',
-      murti: '/assets/Murti.jpg',
-      frames: '/assets/Frames.jpg',
-      karungali: '/assets/karungali.jpg',
-      gemstones: '/assets/Gemstones.jpg',
-      pendant: '/assets/Pendant.jpg',
-      zodiac: '/assets/Zodiac.jpg',
-    };
-    return special[slug] || `/assets/categories/${slug}.png`;
-  }, []);
-
   // Preload images
   useEffect(() => {
-    STORE_CATEGORIES.forEach(cat => {
-      const img = new Image();
-      img.src = imageFor(cat.slug);
+    // Preload banner images
+    bannerImages.forEach(img => {
+      const image = new Image();
+      image.src = img;
     });
-  }, [STORE_CATEGORIES, imageFor]);
-
-  // Carousel scroll controls
-  const carouselRef = useRef(null);
-  const scrollByAmount = 260;
-  const scrollLeft = useCallback(() => {
-    if (carouselRef.current) carouselRef.current.scrollBy({ left: -scrollByAmount, behavior: 'smooth' });
-  }, []);
-  const scrollRight = useCallback(() => {
-    if (carouselRef.current) carouselRef.current.scrollBy({ left: scrollByAmount, behavior: 'smooth' });
-  }, []);
-
-  const goToCategory = useCallback((slug) => {
-    navigate(`/`);
-  }, [navigate]);
-
-  // Two-row items carousel controls
-  const itemsRef = useRef(null);
-  const itemsScrollLeft = useCallback(() => {
-    if (itemsRef.current) itemsRef.current.scrollBy({ left: -640, behavior: 'smooth' });
-  }, []);
-  const itemsScrollRight = useCallback(() => {
-    if (itemsRef.current) itemsRef.current.scrollBy({ left: 640, behavior: 'smooth' });
-  }, []);
-  const handleAddToCart = useCallback((item) => {
-    addToCart({
-      id: item._id || item.slug || item.title,
-      title: item.title,
-      price: item.price || 0,
-      quantity: 1,
-      image: item.imageUrl,
-    });
-  }, [addToCart]);
+  }, [bannerImages]);
 
   const categories = [
     {
@@ -271,13 +214,12 @@ export default function Categories() {
               </div>
             </div>
           </section>
-          
           <div className="py-8">
             <TestPrograms />
           </div>
 
-          {/* Shop by Category Section */}
-          <section className="mb-12">
+          {/* Shop by Category Section - Hidden for now */}
+          {/* <section className="mb-12">
             <div className="mb-3 text-center">
               <h2 className="text-3xl md:text-4xl font-extrabold text-white">Shop by Category</h2>
               <Link to="/" className="block mt-2 text-base text-white/70 hover:text-white font-semibold">View all</Link>
@@ -333,10 +275,10 @@ export default function Categories() {
                 <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </div>
-          </section>
+          </section> */}
 
-          {/* Testimonials Section */}
-          <Testimonials />
+          {/* Testimonials Section - Hidden for now */}
+          {/* <Testimonials /> */}
           
           {/* FAQ Section */}
           <FAQSection />

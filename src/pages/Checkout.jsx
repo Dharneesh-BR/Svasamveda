@@ -169,7 +169,7 @@ const Checkout = () => {
         key: razorpayKey,
         amount: order.amount,
         currency: order.currency || 'INR',
-        name: 'SoulSensei',
+        name: 'Svasam',
         description: 'Payment for your order',
         order_id: order.id,
         handler: async function(response) {
@@ -184,7 +184,8 @@ const Checkout = () => {
             if (verifyResponse.data.success) {
               const user = auth.currentUser;
               if (user) {
-                await addDoc(collection(db, 'users', user.uid, 'orders'), {
+                // Save order
+                const orderDoc = await addDoc(collection(db, 'users', user.uid, 'orders'), {
                   ...orderData,
                   status: 'completed',
                   paymentId: response.razorpay_payment_id,
@@ -192,6 +193,23 @@ const Checkout = () => {
                   createdAt: serverTimestamp(),
                   updatedAt: serverTimestamp()
                 });
+
+                // Create enrollments for courses only (items with category)
+                for (const item of cart) {
+                  if (item.category) { // Only create enrollment for courses with categories
+                    await addDoc(collection(db, 'users', user.uid, 'enrollments'), {
+                      programId: item.id,
+                      programTitle: item.title || item.name,
+                      programSlug: item.slug || item.id,
+                      category: item.category,
+                      imageUrl: item.image || item.imageUrl,
+                      enrolledAt: serverTimestamp(),
+                      progress: 0,
+                      totalLessons: 10, // Default lesson count
+                      status: 'active'
+                    });
+                  }
+                }
               }
               
               clearCart();

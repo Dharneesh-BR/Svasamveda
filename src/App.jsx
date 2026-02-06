@@ -35,6 +35,7 @@ import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import AllArticles from './pages/AllArticles';
 import ProgramDetail from './pages/ProgramDetail';
+import OrderSuccess from './pages/OrderSuccess';
 // Mind subpages - now handled dynamically by ProgramDetail
 // import ManifestAbundance from './pages/mind/ManifestAbundance';
 // import ReduceStress from './pages/mind/ReduceStress';
@@ -111,6 +112,7 @@ function App() {
               <Route path="/favorites" element={<RequireAuth><FavoritesPage /></RequireAuth>} />
               <Route path="/coaching-history" element={<RequireAuth><CoachingHistory /></RequireAuth>} />
               <Route path="/checkout" element={<RequireAuth><Checkout /></RequireAuth>} />
+              <Route path="/order-success" element={<RequireAuth><OrderSuccess /></RequireAuth>} />
               <Route path="/dashboard/*" element={<RequireAuth><DashboardRouter /></RequireAuth>} />
               <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
             </Routes>

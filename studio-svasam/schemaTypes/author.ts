@@ -24,7 +24,7 @@ export default {
     {
       name: 'image',
       type: 'image',
-      title: 'Image',
+      title: 'Profile Image',
       options: {
         hotspot: true
       }
@@ -32,7 +32,18 @@ export default {
     {
       name: 'bio',
       type: 'text',
-      title: 'Bio'
+      title: 'Biography',
+      rows: 5,
+      description: 'Detailed biography of the instructor'
     }
   ]
 } as SchemaTypeDefinition
+
+// Add preview for better studio experience
+export const authorPreview = {
+  select: {
+    title: 'name',
+    subtitle: 'bio',
+    media: 'image'
+  }
+}
