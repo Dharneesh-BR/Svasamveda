@@ -101,6 +101,27 @@ const Checkout = () => {
 
       const user = auth.currentUser;
       if (!user) {
+        navigate('/login', { 
+          state: { 
+            from: location.pathname,
+            message: 'Please log in to complete your purchase'
+          } 
+        });
+        return;
+      }
+
+      // Create order first
+      const { data } = await axios.post(
+        "/.netlify/functions/create-order",
+        {
+          amount: course.price * 100,
+          currency: "INR",
+        }
+      );
+
+      const order = data.order;
+
+      // Define options outside any conditional blocks
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: order.amount,
