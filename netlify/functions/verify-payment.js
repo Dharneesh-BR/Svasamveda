@@ -1,5 +1,5 @@
 const { doc, getDoc, updateDoc, serverTimestamp } = require('firebase-admin');
-const { db } = require('../src/firebase.js');
+const { db } = require('../../src/firebase.js');
 
 exports.handler = async function(event, context) {
   try {
