@@ -1,83 +1,90 @@
-const admin = require('firebase-admin');
+const crypto = require("crypto");
+const admin = require("firebase-admin");
 
-// Initialize Firebase Admin
+// Initialize Firebase Admin once
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-    })
+    credential: admin.credential.applicationDefault()
   });
 }
 
 const db = admin.firestore();
 
-exports.handler = async function(event, context) {
+exports.handler = async (event) => {
   try {
-    const { order_id, payment_id, signature } = JSON.parse(event.body);
-    
-    console.log('Verifying payment:', { order_id, payment_id, signature });
+    if (event.httpMethod !== "POST") {
+      return { statusCode: 405, body: "Method Not Allowed" };
+    }
 
-    if (!order_id || !payment_id || !signature) {
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      userId,
+      orderData
+    } = JSON.parse(event.body);
+
+    if (
+      !razorpay_order_id ||
+      !razorpay_payment_id ||
+      !razorpay_signature ||
+      !userId
+    ) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Missing required payment verification parameters' 
-        })
+        body: JSON.stringify({ success: false, message: "Missing fields" })
       };
     }
 
-    // Find the order in Firestore
-    const orderDoc = await db.collection('orders').doc(order_id).get();
-    
-    if (!orderDoc.exists()) {
-      console.log('Order not found in orders collection, checking user orders...');
-      
-      // Try to find in user's orders collection
-      // We need to get user info from the order or use a different approach
+    // ✅ Razorpay signature verification
+    const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body)
+      .digest("hex");
+
+    if (expectedSignature !== razorpay_signature) {
       return {
-        statusCode: 404,
-        body: JSON.stringify({ 
-          success: false,
-          message: 'Order not found' 
-        })
+        statusCode: 400,
+        body: JSON.stringify({ success: false, message: "Invalid signature" })
       };
     }
 
-    const orderData = orderDoc.data();
-    console.log('Found order:', orderData);
+    // ✅ Save order in Firestore
+    const orderRef = db
+      .collection("users")
+      .doc(userId)
+      .collection("orders")
+      .doc(razorpay_order_id);
 
-    // Update order with payment details
-    await db.collection('orders').doc(order_id).update({
-      ...orderData,
-      paymentId: payment_id,
-      razorpayOrderId: order_id,
-      paymentSignature: signature,
-      status: 'completed',
-      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-      verifiedAt: admin.firestore.FieldValue.serverTimestamp()
-    });
-
-    console.log('Payment verified successfully');
+    await orderRef.set(
+      {
+        ...orderData,
+        paymentId: razorpay_payment_id,
+        razorpayOrderId: razorpay_order_id,
+        status: "completed",
+        verifiedAt: admin.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: true,
-        message: 'Payment verified successfully' 
+        message: "Payment verified & order saved"
       })
     };
 
   } catch (error) {
-    console.error('Payment verification error:', error);
+    console.error("Verify payment failed:", error);
+
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         success: false,
-        message: 'Payment verification failed',
-        error: error.message 
+        error: error.message
       })
     };
   }
