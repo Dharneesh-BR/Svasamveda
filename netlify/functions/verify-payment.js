@@ -1,13 +1,14 @@
 const crypto = require("crypto");
 const admin = require("firebase-admin");
 
+// Firebase Admin init (Netlify-safe)
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(
     process.env.FIREBASE_SERVICE_ACCOUNT
   );
 
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount),
   });
 }
 
@@ -16,7 +17,10 @@ const db = admin.firestore();
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== "POST") {
-      return { statusCode: 405, body: "Method Not Allowed" };
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ message: "Method Not Allowed" }),
+      };
     }
 
     const {
@@ -24,21 +28,28 @@ exports.handler = async (event) => {
       razorpay_payment_id,
       razorpay_signature,
       userId,
-      orderData
+      orderData,
     } = JSON.parse(event.body);
 
+    // Validate input
     if (
       !razorpay_order_id ||
       !razorpay_payment_id ||
       !razorpay_signature ||
-      !userId
+      !userId ||
+      !orderData?.courseId ||
+      !orderData?.courseTitle
     ) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ success: false, message: "Missing fields" })
+        body: JSON.stringify({
+          success: false,
+          message: "Missing required fields",
+        }),
       };
     }
 
+    // 🔐 Verify Razorpay signature
     const body = `${razorpay_order_id}|${razorpay_payment_id}`;
 
     const expectedSignature = crypto
@@ -49,23 +60,27 @@ exports.handler = async (event) => {
     if (expectedSignature !== razorpay_signature) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ success: false, message: "Invalid signature" })
+        body: JSON.stringify({
+          success: false,
+          message: "Invalid Razorpay signature",
+        }),
       };
     }
 
-    const orderRef = db
+    // ✅ Add course to My Courses
+    const courseRef = db
       .collection("users")
       .doc(userId)
-      .collection("orders")
-      .doc(razorpay_order_id);
+      .collection("courses")
+      .doc(orderData.courseId);
 
-    await orderRef.set(
+    await courseRef.set(
       {
-        ...orderData,
+        courseId: orderData.courseId,
+        courseTitle: orderData.courseTitle,
+        status: "active",
+        purchasedAt: admin.firestore.FieldValue.serverTimestamp(),
         paymentId: razorpay_payment_id,
-        razorpayOrderId: razorpay_order_id,
-        status: "completed",
-        verifiedAt: admin.firestore.FieldValue.serverTimestamp()
       },
       { merge: true }
     );
@@ -74,19 +89,17 @@ exports.handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({
         success: true,
-        message: "Payment verified & order saved"
-      })
+        message: "Course added to My Courses",
+      }),
     };
-
   } catch (error) {
-    console.error("Verify payment failed:", error);
-
+    console.error("Verify payment error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({
         success: false,
-        error: error.message
-      })
+        error: error.message,
+      }),
     };
   }
 };

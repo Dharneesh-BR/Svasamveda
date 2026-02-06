@@ -165,6 +165,50 @@ const Checkout = () => {
 
       // Razorpay checkout options
       console.log('Initializing Razorpay payment...');
+      
+      const handlePayment = async () => {
+        // 1️⃣ Create order
+        const { data } = await axios.post(
+          "/.netlify/functions/create-order",
+          {
+            amount: selectedCourse.price * 100,
+            currency: "INR",
+          }
+        );
+
+        const order = data.order;
+
+        // 2️⃣ Open Razorpay
+        const options = {
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          amount: order.amount,
+          currency: order.currency,
+          order_id: order.id,
+          name: "Svasam",
+          description: selectedCourse.title,
+
+          handler: async function (response) {
+            // 3️⃣ Verify payment & unlock course
+            await axios.post("/.netlify/functions/verify-payment", {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              userId: currentUser.uid,
+              orderData: {
+                courseId: selectedCourse.id,
+                courseTitle: selectedCourse.title,
+              },
+            });
+
+            // 4️⃣ Redirect
+            navigate("/order-success");
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      };
+
       const options = {
         key: razorpayKey,
         amount: order.amount,
@@ -172,53 +216,7 @@ const Checkout = () => {
         name: 'Svasam',
         description: 'Payment for your order',
         order_id: order.id,
-        handler: async function(response) {
-          console.log('Payment successful, verifying...', response);
-          try {
-            const user = auth.currentUser;
-            if (user) {
-              const verifyResponse = await axios.post('/.netlify/functions/verify-payment', {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                userId: user.uid,
-                orderData: {
-                  ...orderData,
-                  status: 'completed',
-                  paymentId: response.razorpay_payment_id,
-                  razorpayOrderId: response.razorpay_order_id,
-                  createdAt: serverTimestamp()
-                }
-              });
-
-              if (verifyResponse.data.success) {
-                console.log('Payment verified successfully');
-                // Navigate to success page
-                navigate('/order-success', { 
-                  state: { 
-                    orderId: response.razorpay_order_id,
-                    paymentId: response.razorpay_payment_id
-                  },
-                  replace: true
-                });
-              } else {
-                throw new Error(verifyResponse.data.message || 'Payment verification failed');
-              }
-            } else {
-              throw new Error('User not authenticated');
-            }
-          } catch (error) {
-            console.error('Payment verification error:', error);
-            // Still navigate to success page even if verification fails
-            navigate('/order-success', { 
-              state: { 
-                orderId: response.razorpay_order_id,
-                paymentId: response.razorpay_payment_id
-              },
-              replace: true
-            });
-          }
-        },
+        handler: handlePayment,
         prefill: {
           name: user.displayName || address?.fullName || '',
           email: user.email || '',
@@ -229,12 +227,10 @@ const Checkout = () => {
         },
         modal: {
           ondismiss: function() {
-            console.log('Payment modal dismissed');
+            console.log('Razorpay modal closed');
           },
-        },
-        notes: {
-          order_id: order.id,
-          user_id: user.uid
+          escape: false,
+          backdropclose: false
         }
       };
 

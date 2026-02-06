@@ -1,4 +1,3 @@
-// netlify/functions/create-order.js
 import Razorpay from "razorpay";
 
 export async function handler(event) {
@@ -12,30 +11,23 @@ export async function handler(event) {
   try {
     const { amount, currency } = JSON.parse(event.body);
 
-    // Ensure Razorpay credentials are set
-    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      throw new Error("Razorpay credentials are missing in environment variables.");
-    }
-
     const razorpay = new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
 
-    const options = {
-      amount: amount,
-      currency: currency,
+    const order = await razorpay.orders.create({
+      amount, // amount in paise
+      currency,
       receipt: `receipt_${Date.now()}`,
-    };
-
-    const order = await razorpay.orders.create(options);
+    });
 
     return {
       statusCode: 200,
       body: JSON.stringify({ order }),
     };
   } catch (error) {
-    console.error("Error in create-order function:", error);
+    console.error("Create order error:", error);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: error.message }),
