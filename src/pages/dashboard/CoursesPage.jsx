@@ -54,6 +54,7 @@ const CoursesPage = () => {
   const { user } = useAuth();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -66,6 +67,8 @@ const CoursesPage = () => {
       }
 
       setLoading(true);
+      setError(null);
+      
       try {
         const enrollmentsRef = collection(db, 'users', user.uid, 'enrollments');
         const enrollmentsSnap = await getDocs(query(enrollmentsRef, orderBy('createdAt', 'desc')));
@@ -85,7 +88,9 @@ const CoursesPage = () => {
 
         setCourses(mapped);
       } catch (e) {
-        if (!cancelled) setCourses([]);
+        console.error('Error loading courses:', e);
+        if (!cancelled) setError('Failed to load courses: ' + e.message);
+        setCourses([]);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -101,8 +106,25 @@ const CoursesPage = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">My Courses</h2>
+      
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading your courses...</div>
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-300 mx-auto"></div>
+          <p className="mt-4 text-gray-500">Loading your courses...</p>
+        </div>
+      ) : error ? (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
       ) : courses.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {courses.map((course) => (
@@ -118,7 +140,7 @@ const CoursesPage = () => {
           <p className="text-gray-500 mb-6">You haven't enrolled in any courses yet.</p>
           <Link
             to="/"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-main hover:bg-main/90"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700"
           >
             Browse Programs
           </Link>

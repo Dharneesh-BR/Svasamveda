@@ -34,6 +34,41 @@ export default function Dashboard() {
     return lines.filter(Boolean).join('\n');
   };
 
+  // Remove all enrollments function
+  const handleClearAllEnrollments = async () => {
+    if (!user?.uid) {
+      alert('Please log in first');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to remove all enrollments from your account? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const enrollmentsRef = collection(db, 'users', user.uid, 'enrollments');
+      const enrollmentsSnap = await getDocs(enrollmentsRef);
+      
+      if (enrollmentsSnap.docs.length > 0) {
+        for (const doc of enrollmentsSnap.docs) {
+          await deleteDoc(doc.ref);
+        }
+        
+        // Refresh enrollments data
+        const refreshedSnap = await getDocs(enrollmentsRef);
+        setEnrollments([]);
+        
+        alert(`Successfully removed ${enrollmentsSnap.docs.length} enrollment(s)!`);
+      } else {
+        alert('No enrollments found to remove.');
+      }
+      
+    } catch (error) {
+      console.error('Error clearing enrollments:', error);
+      alert('Error clearing enrollments: ' + error.message);
+    }
+  };
+
   // Remove test order function
   const handleRemoveTestOrder = async () => {
     if (!user?.uid) {
@@ -82,43 +117,6 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error removing test orders:', error);
       alert('Error removing test orders: ' + error.message);
-    }
-  };
-
-  // Create test enrollment function
-  const handleCreateTestEnrollment = async () => {
-    if (!user?.uid) {
-      alert('Please log in first');
-      return;
-    }
-
-    try {
-      const enrollmentData = {
-        programId: 'test-program-1',
-        programTitle: 'Test Wellness Program',
-        programSlug: 'test-wellness-program',
-        category: 'mind', // This makes it a course
-        imageUrl: '/placeholder-program.jpg',
-        enrolledAt: serverTimestamp(),
-        progress: 25,
-        totalLessons: 10,
-        status: 'active'
-      };
-
-      const enrollmentDoc = await addDoc(collection(db, 'users', user.uid, 'enrollments'), enrollmentData);
-      console.log('Test enrollment created with ID:', enrollmentDoc.id);
-      
-      // Refresh enrollments data
-      const enrollmentsRef = collection(db, 'users', user.uid, 'enrollments');
-      const enrollmentsSnap = await getDocs(query(enrollmentsRef, orderBy('createdAt', 'desc')));
-      const enrollmentsData = enrollmentsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      setEnrollments(enrollmentsData);
-      
-      alert('Test course enrollment created successfully! Check your courses page.');
-      
-    } catch (error) {
-      console.error('Error creating test enrollment:', error);
-      alert('Error creating test enrollment: ' + error.message);
     }
   };
 
@@ -197,6 +195,22 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Show clear enrollments button if enrollments exist */}
+            {enrollments.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <button
+                  onClick={handleClearAllEnrollments}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  <FiTrash2 className="h-4 w-4" />
+                  Clear All Enrollments ({enrollments.length})
+                </button>
+                <p className="text-sm text-red-800 mt-2">
+                  Found {enrollments.length} enrollment(s). Click to remove them all.
+                </p>
+              </div>
+            )}
+
             {/* Show remove test order button if test orders exist */}
             {orders.some(order => 
               (order.orderId && order.orderId.startsWith('TEST_')) ||
@@ -213,22 +227,6 @@ export default function Dashboard() {
                 </button>
                 <p className="text-sm text-red-800 mt-2">
                   Test wellness program detected. Click to remove test orders.
-                </p>
-              </div>
-            )}
-
-            {/* Show create test enrollment button if no enrollments exist */}
-            {enrollments.length === 0 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <button
-                  onClick={handleCreateTestEnrollment}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <FiPlus className="h-4 w-4" />
-                  Create Test Course
-                </button>
-                <p className="text-sm text-blue-800 mt-2">
-                  No courses found. Create a test course to test courses functionality.
                 </p>
               </div>
             )}

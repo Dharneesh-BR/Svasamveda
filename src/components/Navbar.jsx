@@ -109,7 +109,7 @@ export default function Navbar() {
         </li>
         <li>{/* <Link to="/store" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Spiritual Store</Link> */}</li>
         <li><Link to="/sessions" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Wellness Library</Link></li>
-        <li><Link to="/blog" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Svasam Journal</Link></li>
+        <li><Link to="/programs" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Programs</Link></li>
         <li><Link to="/contact" className="text-white hover:text-yellow-300 transition font-semibold" onClick={handleNavigation}>Contact us</Link></li>
       </ul>
 

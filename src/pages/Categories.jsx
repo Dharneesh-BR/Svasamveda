@@ -6,15 +6,16 @@ import { t } from '../i18n';
 // Carousel banner images
 const bannerImages = [
   '/assets/banner.jpg',
-  '/assets/MainPageBanner.jpg'
+  '/assets/MainPageBanner.jpg',
+  '/assets/new-banner.jpg'
 ];
+
 const MindImg = '/assets/Mind.png';
 const SoulImg = '/assets/New soul.png';
 const BodyImg = '/assets/Body.png';
 const Logo = '/assets/Svasam vector 2 New.png';
 import FAQSection from '../components/FAQSection';
-import TestPrograms from '../components/TestPrograms';
-import Testimonials from '../components/Testimonials';
+import Programs from '../components/Programs';
 
 // Import Chevron icons
 const ChevronLeft = ({ className }) => (
@@ -215,7 +216,7 @@ export default function Categories() {
             </div>
           </section>
           <div className="py-8">
-            <TestPrograms />
+            <Programs />
           </div>
 
           {/* Shop by Category Section - Hidden for now */}

@@ -10,8 +10,8 @@ import Checkout from './pages/Checkout';
 import Dashboard from './pages/Dashboard';
 import DashboardRouter from './pages/dashboard/index';
 
-// Import TestPrograms component for development
-import TestPrograms from './components/TestPrograms';
+// Import Programs component
+import Programs from './components/Programs';
 
 import Store from './pages/Store';
 import ProductDetail from './pages/ProductDetail';
@@ -103,7 +103,7 @@ function App() {
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/all-articles" element={<AllArticles />} />
-              <Route path="/test-programs" element={<TestPrograms />} />
+              <Route path="/programs" element={<Programs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/reset-password" element={<ResetPassword />} />
