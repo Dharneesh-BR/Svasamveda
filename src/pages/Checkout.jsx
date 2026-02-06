@@ -101,140 +101,67 @@ const Checkout = () => {
 
       const user = auth.currentUser;
       if (!user) {
-        navigate('/login', { 
-          state: { 
-            from: location.pathname,
-            message: 'Please log in to complete your purchase'
-          } 
-        });
-        return;
-      }
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        order_id: order.id,
+        name: "Svasam",
+        description: course.title,
 
+        handler: async function (response) {
+          console.log('Payment successful, verifying...', response);
+          try {
+            const user = auth.currentUser;
+            if (user) {
+              const verifyResponse = await axios.post("/.netlify/functions/verify-payment", {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                userId: user.uid,
+                orderData: {
+                  courseId: course.id,
+                  courseTitle: course.title,
+                },
+              });
+
+              if (verifyResponse.data.success) {
+                console.log('Payment verified successfully');
+                navigate("/order-success", { 
+                  state: { 
+                    orderId: response.razorpay_order_id,
+                    paymentId: response.razorpay_payment_id
+                  },
+                  replace: true
+                });
+              } else {
+                throw new Error(verifyResponse.data.message || 'Payment verification failed');
+              }
+            } else {
+              throw new Error('User not authenticated');
+            }
+          } catch (error) {
+            console.error('Payment verification error:', error);
+            navigate("/order-success", { 
+              state: { 
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id
+              },
+              replace: true
+            });
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+      
+    } else {
+      // Cart-based checkout (existing logic)
       if (cart.length === 0) {
         setError('Your cart is empty');
         return;
       }
-
-      // Validate Razorpay key
-      const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
-      if (!razorpayKey) {
-        console.error('Razorpay key is missing. Please check your environment variables.');
-        throw new Error('Payment processor configuration error. Please contact support.');
-      }
-
-      // Prepare order data
-      const orderData = {
-        amount: Math.round(total * 100), // Ensure amount is in paise
-        currency: 'INR',
-        receipt: `order_rcpt_${Date.now()}`,
-        items: cart.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity
-        })),
-        selectedSession,
-        shippingAddress: {
-          ...address,
-          timestamp: serverTimestamp()
-        },
-        status: 'pending',
-        userId: user.uid,
-        userEmail: user.email,
-        createdAt: serverTimestamp()
-      };
-
-      console.log('Creating order with data:', orderData);
-
-      // Call your backend API to create a Razorpay order
-      console.log('Sending order data to server...');
-      const response = await axios.post('/.netlify/functions/create-razorpay-order', orderData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000 // 10 seconds timeout
-      });
-      
-      if (!response.data?.order) {
-        console.error('Invalid response from server:', response.data);
-        throw new Error('Failed to create order: Invalid response from server');
-      }
-
-        const { order } = response.data;
-        console.log('Order created:', order);
-
-      // Razorpay checkout options
-      console.log('Initializing Razorpay payment...');
-      
-      const handlePayment = async () => {
-        // 1️⃣ Create order
-        const { data } = await axios.post(
-          "/.netlify/functions/create-order",
-          {
-            amount: selectedCourse.price * 100,
-            currency: "INR",
-          }
-        );
-
-        const order = data.order;
-
-        // 2️⃣ Open Razorpay
-        const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-          amount: order.amount,
-          currency: order.currency,
-          order_id: order.id,
-          name: "Svasam",
-          description: selectedCourse.title,
-
-          handler: async function (response) {
-            // 3️⃣ Verify payment & unlock course
-            await axios.post("/.netlify/functions/verify-payment", {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-              userId: currentUser.uid,
-              orderData: {
-                courseId: selectedCourse.id,
-                courseTitle: selectedCourse.title,
-              },
-            });
-
-            // 4️⃣ Redirect
-            navigate("/order-success");
-          },
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      };
-
-      const options = {
-        key: razorpayKey,
-        amount: order.amount,
-        currency: order.currency || 'INR',
-        name: 'Svasam',
-        description: 'Payment for your order',
-        order_id: order.id,
-        handler: handlePayment,
-        prefill: {
-          name: user.displayName || address?.fullName || '',
-          email: user.email || '',
-          contact: address?.phone || ''
-        },
-        theme: {
-          color: '#8B1F7A'
-        },
-        modal: {
-          ondismiss: function() {
-            console.log('Razorpay modal closed');
-          },
-          escape: false,
-          backdropclose: false
-        }
-      };
-
-      console.log('Opening Razorpay with options:', options);
       
       try {
         if (!window.Razorpay) {
@@ -242,50 +169,36 @@ const Checkout = () => {
         }
         
         const rzp = new window.Razorpay(options);
-        
-        rzp.on('payment.failed', function(response) {
-          const errorMessage = response.error?.description || 'Payment was not successful. Please try again.';
-          console.error('Payment failed:', response.error);
-          setError(`Payment failed: ${errorMessage}`);
-        });
-        
-        rzp.on('payment.authorized', function(response) {
-          console.log('Payment authorized:', response);
-        });
-        
         rzp.open();
       } catch (error) {
         console.error('Error initializing Razorpay:', error);
-        throw new Error(`Failed to initialize payment: ${error.message}`);
+        setError(`Failed to initialize payment: ${error.message}`);
       }
-
-    } catch (error) {
-      console.error('Checkout error:', error);
-      let errorMessage = 'Something went wrong. Please try again.';
-      
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error('Error response data:', error.response.data);
-        console.error('Error status:', error.response.status);
-        console.error('Error headers:', error.response.headers);
-        errorMessage = error.response.data?.message || error.message;
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error('No response received:', error.request);
-        errorMessage = 'No response from server. Please check your internet connection.';
-      } else if (error.code === 'ECONNABORTED') {
-        errorMessage = 'Request timed out. Please try again.';
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error('Error message:', error.message);
-      }
-      
-      setError(errorMessage || 'An unexpected error occurred. Please try again later.');
-    } finally {
-      setIsLoading(false);
     }
+  } catch (error) {
+    console.error('Checkout error:', error);
+    let errorMessage = 'Something went wrong. Please try again.';
+    if (error.response?.status === 429) {
+      errorMessage = 'Too many requests. Please wait a moment and try again.';
+    } else if (error.response?.status >= 500) {
+      errorMessage = 'Server error. Please try again later.';
+      console.error('Error headers:', error.response.headers);
+      errorMessage = error.response.data?.message || error.message;
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error('No response received:', error.request);
+      errorMessage = 'No response from server. Please check your internet connection.';
+    } else if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Request timed out. Please try again.';
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      errorMessage = error.message;
+    }
+    setError(errorMessage);
+  } finally {
+    setIsLoading(false);
   }
+}
 
   if (isLoading) {
     return (
