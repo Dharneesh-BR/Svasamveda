@@ -15,7 +15,7 @@ export default defineConfig(({ command, mode }) => {
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
-      minify: 'terser',
+      minify: false, // Disable minification temporarily
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
