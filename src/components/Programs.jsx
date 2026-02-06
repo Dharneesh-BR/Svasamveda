@@ -6,6 +6,7 @@ import { Navigation, Pagination, Autoplay, Grid } from 'swiper/modules';
 import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { FiHeart, FiCheck } from 'react-icons/fi';
+import { useCart } from '../contexts/CartContext';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -19,6 +20,7 @@ const TestPrograms = () => {
   const [favorites, setFavorites] = useState({});
   const swiperRef = useRef(null);
   const user = auth.currentUser;
+  const { addToCart } = useCart();
 
   // Fetch programs for each category
   const { programs: mindPrograms, loading: mindLoading } = useProgramsByCategory('mind');
