@@ -32,19 +32,12 @@ export default function MyCourses() {
           ...d.data()
         }));
 
-        console.log('🔍 DEBUG - Orders data:', ordersData);
-        console.log('🔍 DEBUG - Number of orders:', ordersData.length);
-
         // Extract courses from orders
         const coursesFromOrders = [];
         ordersData.forEach(order => {
-          console.log('🔍 DEBUG - Processing order:', order);
-          
           if (order.items && Array.isArray(order.items)) {
-            console.log('🔍 DEBUG - Order has items array:', order.items);
             order.items.forEach(item => {
               if (item.type === 'course' || item.category) {
-                console.log('🔍 DEBUG - Found course item:', item);
                 coursesFromOrders.push({
                   id: item.id || item._id,
                   ...item,
@@ -56,7 +49,6 @@ export default function MyCourses() {
             });
           } else if (order.type === 'course' || order.category) {
             // Handle single course orders
-            console.log('🔍 DEBUG - Single course order:', order);
             coursesFromOrders.push({
               id: order.id || order._id,
               ...order,
@@ -64,12 +56,8 @@ export default function MyCourses() {
               purchaseDate: order.createdAt,
               purchaseStatus: order.status
             });
-          } else {
-            console.log('🔍 DEBUG - Order structure not recognized:', order);
           }
         });
-        
-        console.log('🔍 DEBUG - Final courses from orders:', coursesFromOrders);
         setPurchasedCourses(coursesFromOrders);
 
       } catch (err) {

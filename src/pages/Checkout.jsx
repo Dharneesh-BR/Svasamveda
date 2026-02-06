@@ -178,9 +178,9 @@ const Checkout = () => {
             const user = auth.currentUser;
             if (user) {
               const verifyResponse = await axios.post('/.netlify/functions/verify-payment', {
-                order_id: response.razorpay_order_id,
-                payment_id: response.razorpay_payment_id,
-                signature: response.razorpay_signature,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
                 userId: user.uid,
                 orderData: {
                   ...orderData,
