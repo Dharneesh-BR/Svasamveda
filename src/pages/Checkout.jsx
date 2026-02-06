@@ -210,16 +210,7 @@ const Checkout = () => {
       console.error('No response received:', error.request);
       errorMessage = 'No response from server. Please check your internet connection.';
     } else if (error.code === 'ECONNABORTED') {
-      errorMessage = 'Request timed out. Please try again.';
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      errorMessage = error.message;
-    }
-    setError(errorMessage);
-  } finally {
-    setIsLoading(false);
   }
-}
 
   if (isLoading) {
     return (
