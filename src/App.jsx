@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import ScrollToTop from './components/ScrollToTop';
 import WhatsAppButton from './components/WhatsAppButton';
+import SEO from './components/SEO';
 import Logo from '/icons/Logo icon.png';
 import SimpleDashboard from './pages/SimpleDashboard';
 
@@ -46,11 +47,29 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <Router>
-        <ScrollToTop />
-        <div className="flex flex-col min-h-screen bg-background">
-          <Navbar />
-          <CartDrawer />
-          <main className="flex-grow pt-20 md:pt-16">
+          <ScrollToTop />
+          <SEO 
+            title="Home"
+            description="Discover balance, clarity, and emotional wellbeing at Svasam. Connect with trusted spiritual guides for mindfulness, meditation, and personal growth. Start your journey to inner peace today."
+            keywords="spiritual healing, mindfulness, meditation, emotional wellbeing, personal growth, inner peace, wellness, spiritual guidance, mental health, self-discovery, transformation"
+            image="/icons/svasam-logo.png"
+            structuredData={{
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Svasam',
+              url: 'https://svasam.com',
+              description: 'Discover balance, clarity, and emotional wellbeing at Svasam. Connect with trusted spiritual guides for mindfulness, meditation, and personal growth.',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: 'https://svasam.com/search?q={search_term_string}',
+                'query-input': 'required name=search_term_string'
+              }
+            }}
+          />
+          <div className="flex flex-col min-h-screen bg-background">
+            <Navbar />
+            <CartDrawer />
+            <main className="flex-grow pt-20 md:pt-16">
             <Routes>
               <Route path="/" element={<Categories />} />
               <Route path="/mind" element={<Mind />} />

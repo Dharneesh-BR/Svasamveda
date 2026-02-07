@@ -1,10 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
   sendPasswordResetEmail,
   updateProfile,
   GoogleAuthProvider,
@@ -13,7 +13,9 @@ import {
   signInWithRedirect,
   getRedirectResult,
   setPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
 } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
@@ -257,4 +259,212 @@ export const handleAuthRedirect = async () => {
   }
 };
 
-export { auth, db };
+// Phone Authentication Functions
+export const setUpRecaptcha = (containerId) => {
+  try {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
+        'size': 'invisible',
+        'callback': (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          console.log('reCAPTCHA solved');
+        },
+        'expired-callback': () => {
+          // Response expired. Ask user to solve reCAPTCHA again.
+          console.log('reCAPTCHA expired');
+        }
+      });
+    }
+    return window.recaptchaVerifier;
+  } catch (error) {
+    console.error('Error setting up reCAPTCHA:', error);
+    return null;
+  }
+};
+
+export const sendPhoneOTP = async (phoneNumber, recaptchaVerifier) => {
+  try {
+    console.log('Sending OTP to phone:', phoneNumber);
+    
+    // For development, use test phone numbers to avoid billing
+    const testPhoneNumbers = {
+      '+911234567890': '123456',
+      '+919876543210': '654321',
+      '+15555215555': '123456',
+      '+15555215556': '654321'
+    };
+    
+    // If it's a test number, simulate OTP sending
+    if (testPhoneNumbers[phoneNumber]) {
+      console.log('Using test phone number, OTP:', testPhoneNumbers[phoneNumber]);
+      // Simulate confirmation result for test numbers
+      window.confirmationResult = {
+        confirm: async (otp) => {
+          if (otp === testPhoneNumbers[phoneNumber]) {
+            // Create a proper mock user object with required Firebase methods
+            const mockUser = {
+              uid: 'test-user-' + Date.now(),
+              phoneNumber: phoneNumber,
+              displayName: 'Test User',
+              email: null,
+              photoURL: null,
+              emailVerified: false,
+              // Add mock Firebase methods
+              getIdToken: () => Promise.resolve('mock-token-' + Date.now()),
+              refreshToken: 'mock-refresh-token',
+              metadata: {},
+              providerData: [],
+              delete: () => Promise.resolve(),
+              reload: () => Promise.resolve(),
+              toJSON: () => ({
+                uid: 'test-user-' + Date.now(),
+                phoneNumber: phoneNumber,
+                displayName: 'Test User'
+              })
+            };
+            return { user: mockUser };
+          } else {
+            throw new Error('Invalid OTP');
+          }
+        }
+      };
+      
+      return { 
+        success: true, 
+        message: 'Test OTP sent successfully',
+        confirmationResult: window.confirmationResult,
+        isTestMode: true
+      };
+    }
+    
+    // For production, use actual Firebase phone auth
+    const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifier);
+    window.confirmationResult = confirmationResult;
+    
+    return { 
+      success: true, 
+      message: 'OTP sent successfully',
+      confirmationResult 
+    };
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    
+    // Provide helpful error messages
+    let errorMessage = error.message;
+    if (error.code === 'auth/billing-not-enabled') {
+      errorMessage = 'Phone authentication is not enabled. Please enable it in Firebase Console or use test numbers: +911234567890 (OTP: 123456) or +919876543210 (OTP: 654321)';
+    } else if (error.code === 'auth/invalid-phone-number') {
+      errorMessage = 'Invalid phone number format. Please enter a valid 10-digit number.';
+    } else if (error.code === 'auth/quota-exceeded') {
+      errorMessage = 'Too many OTP requests. Please try again later.';
+    }
+    
+    return { 
+      success: false, 
+      error: error.code || 'auth/unknown-error',
+      message: errorMessage 
+    };
+  }
+};
+
+export const verifyPhoneOTP = async (otp, name) => {
+  try {
+    if (!window.confirmationResult) {
+      throw new Error('No confirmation result found. Please request OTP again.');
+    }
+
+    const result = await window.confirmationResult.confirm(otp);
+    const user = result.user;
+    
+    // For test users, update the display name directly in the user object
+    if (user.uid && user.uid.startsWith('test-user-')) {
+      user.displayName = name || 'Test User';
+      console.log('Test user profile updated with name:', user.displayName);
+    } else {
+      // For real Firebase users, use updateProfile
+      if (name && user.displayName !== name) {
+        try {
+          await updateProfile(user, { displayName: name });
+        } catch (profileError) {
+          console.warn('Profile update failed:', profileError);
+        }
+      }
+    }
+    
+    // Use final display name
+    const finalName = user.displayName || name || 'Test User';
+
+    // Save user data to Firestore
+    const userDoc = {
+      uid: user.uid,
+      name: finalName,
+      phoneNumber: user.phoneNumber,
+      provider: 'phone',
+      role: 'user',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      await setDoc(doc(db, 'users', user.uid), userDoc, { merge: true });
+      console.log('Phone user data saved to Firestore');
+    } catch (firestoreError) {
+      console.warn('Firestore save failed (may be test user or permissions issue):', firestoreError);
+      
+      // For test users, we can continue even if Firestore fails
+      if (user.uid && user.uid.startsWith('test-user-')) {
+        console.log('Test user created successfully (Firestore skipped)');
+        return { 
+          success: true, 
+          user: { 
+            uid: user.uid,
+            phoneNumber: user.phoneNumber,
+            displayName: finalName,
+            ...userDoc
+          },
+          warning: 'test-user-firestore-skipped'
+        };
+      }
+      
+      throw firestoreError;
+    }
+
+    return { 
+      success: true, 
+      user: { 
+        uid: user.uid,
+        phoneNumber: user.phoneNumber,
+        displayName: finalName,
+        ...userDoc
+      } 
+    };
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    
+    // Provide helpful error messages
+    let errorMessage = error.message;
+    if (error.code === 'auth/invalid-verification-code') {
+      errorMessage = 'Invalid OTP. Please check and try again.';
+    } else if (error.code === 'auth/code-expired') {
+      errorMessage = 'OTP has expired. Please request a new one.';
+    } else if (error.code === 'auth/missing-verification-code') {
+      errorMessage = 'Please enter the OTP sent to your phone.';
+    }
+    
+    return { 
+      success: false, 
+      error: error.code || 'auth/unknown-error',
+      message: errorMessage 
+    };
+  }
+};
+
+export const clearPhoneAuth = () => {
+  window.confirmationResult = null;
+  if (window.recaptchaVerifier) {
+    window.recaptchaVerifier.clear();
+    window.recaptchaVerifier = null;
+  }
+};
+
+export { auth, db, analytics };

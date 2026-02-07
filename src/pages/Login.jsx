@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { signIn, signInWithGoogle } from '../firebase';
+import PhoneAuth from '../components/PhoneAuth';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPhoneAuth, setShowPhoneAuth] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { from, message } = location.state || { from: '/', message: null };
@@ -28,6 +30,14 @@ export default function Login() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handlePhoneAuthSuccess = (user) => {
+    navigate(from, { replace: true });
+  };
+
+  const handleBackToLogin = () => {
+    setShowPhoneAuth(false);
   };
 
   const handleChange = (e) => {
@@ -100,6 +110,16 @@ export default function Login() {
       setIsSubmitting(false);
     }
   };
+
+  // If phone auth is shown, render PhoneAuth component
+  if (showPhoneAuth) {
+    return (
+      <PhoneAuth 
+        onAuthSuccess={handlePhoneAuthSuccess}
+        onBack={handleBackToLogin}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -206,7 +226,21 @@ export default function Login() {
                 </div>
               </div>
 
-              <div className="mt-6">
+              <div className="mt-6 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPhoneAuth(true)}
+                  disabled={isSubmitting}
+                  className="w-full inline-flex justify-center py-2 px-4 border border-purple-300/30 rounded-md shadow-sm bg-white/10 text-sm font-medium text-purple-200 hover:bg-white/20 disabled:opacity-50 transition-all duration-200 backdrop-blur-sm"
+                >
+                  <span className="sr-only">Sign in with Phone</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502.858l-2.906 2.955a1 1 0 01-1.414 0l-2.906-2.955a1 1 0 01-.502-.858L7.28 3a1 1 0 01.948-.684H9a2 2 0 012 2v4a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5v10z" />
+                  </svg>
+                  <span className="ml-2">Sign in with Phone</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => handleSocial('google')}

@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { client, getProgramBySlug } from '../sanityClient';
 import { useCart } from '../contexts/CartContext';
 import { PortableText } from '@portabletext/react';
+import SEO from '../components/SEO';
 
 function ProgramDetail() {
   const { slug } = useParams();
@@ -246,7 +247,36 @@ function ProgramDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      {program && (
+        <SEO 
+          title={program.title}
+          description={program.description || `Discover ${program.title} - a transformative spiritual program at Svasam. Connect with expert guides for your journey to inner peace and wellbeing.`}
+          keywords={`${program.title}, spiritual program, mindfulness, meditation, personal growth, ${program.category?.title || 'wellness'}, emotional wellbeing, inner peace`}
+          image={program.mainImage?.asset?.url || '/images/program-default.jpg'}
+          type="service"
+          structuredData={{
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: program.title,
+            description: program.description || `Discover ${program.title} - a transformative spiritual program at Svasam.`,
+            image: program.mainImage?.asset?.url || '/images/program-default.jpg',
+            provider: {
+              '@type': 'Organization',
+              name: 'Svasam',
+              url: 'https://svasam.com'
+            },
+            offers: {
+              '@type': 'Offer',
+              price: program.price || 0,
+              priceCurrency: 'INR',
+              availability: 'https://schema.org/InStock'
+            },
+            category: program.category?.title || 'Spiritual Wellness'
+          }}
+        />
+      )}
+      <div className="min-h-screen bg-background">
       {/* Global content filter - catch any remaining unwanted text */}
       <div style={{ display: 'none' }}>
         {(() => {
@@ -416,21 +446,23 @@ function ProgramDetail() {
                 <div className="absolute -inset-4 bg-gradient-radial from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
               </div>
               
-              <div className="w-56 h-56 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-3xl relative z-10">
-                <img 
-                  src={safeProgram.instructor?.image || '/placeholder-avatar.jpg'} 
-                  alt={safeProgram.instructor?.name || 'Instructor'}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                {/* Enhanced overlay effects */}
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {/* Vignette effect */}
-                <div className="absolute inset-0 rounded-2xl shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {/* Border glow effect */}
-                <div className="absolute inset-0 rounded-2xl border-2 border-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {/* Spotlight reflection on image */}
-                <div className="absolute top-2 left-2 w-8 h-8 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
-              </div>
+              <div className="relative w-64 h-64 lg:w-72 lg:h-72 rounded-3xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:shadow-3xl border-4 border-purple-400/30">
+                  {/* Background gradient for instructor image */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-pink-500/10 to-indigo-600/20 rounded-full opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <img 
+                    src={safeProgram.instructor?.image || '/placeholder-avatar.jpg'} 
+                    alt={safeProgram.instructor?.name || 'Instructor'}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 relative z-10"
+                  />
+                  {/* Enhanced overlay effects */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Vignette effect */}
+                  <div className="absolute inset-0 rounded-3xl shadow-inner opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  {/* Spotlight reflection on image */}
+                  <div className="absolute top-2 left-2 w-12 h-6 bg-white/20 rounded-full blur-md opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
+                  {/* Border glow effect */}
+                  <div className="absolute inset-0 rounded-3xl border-2 border-purple-400/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></div>
+                </div>
               {/* Enhanced floating badge */}
               <div className="absolute -top-2 -right-2 w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 z-20">
                 <span className="text-white text-sm font-bold">✓</span>
@@ -551,6 +583,7 @@ function ProgramDetail() {
         )}
       </div>
     </div>
+    </>
   );
 }
 

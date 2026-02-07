@@ -1,9 +1,42 @@
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import SEO from '../components/SEO';
 
 export default function About() {
   return (
-    <div className="min-h-screen w-full bg-background py-12">
+    <>
+      <SEO 
+        title="About Svasam"
+        description="Learn about Svasam's mission to provide authentic spiritual guidance and emotional wellbeing. Discover our vision for creating a world where everyone has access to trusted spiritual support."
+        keywords="about svasam, spiritual guidance, emotional wellbeing, mindfulness, meditation, personal growth, inner peace, wellness platform"
+        image="/images/about-svasam.jpg"
+        type="article"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'AboutPage',
+          name: 'About Svasam',
+          description: 'Learn about Svasam\'s mission to provide authentic spiritual guidance and emotional wellbeing.',
+          url: 'https://svasam.com/about',
+          mainEntity: {
+            '@type': 'Organization',
+            name: 'Svasam',
+            description: 'Your Space for Healing, Growth & Inner Transformation',
+            url: 'https://svasam.com',
+            foundingDate: '2024',
+            address: {
+              '@type': 'PostalAddress',
+              addressCountry: 'India'
+            },
+            contactPoint: {
+              '@type': 'ContactPoint',
+              telephone: '+91-XXXXXXXXXX',
+              contactType: 'customer service',
+              availableLanguage: ['English']
+            }
+          }
+        }}
+      />
+      <div className="min-h-screen w-full bg-background py-12">
       <div className="max-w-4xl mx-auto px-4">
         <Link to="/" className="flex items-center text-indigo-600 hover:text-indigo-800 mb-6">
           <FiArrowLeft className="mr-2" /> Back to Home
@@ -134,6 +167,6 @@ export default function About() {
 
         </div>
       </div>
-    </div>
+    </>
   );
 }
