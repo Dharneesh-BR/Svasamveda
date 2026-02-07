@@ -43,14 +43,21 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://svasam.com/">
     
-    <!-- DNS Prefetch for Performance -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//firebaseio.com">
-    <link rel="dns-prefetch" href="//checkout.razorpay.com">
-    
-    <!-- Preconnect for Critical Resources -->
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="/src/main.jsx" as="script" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://firebaseio.com" crossorigin>
+    
+    <!-- Critical CSS (inline) -->
+    <style>
+      /* Critical above-the-fold styles */
+      body{margin:0;font-family:Inter,sans-serif;background:linear-gradient(135deg,#581c87,#6b21a8,#4c1d95)}.loading{display:flex;justify-content:center;align-items:center;height:100vh}.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+    
+    <!-- Non-critical CSS (async) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     
     <!-- Favicon and Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/Logo icon.png">
@@ -111,11 +118,16 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <!-- Razorpay Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Razorpay Script (deferred) -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Critical loading indicator -->
+      <div class="loading">
+        <div class="spinner"></div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
