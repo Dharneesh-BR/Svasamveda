@@ -38,6 +38,13 @@ self.addEventListener('fetch', (event) => {
   const isSameOrigin = requestUrl.origin === self.location.origin;
   if (!isSameOrigin) return;
 
+  // Skip Firebase messaging requests to prevent channel errors
+  if (requestUrl.pathname.includes('firebase') || 
+      requestUrl.hostname.includes('firebase') ||
+      requestUrl.search.includes('firebase')) {
+    return fetch(event.request);
+  }
+
   event.respondWith((async () => {
     try {
       // Try cache first
@@ -57,4 +64,17 @@ self.addEventListener('fetch', (event) => {
       throw err;
     }
   })());
+});
+
+// Handle message events for Firebase compatibility
+self.addEventListener('message', (event) => {
+  // Skip Firebase internal messages to prevent channel errors
+  if (event.data && event.data.type === 'firebase') {
+    return;
+  }
+  
+  // Handle other service worker messages
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

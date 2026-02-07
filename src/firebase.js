@@ -18,7 +18,6 @@ import {
   signInWithPhoneNumber
 } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -26,20 +25,35 @@ const firebaseConfig = {
   authDomain: "svasam-a94e1.firebaseapp.com",
   projectId: "svasam-a94e1",
   storageBucket: "svasam-a94e1.firebasestorage.app",
-  messagingSenderId: "857788126873",
-  appId: "1:857788126873:web:dea096fcd1f7b9f1978a08",
-  measurementId: "G-QW8YP54GS3"
+  appId: "1:857788126873:web:dea096fcd1f7b9f1978a08"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const analytics = getAnalytics(app);
+// Initialize Firebase with error handling
+let app, auth, db;
 
-setPersistence(auth, browserLocalPersistence).catch((error) => {
-  console.error('Error setting auth persistence:', error);
-});
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  
+  // Set auth persistence
+  setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.warn('Error setting auth persistence:', error);
+  });
+  
+  console.log('Firebase initialized successfully');
+} catch (error) {
+  console.error('Error initializing Firebase:', error);
+  // Fallback initialization for development
+  try {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  } catch (fallbackError) {
+    console.error('Firebase fallback initialization failed:', fallbackError);
+    throw new Error('Failed to initialize Firebase');
+  }
+}
 // Sign up function
 export const signUp = async (name, email, password, mobile) => {
   try {
@@ -467,4 +481,4 @@ export const clearPhoneAuth = () => {
   }
 };
 
-export { auth, db, analytics };
+export { auth, db };

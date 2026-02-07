@@ -21,7 +21,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     optimizeDeps: {
-      include: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
+      include: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
     },
     build: {
       outDir: 'dist',
@@ -36,7 +36,7 @@ export default defineConfig(({ command, mode }) => {
             react: ['react', 'react-dom', 'react-router-dom'],
             vendor: ['@sanity/client'],
             ui: ['@heroicons/react', 'react-icons'],
-            firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
+            firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore'],
           },
         },
         // Remove unused exports
