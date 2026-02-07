@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { t } from '../i18n';
+import SEO from '../components/SEO';
 
 // Carousel banner images
 const bannerImages = [
@@ -141,50 +142,103 @@ export default function Categories() {
   ];
 
   return (
-    <main className="relative min-h-screen w-full">
-      {/* Fixed Banner */}
-      <section className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
-        {/* Banner Image */}
-        <div className="relative w-full h-full">
-          <img
-            src={bannerImage}
-            alt="Banner"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: 'center' }}
-            onError={(e) => {
-              console.error('Banner image failed to load:', bannerImage);
-            }}
-          />
-          {/* Dark overlay for text visibility */}
-          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60" />
-        </div>
+    <>
+      <SEO 
+        title="Spiritual Wellness Programs - Mind, Body & Soul"
+        description="Explore transformative wellness programs at Svasam. Discover mindfulness, meditation, and personal growth courses designed to nurture your mind, body, and soul for inner peace and wellbeing."
+        keywords="spiritual wellness programs, mindfulness courses, meditation classes, personal growth, emotional wellbeing, mind body soul, inner peace, transformation"
+        image="/assets/new-banner.jpg"
+        structuredData={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Spiritual Wellness Programs - Mind, Body & Soul',
+          description: 'Explore transformative wellness programs at Svasam. Discover mindfulness, meditation, and personal growth courses.',
+          url: 'https://svasam.com',
+          mainEntity: {
+            '@type': 'Organization',
+            name: 'Svasam',
+            description: 'Your Space for Healing, Growth & Inner Transformation'
+          },
+          breadcrumbList: {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+              {
+                '@type': 'ListItem',
+                'position': 1,
+                'name': 'Home',
+                'item': 'https://svasam.com'
+              },
+              {
+                '@type': 'ListItem',
+                'position': 2,
+                'name': 'Programs',
+                'item': 'https://svasam.com'
+              }
+            ]
+          }
+        }}
+      />
+      <main className="relative min-h-screen w-full">
+        {/* Fixed Banner */}
+        <section className="relative w-full h-[60vh] md:h-[70vh] overflow-hidden">
+          {/* Banner Image */}
+          <div className="relative w-full h-full">
+            <img
+              src={bannerImage}
+              alt="Banner"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: 'center' }}
+              onError={(e) => {
+                console.error('Banner image failed to load:', bannerImage);
+              }}
+            />
+            {/* Dark overlay for text visibility */}
+            <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/60" />
+          </div>
 
-        {/* Banner Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center z-10">
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-2xl animate-fade-in">
-            Reconnect. Realign. Transform.
-          </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-white/95 max-w-4xl mb-8 md:mb-12 drop-shadow-lg animate-fade-in-delay">
-            Purpose driven wellness programs guiding you back to your inner self where true change begins.
-          </p>
-        </div>
-      </section>
+          {/* Banner Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center z-10">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-2xl animate-fade-in">
+              Reconnect. Realign. Transform.
+            </h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-white/95 max-w-4xl mb-8 md:mb-12 drop-shadow-lg animate-fade-in-delay">
+              Purpose driven wellness programs guiding you back to your inner self where true change begins.
+            </p>
+          </div>
+        </section>
 
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Categories Section */}
-          <section aria-labelledby="categories-heading" className="w-full py-8 sm:py-12">
-            <div className="mb-8 text-center">
-              <p className="text-white/70 text-lg max-w-2xl mx-auto">Explore our transformative wellness programs designed to nurture your mind, body, and soul</p>
-            </div>
-            
-            {/* Categories Grid */}
-            <div className="relative">
-              {/* Mobile View - Single Line */}
-              <div className="md:hidden px-4 sm:px-6 mt-8">
-                <div className="flex justify-between gap-2 pb-4">
+        <div className="relative z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Categories Section */}
+            <section aria-labelledby="categories-heading" className="w-full py-8 sm:py-12">
+              <div className="mb-8 text-center">
+                <p className="text-white/70 text-lg max-w-2xl mx-auto">Explore our transformative wellness programs designed to nurture your mind, body, and soul</p>
+              </div>
+              
+              {/* Categories Grid */}
+              <div className="relative">
+                {/* Mobile View - Single Line */}
+                <div className="md:hidden px-4 sm:px-6 mt-8">
+                  <div className="flex justify-between gap-2 pb-4">
+                    {categories.map((category) => (
+                      <div key={category.id} className="flex-1">
+                        <CategoryCard
+                          to={`/${category.id}`}
+                          title={category.title}
+                          description={category.description}
+                          subtitle={category.subtitle}
+                          image={category.image}
+                          alt={category.alt}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Desktop View - Grid */}
+                <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-8 px-4 sm:px-6 lg:px-8">
                   {categories.map((category) => (
-                    <div key={category.id} className="flex-1">
+                    <div key={category.id} className="w-full">
                       <CategoryCard
                         to={`/${category.id}`}
                         title={category.title}
@@ -197,94 +251,13 @@ export default function Categories() {
                   ))}
                 </div>
               </div>
+            </section>
 
-              {/* Desktop View - Grid */}
-              <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 mt-8 px-4 sm:px-6 lg:px-8">
-                {categories.map((category) => (
-                  <div key={category.id} className="w-full">
-                    <CategoryCard
-                      to={`/${category.id}`}
-                      title={category.title}
-                      description={category.description}
-                      subtitle={category.subtitle}
-                      image={category.image}
-                      alt={category.alt}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-          <div className="py-8">
-            <Programs />
+            {/* FAQ Section */}
+            <FAQSection />
           </div>
-
-          {/* Shop by Category Section - Hidden for now */}
-          {/* <section className="mb-12">
-            <div className="mb-3 text-center">
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white">Shop by Category</h2>
-              <Link to="/" className="block mt-2 text-base text-white/70 hover:text-white font-semibold">View all</Link>
-            </div>
-            <div className="relative">
-              <button
-                type="button"
-                aria-label="Scroll categories left"
-                onClick={() => scrollLeft()}
-                className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-
-              <div
-                ref={carouselRef}
-                className="flex gap-5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-10"
-                role="tablist"
-                aria-label="Store categories"
-              >
-                {STORE_CATEGORIES.map(cat => (
-                  <div
-                    key={cat.slug}
-                    className="flex-shrink-0 snap-start group w-20 sm:w-28 md:w-36 focus:outline-none"
-                    title={cat.title}
-                  >
-                    <div className="rounded-xl border border-accent/20 bg-white shadow-sm overflow-hidden transition-all cursor-default">
-                      <div className="aspect-square w-full bg-gray-50 overflow-hidden">
-                        <img
-                          src={imageFor(cat.slug)}
-                          alt={`${cat.title} thumbnail`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextElementSibling.style.display = 'flex';
-                          }}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm" style={{ display: 'none' }}>No Image</div>
-                      </div>
-                    </div>
-                    <div className="mt-2 text-center text-sm font-semibold text-white">{cat.title}</div>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                aria-label="Scroll categories right"
-                onClick={() => scrollRight()}
-                className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 border border-accent/20 shadow hover:bg-white"
-              >
-                <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-            </div>
-          </section> */}
-
-          {/* Testimonials Section - Hidden for now */}
-          {/* <Testimonials /> */}
-          
-          {/* FAQ Section */}
-          <FAQSection />
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
