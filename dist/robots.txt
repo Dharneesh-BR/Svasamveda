@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://svasam.com/sitemap.xml
+
+# Block unnecessary files
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /dist/
+
+# Allow important directories
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /icons/
+Allow: /assets/
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1

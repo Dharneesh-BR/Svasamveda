@@ -20,6 +20,9 @@ export default defineConfig(({ command, mode }) => {
         '@': resolve(__dirname, './src'),
       },
     },
+    optimizeDeps: {
+      include: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
+    },
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
@@ -33,11 +36,15 @@ export default defineConfig(({ command, mode }) => {
             react: ['react', 'react-dom', 'react-router-dom'],
             vendor: ['@sanity/client'],
             ui: ['@heroicons/react', 'react-icons'],
-            firebase: ['firebase', '@react-firebase/auth'],
+            firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
           },
         },
         // Remove unused exports
         treeshake: 'smallest',
+        // Externalize Firebase modules if needed
+        external: (id) => {
+          return false; // Keep Firebase bundled for now
+        },
       },
       // Optimize assets
       assetsInlineLimit: 4096,
