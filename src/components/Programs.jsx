@@ -152,18 +152,13 @@ const TestPrograms = () => {
   }
 
   return (
-    <div className="py-12 px-4">
+    <div className="py-8">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-white mb-4">Featured Sessions</h2>
-        <p className="text-center text-white/70 mb-12 max-w-3xl mx-auto">
-          Explore our carefully curated programs designed to nurture your mind, body, and soul
-        </p>
-        
         <div className="relative">
           <Swiper
             ref={swiperRef}
             modules={[Navigation, Pagination, Autoplay, Grid]}
-            spaceBetween={30}
+            spaceBetween={20}
             slidesPerView={1}
             grid={{
               rows: 2,
@@ -172,6 +167,7 @@ const TestPrograms = () => {
             breakpoints={{
               640: { 
                 slidesPerView: 1,
+                spaceBetween: 20,
                 grid: {
                   rows: 2,
                   fill: 'row'
@@ -179,6 +175,7 @@ const TestPrograms = () => {
               },
               768: { 
                 slidesPerView: 2,
+                spaceBetween: 24,
                 grid: {
                   rows: 2,
                   fill: 'row'
@@ -186,6 +183,7 @@ const TestPrograms = () => {
               },
               1024: { 
                 slidesPerView: 3,
+                spaceBetween: 30,
                 grid: {
                   rows: 2,
                   fill: 'row'
@@ -195,15 +193,16 @@ const TestPrograms = () => {
             autoplay={{
               delay: 5000,
               disableOnInteraction: false,
+              pauseOnMouseEnter: true
             }}
             pagination={{
               clickable: true,
               el: '.programs-pagination',
-              bulletClass: 'w-2 h-2 bg-gray-300 rounded-full inline-block mx-1 cursor-pointer',
-              bulletActiveClass: 'bg-white w-6',
+              bulletClass: 'w-3 h-3 bg-white/30 rounded-full inline-block mx-2 cursor-pointer transition-all duration-300 hover:bg-white/50',
+              bulletActiveClass: 'bg-white w-10 rounded-full scale-110',
             }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            className="pb-12"
+            className="pb-16 programs-swiper"
           >
             {allPrograms.map((program) => (
               <SwiperSlide key={program._id} className="h-full">
@@ -293,27 +292,17 @@ const TestPrograms = () => {
           </Swiper>
           
           {/* Custom Pagination */}
-          <div className="flex justify-center mt-8">
-            <div className="programs-pagination flex space-x-2">
-              {Array.from({ length: Math.ceil(allPrograms.length / 6) }).map((_, index) => (
-                <span 
-                  key={index}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    index === Math.floor(activeIndex / 6) ? 'bg-white w-6' : 'bg-gray-300'
-                  }`}
-                  onClick={() => swiperRef.current?.swiper.slideTo(index * 6)}
-                />
-              ))}
-            </div>
+          <div className="flex justify-center items-center mt-8 space-x-1">
+            <div className="programs-pagination flex flex-wrap items-center justify-center gap-2 p-3 bg-black/20 rounded-full backdrop-blur-sm max-w-xs"></div>
           </div>
         </div>
         
         <div className="mt-12 text-center">
           <Link 
-            to="/sessions" 
+            to="/programs" 
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 transition-colors duration-200"
           >
-            View All Sessions
+            View All Programs
             <svg className="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>

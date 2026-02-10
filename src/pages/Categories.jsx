@@ -253,6 +253,22 @@ export default function Categories() {
               </div>
             </section>
 
+            {/* Programs Section with 2-Column Carousel */}
+            <section aria-labelledby="programs-heading" className="w-full py-12 sm:py-16">
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 id="programs-heading" className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                  Featured Programs
+                </h2>
+                <p className="text-white/70 text-lg max-w-2xl mx-auto">
+                  Discover our most popular wellness programs designed to transform your journey
+                </p>
+              </div>
+              
+              <div className="px-4 sm:px-6 lg:px-8">
+                <Programs />
+              </div>
+            </section>
+
             {/* FAQ Section */}
             <FAQSection />
           </div>
