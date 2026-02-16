@@ -51,6 +51,8 @@ export default defineConfig(({ command, mode }) => {
       cssCodeSplit: true,
       // Modern build optimization
       cssMinify: true,
+      // Fix MIME type issues
+      cssTarget: 'chrome80',
       // Remove console logs in production
       terserOptions: {
         compress: {
@@ -61,7 +63,11 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       port: 3000,
-      // No proxy needed when using CDN directly
+      // Fix MIME type issues for assets
+      headers: {
+        'Content-Type': 'text/javascript',
+        'Access-Control-Allow-Origin': '*'
+      },
       cors: true, // Enable CORS for development
       open: true,
     },
