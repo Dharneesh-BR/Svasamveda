@@ -66,7 +66,16 @@ export default defineConfig(({ command, mode }) => {
       // Fix MIME type issues for assets
       headers: {
         'Content-Type': 'text/javascript',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+      },
+      // Proper MIME types for different file extensions
+      mimeTypes: {
+        '.js': 'text/javascript',
+        '.css': 'text/css',
+        '.html': 'text/html',
+        '.json': 'application/json'
       },
       cors: true, // Enable CORS for development
       open: true,
