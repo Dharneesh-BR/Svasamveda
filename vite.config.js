@@ -63,6 +63,7 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       port: 3000,
+      host: true, // Ensure proper host resolution
       // Fix MIME type issues for assets
       headers: {
         'Content-Type': 'text/javascript',
